@@ -1,10 +1,10 @@
 +++
-title = "A Person Re-Identification System For Mobile Devices"
-date = 2015-09-01T00:00:00
+title = "A system for automated grading and result publication"
+date = 2018-04-08T00:00:00
 draft = false
 
 # Authors. Comma separated list, e.g. `["Bob Smith", "David Jones"]`.
-authors = ["GA Cushen"]
+authors = ["Dhakal Deependra"]
 
 # Publication type.
 # Legend:
@@ -15,14 +15,14 @@ authors = ["GA Cushen"]
 # 4 = Report
 # 5 = Book
 # 6 = Book section
-publication_types = ["2"]
+publication_types = ["0"]
 
 # Publication name and optional abbreviated version.
-publication = "In *Signal Image Technology & Internet Systems (SITIS)*, IEEE."
-publication_short = "In *SITIS*"
+publication = "In *Personal Journal Archive*, Github"
+publication_short = "In *PJA*"
 
 # Abstract and optional shortened version.
-abstract = "Person re-identification is a critical security task for recognizing a person across spatially disjoint sensors. Previous work can be computationally intensive and is mainly based on low-level cues extracted from RGB data and implemented on a PC for a fixed sensor network (such as traditional CCTV). We present a practical and efficient framework for mobile devices (such as smart phones and robots) where high-level semantic soft biometrics are extracted from RGB and depth data. By combining these cues, our approach attempts to provide robustness to noise, illumination, and minor variations in clothing. This mobile approach may be particularly useful for the identification of persons in areas ill-served by fixed sensors or for tasks where the sensor position and direction need to dynamically adapt to a target. Results on the BIWI dataset are preliminary but encouraging. Further evaluation and demonstration of the system will be available on our website."
+abstract = "Nepal government has adopted grade based student evaluation scheme. While the implications of the sytems openly discussed elsewhere, this paper aims to just ease the task of publishing result from a entry sheet. Using `R` feature similar to lookup table and adding in convenient visualization summary of grade based results could be obtained. An example case scenario uses actual data of student examinees. A friendlier data entrying system has been used to illustrate usefulness of automating the process."
 abstract_short = ""
 
 # Featured image thumbnail (optional)
@@ -43,7 +43,7 @@ projects = []
 tags = []
 
 # Links (optional).
-url_pdf = "http://arxiv.org/pdf/1512.04133v1"
+url_pdf = ""
 url_preprint = ""
 url_code = ""
 url_dataset = ""
