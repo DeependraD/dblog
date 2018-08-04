@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+public/
+/**/Thumbs.db
+blogdown/
+_cache/
+drafts/

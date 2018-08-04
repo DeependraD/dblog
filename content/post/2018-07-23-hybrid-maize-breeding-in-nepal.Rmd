@@ -1,0 +1,11 @@
+---
+title: Hybrid Maize Breeding in Nepal
+author: Deependra Dhakal
+date: '2018-07-23'
+slug: hybrid-maize-breeding-in-nepal
+categories:
+  - Plant Breeding
+tags: ["rmarkdown", "research-review", "maize"]
+---
+
+Seeds are the carrier of technology -- this statement, I often mull over and now enshrine, while we are getting into the talks about seeds of change. 

@@ -1,0 +1,463 @@
+---
+title: Dealing with factors
+author: Deependra Dhakal
+date: '2017-05-18'
+slug: dealing-with-factors
+categories:
+  - R
+  - factor
+tags:
+  - R
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#a-factor-is-an-headache">A <code>factor</code> is an headache</a></li>
+<li><a href="#visualizing-data">Visualizing data</a></li>
+</ul>
+</div>
+
+<div id="a-factor-is-an-headache" class="section level2">
+<h2>A <code>factor</code> is an headache</h2>
+<p>I have a dataset, cleaning which has been a pain lately. I’m going to use 20 observations of the imported dataset in this post to demonstrate how pathetically have I been advancing with it.</p>
+<table class="table table-striped table-hover" style="font-size: 10px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:center;font-weight: bold;">
+plot
+</th>
+<th style="text-align:center;font-weight: bold;">
+jan_23_2017
+</th>
+<th style="text-align:center;font-weight: bold;">
+jan_26_2017
+</th>
+<th style="text-align:center;font-weight: bold;">
+jan_29_2017
+</th>
+<th style="text-align:center;font-weight: bold;">
+feb_02_2017
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+b
+</td>
+<td style="text-align:center;">
+am
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+2
+</td>
+<td style="text-align:center;">
+f
+</td>
+<td style="text-align:center;">
+s
+</td>
+<td style="text-align:center;">
+1p
+</td>
+<td style="text-align:center;">
+10p
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+3
+</td>
+<td style="text-align:center;">
+b
+</td>
+<td style="text-align:center;">
+a
+</td>
+<td style="text-align:center;">
+sm
+</td>
+<td style="text-align:center;">
+3p
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+4
+</td>
+<td style="text-align:center;">
+b
+</td>
+<td style="text-align:center;">
+b
+</td>
+<td style="text-align:center;">
+ap
+</td>
+<td style="text-align:center;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+5
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+b
+</td>
+<td style="text-align:center;">
+bp
+</td>
+<td style="text-align:center;">
+s
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+6
+</td>
+<td style="text-align:center;">
+b
+</td>
+<td style="text-align:center;">
+a
+</td>
+<td style="text-align:center;">
+sp
+</td>
+<td style="text-align:center;">
+3
+</td>
+</tr>
+</tbody>
+</table>
+<p>Providing it a context, the colums represent multiple observations of same variable at different dates, as apparent from the column names.</p>
+<p>One can observe from the <code>str(head_boot)</code> that the dataframe although has only 20 observations. Had a larger dataframe been subsetted, the factors with their usual nuisance carry over the all the levels, even currently unused ones. To demonstrate this, below I present how many factor levels the original dataframe had and what changes after a <code>subset</code> (<code>slice</code>, <code>filter</code> have same feature) operation.</p>
+<pre class="r"><code># original dataframe
+head_boot %&gt;% select_if(is.factor) %&gt;% map_int(function(x) length(levels(x)))</code></pre>
+<pre><code>## jan_23_2017 jan_26_2017 jan_29_2017 feb_02_2017 
+##           5           6          14          15</code></pre>
+<pre class="r"><code># subsetted dataframe
+subset.data.frame(head_boot, subset = head_boot$jan_23_2017 %in% 
+    c(&quot;s&quot;, &quot;0&quot;), select = sapply(head_boot, is.factor)) %&gt;% 
+    map_int(function(x) length(levels(x)))</code></pre>
+<pre><code>## jan_23_2017 jan_26_2017 jan_29_2017 feb_02_2017 
+##           5           6          14          15</code></pre>
+<p>A prophylactic measure is avoiding at all importing of character data columns as a factor. This could be done using setup option: <code>options(stringsAsFactors = FALSE)</code> ahead of import. Still, after the import many options exist. Some of the best alternatives out are listed below:</p>
+<ol style="list-style-type: decimal">
+<li><p>Use <code>subsetted_df$factor_col[, drop=TRUE]</code>, where a vector of factor values is indexed with drop argument.</p></li>
+<li><p>Convert factor columns of subsetted dataframe first to character and then back to factors class.</p></li>
+<li><p>Use <code>forcats::fct_drop(f)</code> for more reliable NA handling</p></li>
+<li><p>Use <code>droplevels()</code> or <code>droplevels.data.frame()</code></p></li>
+</ol>
+<p>To give a realistic feel to data, factor levels may be recoded or relabelled with more informative labels.</p>
+<pre class="r"><code>suit_labels &lt;- factor(c(&quot;before_boot_n_boot&quot;, &quot;heading&quot;, 
+    &quot;anthesis&quot;), levels = c(&quot;before_boot_n_boot&quot;, &quot;heading&quot;, 
+    &quot;anthesis&quot;), ordered = T)
+
+# what are all the levels
+head_boot_lvl &lt;- head_boot %&gt;% select_if(is.factor) %&gt;% 
+    map(levels) %&gt;% unlist() %&gt;% unique()
+
+# purrr::cross_df preserves the order,
+# tidyr::crossing doesn&#39;t
+possible_hb_lvl &lt;- cross_df(list(post = factor(c(&quot;m&quot;, 
+    &quot;&quot;, &quot;p&quot;), ordered = TRUE), pre = factor(c(&quot;b&quot;, 
+    &quot;f&quot;, &quot;a&quot;, &quot;s&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;10&quot;, &quot;11&quot;, 
+    &quot;12&quot;), ordered = TRUE))) %&gt;% select(rev(everything())) %&gt;% 
+    # arrange(match(post, c(&#39;m&#39;, &#39;&#39;, &#39;p&#39;))) %&gt;% # don&#39;t
+# need this ordering
+unite(col = &quot;pre_post&quot;, sep = &quot;&quot;) %&gt;% add_row(pre_post = &quot;0&quot;, 
+    .before = 1) %&gt;% mutate(pre_post = factor(pre_post, 
+    levels = pre_post, ordered = TRUE))
+
+# mutate original dataframe to represent ordinal
+# factors
+head_boot &lt;- head_boot %&gt;% mutate_if(is.factor, function(x) factor(x, 
+    levels = possible_hb_lvl$pre_post, labels = possible_hb_lvl$pre_post, 
+    ordered = TRUE))
+
+# function to recode factor levels (better to use
+# `fct_recode()`)
+fct_minimize &lt;- function(x) case_when(x &lt; &quot;1m&quot; ~ suit_labels[1], 
+    x &gt;= &quot;1m&quot; &amp; x &lt; &quot;10m&quot; ~ suit_labels[2], x &gt;= &quot;10m&quot; ~ 
+        suit_labels[3], TRUE ~ as.factor(x))
+
+# mutate original dataframe with function to recode
+# factor levels
+head_boot &lt;- head_boot %&gt;% mutate_if(is.factor, fct_minimize)
+
+str(head_boot)</code></pre>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    20 obs. of  5 variables:
+##  $ plot       : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ jan_23_2017: Ord.factor w/ 3 levels &quot;before_boot_n_boot&quot;&lt;..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ jan_26_2017: Ord.factor w/ 3 levels &quot;before_boot_n_boot&quot;&lt;..: 1 1 1 1 1 1 1 2 1 1 ...
+##  $ jan_29_2017: Ord.factor w/ 3 levels &quot;before_boot_n_boot&quot;&lt;..: 1 2 1 1 1 1 2 2 2 1 ...
+##  $ feb_02_2017: Ord.factor w/ 3 levels &quot;before_boot_n_boot&quot;&lt;..: 1 3 2 2 1 2 2 3 2 1 ...</code></pre>
+<p>A more telling dataframe looks like the one below.</p>
+<pre class="r"><code>knitr::kable(head(head_boot), format = &quot;html&quot;, align = &quot;c&quot;) %&gt;% 
+    kableExtra::kable_styling(bootstrap_options = c(&quot;striped&quot;, 
+        &quot;hover&quot;), font_size = 10, position = &quot;center&quot;) %&gt;% 
+    kableExtra::row_spec(0, bold = TRUE) %&gt;% kableExtra::column_spec(1, 
+    bold = TRUE)</code></pre>
+<table class="table table-striped table-hover" style="font-size: 10px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:center;font-weight: bold;">
+plot
+</th>
+<th style="text-align:center;font-weight: bold;">
+jan_23_2017
+</th>
+<th style="text-align:center;font-weight: bold;">
+jan_26_2017
+</th>
+<th style="text-align:center;font-weight: bold;">
+jan_29_2017
+</th>
+<th style="text-align:center;font-weight: bold;">
+feb_02_2017
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+1
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+2
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+heading
+</td>
+<td style="text-align:center;">
+anthesis
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+3
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+heading
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+4
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+heading
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+5
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+6
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+heading
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="visualizing-data" class="section level2">
+<h2>Visualizing data</h2>
+<p>Bar plotting of the ordinal data might reveal interesting insights, so let’s prepare ggplot graphs.</p>
+<pre class="r"><code>library(ggplot2)  # load library
+
+walk2(.x = head_boot %&gt;% select(jan_23_2017:feb_02_2017), 
+    .y = strptime(str_subset(colnames(head_boot), &quot;^\\w{3}_\\d{2}&quot;), 
+        format = &quot;%b_%d_%Y&quot;), .f = ~print(ggplot(aes(x = .x), 
+        data = head_boot) + geom_bar(position = &quot;dodge&quot;, 
+        stat = &quot;count&quot;, width = 0.5) + xlab(as.character(.y)) + 
+        theme(axis.text.x = element_text(angle = 40, 
+            size = 9, vjust = 0.6))))</code></pre>
+<div class="figure" style="text-align: center"><span id="fig:ggbar-viz"></span>
+<img src="/post/2017-05-18-dealing-right-with-factors_files/figure-html/ggbar-viz-1.svg" alt="Growth stages at different dates" width="576" />
+<p class="caption">
+Figure 1: Growth stages at different dates
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:ggbar-viz"></span>
+<img src="/post/2017-05-18-dealing-right-with-factors_files/figure-html/ggbar-viz-2.svg" alt="Growth stages at different dates" width="576" />
+<p class="caption">
+Figure 1: Growth stages at different dates
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:ggbar-viz"></span>
+<img src="/post/2017-05-18-dealing-right-with-factors_files/figure-html/ggbar-viz-3.svg" alt="Growth stages at different dates" width="576" />
+<p class="caption">
+Figure 1: Growth stages at different dates
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:ggbar-viz"></span>
+<img src="/post/2017-05-18-dealing-right-with-factors_files/figure-html/ggbar-viz-4.svg" alt="Growth stages at different dates" width="576" />
+<p class="caption">
+Figure 1: Growth stages at different dates
+</p>
+</div>
+<p>With dplyr, It’s seemless to obtain a tabular summary of what has been visualized above.</p>
+<pre class="r"><code># credit:
+# https://stackoverflow.com/a/46340237/6725057
+head_boot %&gt;% select_if(is.factor) %&gt;% tidyr::gather(date, 
+    stage) %&gt;% dplyr::group_by(date, stage) %&gt;% dplyr::count() %&gt;% 
+    dplyr::ungroup() %&gt;% tidyr::spread(date, n) %&gt;% 
+    knitr::kable(format = &quot;html&quot;, align = &quot;c&quot;) %&gt;% 
+    kableExtra::kable_styling(bootstrap_options = c(&quot;striped&quot;, 
+        &quot;hover&quot;), font_size = 10, position = &quot;center&quot;) %&gt;% 
+    kableExtra::row_spec(0, bold = TRUE) %&gt;% kableExtra::column_spec(1, 
+    bold = TRUE)</code></pre>
+<table class="table table-striped table-hover" style="font-size: 10px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:center;font-weight: bold;">
+stage
+</th>
+<th style="text-align:center;font-weight: bold;">
+feb_02_2017
+</th>
+<th style="text-align:center;font-weight: bold;">
+jan_23_2017
+</th>
+<th style="text-align:center;font-weight: bold;">
+jan_26_2017
+</th>
+<th style="text-align:center;font-weight: bold;">
+jan_29_2017
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+anthesis
+</td>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+before_boot_n_boot
+</td>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+19
+</td>
+<td style="text-align:center;">
+15
+</td>
+<td style="text-align:center;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:center;font-weight: bold;">
+heading
+</td>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+8
+</td>
+</tr>
+</tbody>
+</table>
+</div>
