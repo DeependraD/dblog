@@ -9,7 +9,7 @@ draft = false
 authors = ["Deependra Dhakal"]
 
 tags = ["Maize", "History"]
-summary = "How Nepalese embellish a long history of the saver crop"
+summary = "How Nepal embellish a long history of Maize"
 
 [header]
 image = "headers/Maize_cob.jpg"
