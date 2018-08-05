@@ -18,11 +18,11 @@ authors = ["Dhakal Deependra"]
 publication_types = ["0"]
 
 # Publication name and optional abbreviated version.
-publication = "In *Personal Journal Archive*, Github"
-publication_short = "In *PJA*"
+publication = "Unpublished"
+publication_short = "Unpublished"
 
 # Abstract and optional shortened version.
-abstract = "Nepal government has adopted grade based student evaluation scheme. While the implications of the sytems openly discussed elsewhere, this paper aims to just ease the task of publishing result from a entry sheet. Using `R` feature similar to lookup table and adding in convenient visualization summary of grade based results could be obtained. An example case scenario uses actual data of student examinees. A friendlier data entrying system has been used to illustrate usefulness of automating the process."
+abstract = "Nepal government has adopted grade based student evaluation scheme. While the implications of the system are openly discussed elsewhere, this paper aims to just ease the task of publishing result from a draft entry sheet. Using features from `R`, similar to lookup table feature in Excel, we expand on summarizing result with supporting visualization. An example case scenario uses actual data of student examinees. A friendlier data entrying system has been used to illustrate usefulness of automating the process."
 abstract_short = ""
 
 # Featured image thumbnail (optional)
@@ -40,7 +40,7 @@ projects = []
 
 # Tags (optional).
 #   Set `tags = []` for no tags, or use the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
-tags = []
+tags = ["Visualization", "Aggregation"]
 
 # Links (optional).
 url_pdf = ""
@@ -71,4 +71,3 @@ caption = ""
 
 +++
 
-More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code.

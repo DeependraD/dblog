@@ -293,8 +293,8 @@ enableGitInfo = false
   weight = 4
 
 [[menu.main]]
-  name = "Teaching"
-  url = "#teaching"
+  name = "Current Affiliation"
+  url = "#current_affiliation"
   weight = 5
 
 [[menu.main]]
