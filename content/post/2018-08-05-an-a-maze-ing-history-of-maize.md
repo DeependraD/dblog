@@ -12,8 +12,8 @@ tags = ["Maize", "History"]
 summary = "How Nepal embellish a long history of Maize"
 
 [header]
-image = "headers/Maize_cob.jpg"
-caption = "Image credit: [**Corn**](http://cornindia.com/importance-and-utilization-of-maize/)"
+image = "maize/Sweet_corn_Dipa.jpg"
+caption = "Dehusked table purpose sweet corn; Image credit: Dipa Ghimire"
 
 [[gallery_item]]
 album = "1"
@@ -70,11 +70,22 @@ A vast array of literature point towards South America as origin of _Zea_ and _T
 
 Maize farming has been one of the prime occupations of Hill people, besides livestock rearing. A defining feature of the hills is relatively young nature of the terrain. Rocks and constitutive layers are rapidly changing the states while the soil horizons near top, primarily the top-soil fraction, are exposed to a variety of weathering action. The topographical relief and the slope predispose the soil to the extremes of leaching and runoff phenomena. This all contributes to the dynamism of soil processes in the Hills. In the meantime, while the longstanding prevalence of maize by soundly adapting to this dynamic growth medium is appreciable, it's versatility to fend well also in impoverished soil and it's suitability of providing for muliple needs of a farming household makes Maize an excellent fit in hilly Nepal.
 
+### Consumption
+
+- More than two thirds of the maize produced in the midhills and highhills is used for direct human consumption at the farm level. 
+- In the terai, less than 50% of the maize is used for human consumption and a significant part of the production goes to the market
+
+### Cultivation
+
 - Traditionally cultivated as rainfed crop in mixed cropping with millet(in _Bari_ land) in Nepal. 
 - Often relayed with millet and upland crops.
 - Owing to revelations about productivity of winter maize being greater, in recent years, trend of winter maize or even spring maize with supplemental irrigation is on rise.
 
-### Opportunities for increasing maize production
+### Yield
+
+
+
+### Opportunities
 
 - Tremendous opportunities exist for maize seed productivity enhancement, thereby narrowing down the wider yield gap mainly through horizontal/cultivation expansion in winter season.
 

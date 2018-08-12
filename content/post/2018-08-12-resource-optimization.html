@@ -1,0 +1,111 @@
+---
+title: "Resource optimization"
+subtitle: "A practical solution"
+author: Deependra Dhakal
+date: '2018-08-12'
+slug: optimization
+math: true
+categories: []
+tags:
+  - agriculture
+  - optimization
+  - R
+header:
+  caption: ''
+  image: ''
+---
+
+
+
+<p><span class="math display">\[
+\begin{align}
+\textbf{Question}
+\end{align}
+\]</span></p>
+<p>A farmer has 600 katthas of land under his authority. Each of his katthas of land will either be sown with Rice or with Maize during the current season. Each kattha planted with Maize will yield Rs 1000, requires 2 workers and 20 kg of fertilizer. Each kattha planted with Rice will yield Rs 2000, requires 4 workers and 25 kg of fertilizers. There are currently 1200 workers and 11000 kg of fertilizer available.</p>
+<p>So, the problem is how can he/she allocate his parcel of land for reaping maximum profit while also staying within the limits of input availability.</p>
+<p><span class="math display">\[
+\begin{align}
+\textbf{Answer}
+\end{align}
+\]</span></p>
+<p>The problem can be formulated as an optimization problem with following notation:</p>
+<p><span class="math inline">\(X_1\)</span> = katthas of Maize <span class="math inline">\(X_2\)</span> = katthas of Rice</p>
+<p>The objective function is:</p>
+<p><span class="math display">\[
+max(1000X_1+2000X_2)
+\]</span></p>
+<p>Now let’s construct a matrix defining the constraints.</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+Worker\\
+Fertilizer 
+\end{bmatrix}=
+\begin{bmatrix}
+2X_1 + 4X_2 \leq 1200\\
+20X_1 + 25X_2 \leq 11000
+\end{bmatrix}
+\]</span></p>
+<pre class="r"><code>library(lpSolve)
+library(tidyverse)
+library(formattable)</code></pre>
+<p>Define objective function to be optimized.</p>
+<pre class="r"><code>objective.in &lt;- 
+  c(
+    1000, # maize
+    2000 # rice
+  )</code></pre>
+<p>Define constraint matrix with variables in the left hand side.</p>
+<pre class="r"><code>const.mat &lt;- 
+  matrix(
+    c(
+      2, 4, # maize
+      20, 25
+    ),
+    nrow = 2,
+    byrow = TRUE
+  )</code></pre>
+<p>Define direction of constraints.</p>
+<pre class="r"><code>const.dir &lt;- 
+  rep(
+    &quot;&lt;=&quot;,
+    2
+  )</code></pre>
+<p>Define constraint limits as values in the right hand side.</p>
+<pre class="r"><code>const.rhs &lt;- 
+  c(
+    1200,
+    11000
+  )</code></pre>
+<p>The structure of linear optimization problem.</p>
+<pre class="r"><code>const.mat %&gt;% 
+  cbind(const.dir) %&gt;% 
+  cbind(const.rhs) %&gt;% 
+  rbind(
+    c(
+      objective.in,
+      &quot; &lt;--- &quot;,
+      &quot;max fun to left&quot;
+    ),
+    .
+  ) %&gt;% 
+  noquote()</code></pre>
+<pre><code>##                const.dir const.rhs      
+## [1,] 1000 2000  &lt;---     max fun to left
+## [2,] 2    4    &lt;=        1200           
+## [3,] 20   25   &lt;=        11000</code></pre>
+<p>Linear programming syntax and solution search.</p>
+<pre class="r"><code>solution &lt;- 
+  lp(
+    direction = &quot;max&quot;,
+    objective.in = objective.in,
+    const.mat = const.mat,
+    const.dir = const.dir,
+    const.rhs = const.rhs
+  )
+
+objective.in %*% solution$solution %&gt;% 
+  currency(symbol = &quot;Rs. &quot;)</code></pre>
+<pre><code>##      [,1]          
+## [1,] Rs. 600,000.00</code></pre>
+<p>This post is thanks to <a href="https://www.youtube.com/watch?v=61Kwaab8CoU">Freddy Drennan’s youtube video</a></p>
