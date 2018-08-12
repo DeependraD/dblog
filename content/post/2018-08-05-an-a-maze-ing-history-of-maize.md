@@ -15,6 +15,7 @@ summary = "How Nepal embellish a long history of Maize"
 image = "maize/Sweet_corn_Dipa.jpg"
 caption = "Dehusked table purpose sweet corn; Image credit: Dipa Ghimire"
 
+
 [[gallery_item]]
 album = "1"
 image = ""

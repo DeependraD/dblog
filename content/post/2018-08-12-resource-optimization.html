@@ -108,4 +108,17 @@ objective.in %*% solution$solution %&gt;%
   currency(symbol = &quot;Rs. &quot;)</code></pre>
 <pre><code>##      [,1]          
 ## [1,] Rs. 600,000.00</code></pre>
+<p>Solution to variables value <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span> can also be found.</p>
+<pre class="r"><code>solution$solution</code></pre>
+<pre><code>## [1]   0 300</code></pre>
+<p>Whole problem and solution domain can be summarized in a graph. This is an added effort for some other day…</p>
+<!-- ```{r question-answer} -->
+<!-- plot(0, 0,  -->
+<!--      xlim = c(0, 600), ylim = c(0, 600),  -->
+<!--      xlab = "Maize", ylab = "Rice",  -->
+<!--      main = "Maize versus Rice: Plant more of which?") -->
+<!-- polygon(c(0, 1000/3, 0), c(500, 0, 0), col = "skyblue", density = 30) -->
+<!-- polygon(c(0, 1200/2, 0), c(1200/4, 0), col = "red", density = 20) -->
+<!-- abline(h = 200, v = 200) -->
+<!-- ``` -->
 <p>This post is thanks to <a href="https://www.youtube.com/watch?v=61Kwaab8CoU">Freddy Drennan’s youtube video</a></p>
