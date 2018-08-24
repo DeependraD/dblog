@@ -55,6 +55,7 @@ Another situation of writing on behalf of a candidate who you have agreed to ref
 > In closing, as detailed above, based on my experience working with her, I can unreservedly recommend Ms. XXX to you for any intermediate or senior marketing position. If you would like further elaboration, feel free to call me at (+977) 056-523621.
 > 
 > Sincerely,
+>
 > YYY
+>
 > Director, Marketing and Sales
-
