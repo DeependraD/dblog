@@ -3,6 +3,9 @@ title: 'Stability analysis: how to guide'
 author: Deependra Dhakal
 date: '2018-08-14'
 slug: stability-analysis-how-to-guide
+math: true
+bibliography: ["./bib/2018-08-14-stability-analysis-how-to-guide.bib"]
+link-citations: true
 categories:
   - Plant Breeding
   - R
@@ -14,7 +17,11 @@ header:
   image: ''
 ---
 
+## Meaning of stability 
+
 Comparison of treatments may also imply cross comparison of their stability across multiple environments, especially when a study constitutes a series of trials that are each conducted at different locations and/or at different periods in time (henceforth referred to as MET; **M**ulti-**E**nvironment **T**rial). Several situations exist where only mean based performance analysis are regarded inconclusive. 
 For example, in varietal release process the authorizing body seeks record of consistent trait performace of certain crop genotype. The imperative is: a variety needs to be stably exhibit it's characters in the proposed domain of cultivation, which generally is a wide area, throughout a long duration of cultivation cycles. This pre-condition of stable character inheritance is more relevant to crops constituting a homogenous and homozygous population. Either of the location, time period or combination of both, more commonly framed as year in field researches, could be assumed to present an unique environment that treatment entries are tested in. Thus, for results to be widely applicable, performance measures across environments should be more or less stable. To the contrary, the concept of utilizing differential character expression across different environments is often explored when interaction between genotypes and environments result in more desirable character.
 
 In MET trials, it is also of interest whether the same treatments perform well or poorly in all locations, or are there as-yet-unknown subpopulations such that some treatments perform optimally at certain types of locations whereas other treatments are better suited for other locations[@littell2007sas]. By assessing the simple effects of treatments at each location using the BLUPs demonstrated in this example, the stability issue can be addressed using mixed model methods.
+
+## References

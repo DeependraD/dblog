@@ -5,7 +5,8 @@ author: Deependra Dhakal
 date: '2018-08-12'
 slug: optimization
 math: true
-categories: []
+categories: 
+  - agriculture
 tags:
   - agriculture
   - optimization
