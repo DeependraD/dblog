@@ -87,7 +87,11 @@ mating_mat <- cross_df(.l = list(M = ten_ind, F = ten_ind)) %>%
   dplyr::rename(Parents = M)
 
 mating_mat[,-1][upper.tri(mating_mat[,-1], diag = TRUE)] = NA
-mating_mat[c(9, 8, 5, 5), c(2, 5, 8, 4)] = NA
+mating_mat[,-1] <- mating_mat[,-1] %>% 
+  mutate_all(.funs = funs(replace(., sample(1:10, 
+                                            size = sample(1:5, size = 1, replace = TRUE), 
+                                            replace = FALSE), NA)))
+
 # mating_mat[sample(1:10, 2, replace = TRUE), sample(1:10, 3, replace = TRUE)]
   
 mating_mat %>%
@@ -98,7 +102,55 @@ mating_mat %>%
 ```
 
 
-4. Connected diallels: Two groups (for example, $1-6$ and $7-12$) of individuals are used to form two diallels (generally partial or other diallel scheme in each group) but they are connected by crossing $4 \times 9$, $7 \times 1$, $9 \times 3$ and $10 \times 2$. In the example below, the second diallel also includes some selfs $(S)$ and reciprocals $(R)$ (Table connected-diallel).
+4. Connected diallels: Two groups (for example, $1-6$ and $7-12$) of individuals are used to form two diallels (generally partial or other diallel scheme in each group) but they are connected by crossing $4 \times 9$, $7 \times 1$, $9 \times 3$ and $10 \times 2$. In the example below, the second diallel also includes some selfs $(S)$ and reciprocals $(R)$ (Table \@ref(tab:connected-diallel)).
+
+```{r connected-diallel}
+# Connected diallel mating scheme
+
+twelve_ind <- gl(12, k = 1, ordered = T, labels = paste("P", 1:12, sep = ""))
+
+# generate independent diallel from first six parents
+mating_mat1 <- cross_df(.l = list(M = twelve_ind[1:6], F = twelve_ind[1:6])) %>% 
+  unite(col = "cross", sep = " x ", remove = F) %>% 
+  spread(key = F, value = cross) %>% 
+  dplyr::rename(Parents = M)
+
+# create partial diallel from first matrix
+mating_mat1[,-1][upper.tri(mating_mat1[,-1], diag = TRUE)] <- NA
+mating_mat1[,-1] <- mating_mat1[,-1] %>% 
+  mutate_all(.funs = funs(replace(., sample(1:length(which(!is.na(.))), 
+                                            size = sample(1:4, size = 1, replace = TRUE), 
+                                            replace = TRUE), NA)))
+
+# generate independent diallel from next six parents
+mating_mat2 <- cross_df(.l = list(M = twelve_ind[7:12], F = twelve_ind[7:12])) %>% 
+  unite(col = "cross", sep = " x ", remove = F) %>% 
+  spread(key = F, value = cross) %>% 
+  dplyr::rename(Parents = M)
+
+# create random diallel crosses from second matrix
+mating_mat2[,-1] <- mating_mat2[,-1] %>% 
+  mutate_all(.funs = funs(replace(., sample(1:6, 
+                                            size = sample(3:5, size = 1, replace = TRUE), # because at least 3 diallel crosses will be have to be avoided; likewise minimum of (6-5=1) crosses must be performed for some diallel parent.
+                                            replace = FALSE), NA)))
+
+# combine two matrices diagonally using Matrix package
+mating_mat <- full_join(mating_mat1, mating_mat2)
+
+# add connecting crossess between two diallel sets
+mating_mat[,-1][,c(9, 1, 3, 2)] <- pmap_df(list(mating_mat[,-1][,c(9, 1, 3, 2)], 
+             c(4, 7, 9, 10), 
+             c("P4 x P9", "P7 x P1", "P9 x P3", "P10 x P2")),
+        .f = function(x, y, z)replace(x, y, z))
+
+# see the table  
+mating_mat %>%
+  knitr::kable(caption = "Connected diallel mating scheme using 12 parents") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10) %>% 
+  kableExtra::column_spec(1, bold = TRUE) %>% 
+  kableExtra::column_spec(column = 1:11, width = "7em")
+```
+
 
 With the convenience of using individuals as both male and female parents, diallel mating designs are popular for plant breeding studies. Certain diallel designs allow for estimation of reciprocal cross effects. Diallels cannot be used in dioecious species (female and male flowers occur in different plants). However, factorial designs can be used in dioecious species to estimate dominance genetic variance.
 
@@ -112,6 +164,25 @@ If there are no connections between groups of parents, the design is a diallel i
 flev <- c(1,3:8)
 Matrix::sparseMatrix(seq_along(flev), flev, x = 1)
 
+```
+
+<!-- ## Analysis of diallel cross -->
+
+```{r diallel-analysis, echo=FALSE, eval=FALSE, include=FALSE}
+## use plantbreeding package
+resd <- diallele1(data(fulldial, package = "plantbreeding"), yvar = "YIELD", 
+                  progeny = "TRT", male = "MALE", female = "FEMALE", 
+                  replication = "REP")
+
+resd$gca.effmat
+resd$sca.effmat
+
+## manually summarize the results of diallel mating scheme
+map_dbl(fulldial[,-7], ~length(unique(.x)))
+fulldial %>% 
+  group_by(MALE, FEMALE) %>% 
+  summarise_at("YIELD", funs(mean, .args = list(na.rm = TRUE))) %>% 
+  spread(key = FEMALE, value = YIELD)
 ```
 
 
