@@ -29,9 +29,7 @@ require(plantbreeding)
 
 ## Mating designs: a brief review
 
-Mating designs allow for partitioning of effects of phenotype, as either due to genotype, environment or dominance effects.
-
-Using one or more analysis scheme information such as identification of heterotic groups, estimation of general and specific combining abilities and testing of environmental interactions can be extracted from mating designs. Progenies resulting from a well designed mating are used for the study of genetic traits.
+Mating designs allow for partitioning of phenotypic effects -- as due to genotype, environment or interacting effects among genes and alleles. Using one or more of these mating schemes, identification of heterotic groups, estimation of general and specific combining abilities and testing of environmental interactions could be done. Progenies resulting from a well designed mating are used for the dissection of trait genetics.
 
 There are four types of popular diallel crosses:
 
