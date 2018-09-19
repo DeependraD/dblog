@@ -16,13 +16,11 @@ header:
   image: ''
 ---
 
-<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
 
 
 <div id="mating-designs-a-brief-review" class="section level2">
 <h2>Mating designs: a brief review</h2>
-<p>Mating designs allow for partitioning of effects of phenotype, as either due to genotype, environment or dominance effects.</p>
-<p>Using one or more analysis scheme information such as identification of heterotic groups, estimation of general and specific combining abilities and testing of environmental interactions can be extracted from mating designs. Progenies resulting from a well designed mating are used for the study of genetic traits.</p>
+<p>Mating designs allow for partitioning of phenotypic effects – as due to genotype, environment or interacting effects among genes and alleles. Using one or more of these mating schemes, identification of heterotic groups, estimation of general and specific combining abilities and testing of environmental interactions could be done. Progenies resulting from a well designed mating are used for the dissection of trait genetics.</p>
 <p>There are four types of popular diallel crosses:</p>
 <ol style="list-style-type: decimal">
 <li>Full diallels: All the possible combinations of crosses among parents, including reciprocals and self-fertilization of the parents are made. For a sample of <span class="math inline">\(n\)</span> parents, the full-diallel requires <span class="math inline">\(n \times n\)</span> progenies, a number that quickly becomes unmanageable as more parents are sampled (Table <a href="#tab:full-diallel">1</a>).</li>
@@ -838,6 +836,7 @@ P1
 P2
 </td>
 <td style="text-align:left;width: 7em; ">
+P2 x P1
 </td>
 <td style="text-align:left;width: 7em; ">
 </td>
@@ -896,7 +895,6 @@ P4 x P1
 P4 x P2
 </td>
 <td style="text-align:left;width: 7em; ">
-P4 x P3
 </td>
 <td style="text-align:left;width: 7em; ">
 </td>
@@ -921,9 +919,9 @@ P5
 P5 x P1
 </td>
 <td style="text-align:left;width: 7em; ">
+P5 x P2
 </td>
 <td style="text-align:left;width: 7em; ">
-P5 x P3
 </td>
 <td style="text-align:left;width: 7em; ">
 P5 x P4
@@ -949,9 +947,9 @@ P6
 P6 x P1
 </td>
 <td style="text-align:left;width: 7em; ">
+P6 x P2
 </td>
 <td style="text-align:left;width: 7em; ">
-P6 x P3
 </td>
 <td style="text-align:left;width: 7em; ">
 P6 x P4
@@ -975,11 +973,12 @@ P6 x P5
 P7
 </td>
 <td style="text-align:left;width: 7em; ">
-P7 x P1
 </td>
 <td style="text-align:left;width: 7em; ">
+P7 x P2
 </td>
 <td style="text-align:left;width: 7em; ">
+P7 x P3
 </td>
 <td style="text-align:left;width: 7em; ">
 P7 x P4
@@ -988,7 +987,6 @@ P7 x P4
 P7 x P5
 </td>
 <td style="text-align:left;width: 7em; ">
-P7 x P6
 </td>
 <td style="text-align:left;width: 7em; ">
 </td>
@@ -1007,7 +1005,6 @@ P8
 P8 x P1
 </td>
 <td style="text-align:left;width: 7em; ">
-P8 x P2
 </td>
 <td style="text-align:left;width: 7em; ">
 </td>
@@ -1015,10 +1012,8 @@ P8 x P2
 P8 x P4
 </td>
 <td style="text-align:left;width: 7em; ">
-P8 x P5
 </td>
 <td style="text-align:left;width: 7em; ">
-P8 x P6
 </td>
 <td style="text-align:left;width: 7em; ">
 P8 x P7
@@ -1035,12 +1030,11 @@ P8 x P7
 P9
 </td>
 <td style="text-align:left;width: 7em; ">
-P9 x P1
 </td>
 <td style="text-align:left;width: 7em; ">
-P9 x P2
 </td>
 <td style="text-align:left;width: 7em; ">
+P9 x P3
 </td>
 <td style="text-align:left;width: 7em; ">
 </td>
@@ -1048,8 +1042,10 @@ P9 x P2
 P9 x P5
 </td>
 <td style="text-align:left;width: 7em; ">
+P9 x P6
 </td>
 <td style="text-align:left;width: 7em; ">
+P9 x P7
 </td>
 <td style="text-align:left;width: 7em; ">
 P9 x P8
@@ -1067,22 +1063,23 @@ P10
 P10 x P1
 </td>
 <td style="text-align:left;width: 7em; ">
-P10 x P2
 </td>
 <td style="text-align:left;width: 7em; ">
 P10 x P3
 </td>
 <td style="text-align:left;width: 7em; ">
+P10 x P4
 </td>
 <td style="text-align:left;width: 7em; ">
-P10 x P5
 </td>
 <td style="text-align:left;width: 7em; ">
+P10 x P6
 </td>
 <td style="text-align:left;width: 7em; ">
 P10 x P7
 </td>
 <td style="text-align:left;width: 7em; ">
+P10 x P8
 </td>
 <td style="text-align:left;width: 7em; ">
 P10 x P9
@@ -1210,6 +1207,7 @@ P3
 P3 x P1
 </td>
 <td style="text-align:left;width: 7em; ">
+P3 x P2
 </td>
 <td style="text-align:left;width: 7em; ">
 </td>
@@ -1237,6 +1235,7 @@ P3 x P1
 P4
 </td>
 <td style="text-align:left;width: 7em; ">
+P4 x P1
 </td>
 <td style="text-align:left;width: 7em; ">
 P4 x P2
@@ -1269,6 +1268,7 @@ P4 x P9
 P5
 </td>
 <td style="text-align:left;width: 7em; ">
+P5 x P1
 </td>
 <td style="text-align:left;width: 7em; ">
 P5 x P2
@@ -1350,12 +1350,15 @@ P7 x P1
 <td style="text-align:left;width: 7em; ">
 </td>
 <td style="text-align:left;width: 7em; ">
+P7 x P8
 </td>
 <td style="text-align:left;width: 7em; ">
 </td>
 <td style="text-align:left;width: 7em; ">
+P7 x P10
 </td>
 <td style="text-align:left;">
+P7 x P11
 </td>
 <td style="text-align:left;">
 </td>
@@ -1379,11 +1382,12 @@ P8
 <td style="text-align:left;width: 7em; ">
 </td>
 <td style="text-align:left;width: 7em; ">
+P8 x P8
 </td>
 <td style="text-align:left;width: 7em; ">
-P8 x P9
 </td>
 <td style="text-align:left;width: 7em; ">
+P8 x P10
 </td>
 <td style="text-align:left;">
 </td>
@@ -1408,17 +1412,18 @@ P9 x P3
 <td style="text-align:left;width: 7em; ">
 </td>
 <td style="text-align:left;width: 7em; ">
+P9 x P7
 </td>
 <td style="text-align:left;width: 7em; ">
 </td>
 <td style="text-align:left;width: 7em; ">
-P9 x P9
 </td>
 <td style="text-align:left;width: 7em; ">
 </td>
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
+P9 x P12
 </td>
 </tr>
 <tr>
@@ -1439,17 +1444,20 @@ P10 x P2
 <td style="text-align:left;width: 7em; ">
 </td>
 <td style="text-align:left;width: 7em; ">
+P10 x P7
+</td>
+<td style="text-align:left;width: 7em; ">
+P10 x P8
 </td>
 <td style="text-align:left;width: 7em; ">
 </td>
 <td style="text-align:left;width: 7em; ">
-</td>
-<td style="text-align:left;width: 7em; ">
-P10 x P10
 </td>
 <td style="text-align:left;">
+P10 x P11
 </td>
 <td style="text-align:left;">
+P10 x P12
 </td>
 </tr>
 <tr>
@@ -1469,16 +1477,15 @@ P11
 <td style="text-align:left;width: 7em; ">
 </td>
 <td style="text-align:left;width: 7em; ">
-P11 x P7
 </td>
 <td style="text-align:left;width: 7em; ">
 </td>
 <td style="text-align:left;width: 7em; ">
+P11 x P9
 </td>
 <td style="text-align:left;width: 7em; ">
 </td>
 <td style="text-align:left;">
-P11 x P11
 </td>
 <td style="text-align:left;">
 </td>
@@ -1503,16 +1510,13 @@ P12
 P12 x P7
 </td>
 <td style="text-align:left;width: 7em; ">
-P12 x P8
 </td>
 <td style="text-align:left;width: 7em; ">
-P12 x P9
 </td>
 <td style="text-align:left;width: 7em; ">
 P12 x P10
 </td>
 <td style="text-align:left;">
-P12 x P11
 </td>
 <td style="text-align:left;">
 P12 x P12
