@@ -31,6 +31,31 @@ require(plantbreeding)
 
 Mating designs allow for partitioning of phenotypic effects -- as due to genotype, environment or interacting effects among genes and alleles. Using one or more of these mating schemes, identification of heterotic groups, estimation of general and specific combining abilities and testing of environmental interactions could be done. Progenies resulting from a well designed mating are used for the dissection of trait genetics.
 
+In order to understand genetics of traits and to make effective choice of parents, two contrasting methods of selection should be understood first. Bluntly, selection methods can be stated as either being forward or backward. Forward selection is synonymous to **within-family selection** whereas the concept of backward selection embodies **selection among families**. Ideally, forward selection works best for highly heritable traits -- for those traits regulated by few small genes, as opposed to those involving large number of genes with small cumulative effects. 
+
+Selection gets more complicated as data on several different individuals belonging to some families is available. [What we study versus what reality is; Insert soil layer image here]. Broadly, three distinct modes of selection could be practiced:
+
+1. Strict within family selection
+2. Selection on within family deviation
+3. Combined family and within family selection; family selection index
+
+When the interest is to exploit the state of heterosis arising from certain combination of parental individuals, the genetic factors contributing well to superior phenotype should be underpinned. The whole process of determining favorable combination among parental individuals should be met with phenotypic data from many progeny, which is retrospective in purpose -- thus the name backward selection. Family selection has different variants and serve variying purposes as well. 
+
+- Half-sib selection is used to select superier individuals for their GCA.
+- Full-sib selection is used to make distinct parental matings in order to induce hybrid vigor by capturing specific combinining abilities
+
+Phenotype ($y_i$) of an individual can be modeled as linear combination of additive ($A_i$), dominance (D_i) and environmental ($e_i$) effects, is:
+
+$$y_i = \mu + A_i + D_i + e_i$$
+
+SCA effects are derived from inter-allelic/intra-loci interactions. The mean genotypic value of offspring from a particular cross may deviate from value expected considering the population mean and the sum of the parental GCA effects. This deviation is the specific combining ability for that cross.
+
+We can define the mean genotypic value ($G_AB$) for the full-sib family produced by crossing parents A and B as the sum of the overall mean $\mu$, the GCAs of the two parents and the SCA value:
+
+$$G_AB = \mu + GCA_A + GCA_B + SCA_AB$$
+
+A classical method to estimate dominance genetic variance (D) is to estimate the variance associated with SCA effects of many crosses. The expected value of the observed SCA variance component is 1/4 of the dominance genetic variance in the reference population.
+
 There are four types of popular diallel crosses:
 
 1. Full diallels: All the possible combinations of crosses among parents, including reciprocals and self-fertilization of the parents are made. For a sample of $n$ parents, the full-diallel requires $n \times n$ progenies, a number that quickly becomes unmanageable as more parents are sampled (Table \@ref(tab:full-diallel)).
@@ -183,19 +208,5 @@ fulldial %>%
   spread(key = FEMALE, value = YIELD)
 ```
 
-
-## Specific combining ability (SCA) and Genetic Values
-
-Individual phenotype ($y_i$) is:
-
-$$y_i = \mu + A_i + D_i + e_i$$
-
-SCA effects are derived from inter-allelic/intra-loci interactions. The mean genotypic value of offspring from a particular cross may deviate from value expected considering the population mean and the sum of the parental GCA effects. This deviation is the specific combining ability for that cross.
-
-We can define the mean genotypic value ($G_AB$) for the full-sib family produced by crossing parents A and B as the sum of the overall mean $\mu$, the GCAs of the two parents and the SCA value:
-
-$$G_AB = \mu + GCA_A + GCA_B + SCA_AB$$
-
-A classical method to estimate dominance genetic variance (D) is to estimate the variance associated with SCA effects of many crosses. The expected value of the observed SCA variance component is 1/4 of the dominance genetic variance in the reference population.
 
 ## References
