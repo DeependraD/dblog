@@ -1,19 +1,18 @@
 ---
-title: Diallel cross analysis
-author: Deependra Dhakal
+title: "Diallel cross analysis"
+author: "Deependra Dhakal"
 date: '2018-09-15'
-slug: diallel-cross-analysis
-math: true
-bibliography: ["./bib/2018-09-15-diallel-cross-analysis.bib"]
-link-citations: true
-categories:
-  - Plant Breeding
-tags:
-  - agriculture
-  - research-review
+categories: Plant Breeding
 header:
   caption: ''
   image: ''
+link-citations: yes
+math: yes
+slug: diallel-cross-analysis
+tags:
+- agriculture
+- research-review
+bibliography: ./bib/2018-09-15-diallel-cross-analysis.bib
 ---
 
 
@@ -44,17 +43,36 @@ When the interest is to exploit the state of heterosis arising from certain comb
 - Half-sib selection is used to select superier individuals for their GCA.
 - Full-sib selection is used to make distinct parental matings in order to induce hybrid vigor by capturing specific combinining abilities
 
-Phenotype ($y_i$) of an individual can be modeled as linear combination of additive ($A_i$), dominance (D_i) and environmental ($e_i$) effects, is:
+The concept of combining abilities was first laid out by Sprague and Tatum in 1942 [@sprague1942general] in order to generate variance estimates without too much of underlying genetic assumptions. The combining ability test procedure involves making crossess of several different combinations from a set of parents and ascribing the resultant variances statistically to either the genetic additiveness of parental charactersistics or the interacting parental genetic combinations. Thus, the phenotype ($y_i$) of a cross progeny can be modeled as linear combination of additive ($A_i$), dominance ($D_i$) and environmental ($e_i$) effects, is:
 
 $$y_i = \mu + A_i + D_i + e_i$$
 
-SCA effects are derived from inter-allelic/intra-loci interactions. The mean genotypic value of offspring from a particular cross may deviate from value expected considering the population mean and the sum of the parental GCA effects. This deviation is the specific combining ability for that cross.
+Crossing each line with several other lines produces an additional measure in the mean performance of each line in all crosses. This mean performance of a line, when expressed as a deviation from the mean of all crosses, gives what is called the general combining ability (**GCA**) of the lines. The GCA is calculated as the average of all $F_1$s having this particular line as one parent, the value being expressed as a deviation from the overall mean of crosses. Each cross has an expected value (the sum of GCAs of its two parental lines).
 
-We can define the mean genotypic value ($G_AB$) for the full-sib family produced by crossing parents A and B as the sum of the overall mean $\mu$, the GCAs of the two parents and the SCA value:
+The mean genotypic value of offspring from a particular cross may deviate from value expected considering the population mean and the sum of the parental GCA effects. This deviation is the specific combining ability (**SCA**) for that cross.
 
-$$G_AB = \mu + GCA_A + GCA_B + SCA_AB$$
+The differences of GCA are due to the additive and additive x additive interactions in the base population. The differences in SCA are attributable to nonadditive genetic variance. SCA effects are derived from inter-allelic/intra-loci interactions. Furthermore, the SCA is expected to increase in variance more rapidly as inbreeding in the population reaches high levels. GCA is the average performance of a plant in a cross with different tester lines, while SCA measures the performance of a plant in a specific combination in comparison with other cross combinations.
 
-A classical method to estimate dominance genetic variance (D) is to estimate the variance associated with SCA effects of many crosses. The expected value of the observed SCA variance component is 1/4 of the dominance genetic variance in the reference population.
+We can define the mean genotypic value ($G_{AB}$) for the full-sib family produced by crossing parents A and B as the sum of the overall mean $\mu$, the GCAs of the two parents and the SCA value:
+
+$$G_{AB} = \mu + GCA_A + GCA_B + SCA_{AB}$$
+
+The types of interactions that can be obtained (SCA effects) depend upon the mating scheme used to produce the crosses, the most common being the diallel mating design, developed by B. Griffing (1956). Methods such as top cross and poly-cross are also not uncommon. A classical method to estimate dominance genetic variance (D) is to estimate the variance associated with SCA effects of many crosses. The expected value of the observed SCA variance component is 1/4 of the dominance genetic variance in the reference population.
+
+The GCA of each line is calculated as follows:
+
+$$
+G_x = \left[\frac{T_x}{n-2}\right]-\left[\frac{\sum T}{n(n-2)}\right]
+$$
+
+Where x represents a specific line. Using fabricated dataset given in Table \@ref(tab:fabricated-diallel) following procedures outlines how GCA for line B ($GCA_b$) can be calculated.
+
+$$
+G_b = \left[\frac{T_x}{n-2}\right]-\left[\frac{\sum T}{n(n-2)}\right] \\
+= \left[\frac{226}{8}\right]-\left[\frac{226}{8}\right] \\
+= 28.25-25.3 \\
+= 2.95
+$$
 
 There are four types of popular diallel crosses:
 
