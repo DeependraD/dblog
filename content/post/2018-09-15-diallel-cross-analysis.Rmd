@@ -1,8 +1,8 @@
 ---
-title: "Diallel cross analysis"
+title: "Diallel cross: A case study of mating designs"
 author: "Deependra Dhakal"
 date: '2018-09-15'
-categories: Plant Breeding
+# categories: "Plant Breeding"
 header:
   caption: ''
   image: ''
@@ -20,13 +20,16 @@ bibliography: ./bib/2018-09-15-diallel-cross-analysis.bib
 knitr::opts_chunk$set(tidy = TRUE, cache = TRUE, echo = FALSE, 
                       tidy.opts = list(width.cutoff=50), 
                       eval = TRUE, fig.align = "center", fig.asp = 0.6, 
-                      message = FALSE, warning = FALSE)
+                      message = FALSE, warning = FALSE, cache = TRUE)
 options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
 library(tidyverse)
 require(plantbreeding)
+set.seed(453)
 ```
 
-## Mating designs: a brief review
+# Mating designs
+
+## Introduction
 
 Mating designs allow for partitioning of phenotypic effects -- as due to genotype, environment or interacting effects among genes and alleles. Using one or more of these mating schemes, identification of heterotic groups, estimation of general and specific combining abilities and testing of environmental interactions could be done. Progenies resulting from a well designed mating are used for the dissection of trait genetics.
 
@@ -47,6 +50,8 @@ The concept of combining abilities was first laid out by Sprague and Tatum in 19
 
 $$y_i = \mu + A_i + D_i + e_i$$
 
+## Combining ability
+
 Crossing each line with several other lines produces an additional measure in the mean performance of each line in all crosses. This mean performance of a line, when expressed as a deviation from the mean of all crosses, gives what is called the general combining ability (**GCA**) of the lines. The GCA is calculated as the average of all $F_1$s having this particular line as one parent, the value being expressed as a deviation from the overall mean of crosses. Each cross has an expected value (the sum of GCAs of its two parental lines).
 
 The mean genotypic value of offspring from a particular cross may deviate from value expected considering the population mean and the sum of the parental GCA effects. This deviation is the specific combining ability (**SCA**) for that cross.
@@ -62,19 +67,73 @@ The types of interactions that can be obtained (SCA effects) depend upon the mat
 The GCA of each line is calculated as follows:
 
 $$
-G_x = \left[\frac{T_x}{n-2}\right]-\left[\frac{\sum T}{n(n-2)}\right]
+\mathrm{G_x} = \left[\frac{T_x}{n-2}\right]-\left[\frac{\sum T}{n(n-2)}\right]
 $$
 
-Where x represents a specific line. Using fabricated dataset given in Table \@ref(tab:fabricated-diallel) following procedures outlines how GCA for line B ($GCA_b$) can be calculated.
+Where $x$ represents a specific line. Using fabricated dataset given in Table \@ref(tab:fabricated-diallel) following procedures outlines how GCA for Parent 2 (P2) ($GCA_{P2}$) can be calculated.
 
-$$
-G_b = \left[\frac{T_x}{n-2}\right]-\left[\frac{\sum T}{n(n-2)}\right] \\
-= \left[\frac{226}{8}\right]-\left[\frac{226}{8}\right] \\
-= 28.25-25.3 \\
-= 2.95
-$$
+\begin{equation}
+\begin{split}
+\mathrm{G_b} & = \left[\frac{T_x}{n-2}\right]-\left[\frac{\sum T}{n(n-2)}\right] \\
+ & = \left[\frac{39.7}{8}\right]-\left[\frac{324.7}{10\times 8}\right] \\
+ & = 4.96-4.06 \\
+ & = 0.9
+\end{split}
+(\#eq:gca-calculation)
+\end{equation}
 
-There are four types of popular diallel crosses:
+```{r fabricated-diallel}
+# Fabricated half diallel mating data
+
+ten_ind <- gl(10, k = 1, ordered = T, labels = paste("P", 1:10, sep = ""))
+mating_mat <- cross_df(.l = list(M = ten_ind, F = ten_ind)) %>% 
+  unite(col = "cross", sep = " x ", remove = F) %>% 
+  spread(key = F, value = cross) %>% 
+  dplyr::rename(Parents = M)
+
+mating_mat[,-1][upper.tri(mating_mat[,-1], diag = TRUE)] = NA
+
+# generate a vector of population means of length = n, representing each parental line
+mu_list = rnorm(10, mean = 3.5, sd = 1.0)
+  
+# generate a vector of sds of length = n, representing each parental line
+sd_list = rnorm(10, mean = 1.2, sd = 0.3)
+
+# generate a dataframe of random numbers for each column
+mating_mat_num <- map2_dfc(.x = mu_list, 
+     .y = sd_list, 
+     .f = ~cbind(rnorm(10, .x, .y))) %>% 
+  magrittr::set_colnames(paste("P", 1:10, sep = ""))
+mating_mat_num <- replace(mating_mat_num, !map_df(mating_mat[,-1], ~!is.na(.x)), NA)
+
+mating_mat_num %>%
+  add_column(.before = 1, Parents = mating_mat$Parents) %>% 
+  knitr::kable(caption = "Fabricated data from a diallel cross scheme using 10 parents") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10) %>% 
+  kableExtra::column_spec(1, bold = TRUE) %>% 
+  kableExtra::column_spec(column = 1:11, width = "7em")
+```
+
+Taking the above table of diallel cross data, total of each individual parental line could be computed by summing over all the crossess involving the common parent. Similarly, the grand totals could be 
+obtained by adding together all the individual parents' total. The individual parents' sum and grand total is shown in the Table \@ref(tab:sum-over-ind) below.
+
+```{r sum-over-ind}
+as.matrix(mating_mat_num) %>% 
+  Matrix::forceSymmetric("L") %>% 
+  as.matrix() %>% 
+  colSums(na.rm = TRUE) %>% 
+  as_data_frame() %>% 
+  add_column(.before = 1, Parents = mating_mat$Parents) %>% 
+  dplyr::rename("Line total" = "value") %>% 
+  add_case(`Parents` = "Total", `Line total` = sum(.$`Line total`)) %>% 
+  knitr::kable(caption = "Totals of individual lines and grand total of diallel cross\n scheme using 10 parents") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 12) %>% 
+  kableExtra::column_spec(1, bold = TRUE)
+```
+
+## Types of diallel mating design
+
+There are four types of popular diallel crossing designs:
 
 1. Full diallels: All the possible combinations of crosses among parents, including reciprocals and self-fertilization of the parents are made. For a sample of $n$ parents, the full-diallel requires $n \times n$ progenies, a number that quickly becomes unmanageable as more parents are sampled (Table \@ref(tab:full-diallel)).
 
