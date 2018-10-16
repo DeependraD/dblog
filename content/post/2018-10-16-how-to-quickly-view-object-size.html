@@ -1,0 +1,60 @@
+---
+title: How to quickly view object size
+author: Deependra Dhakal
+date: '2018-10-16'
+slug: how-to-quickly-view-object-size
+categories:
+  - R
+tags:
+  - R
+header:
+  caption: 'Tricks of a lobstr :smile:; Source:istock'
+  image: 'lobstr/lobster.jpg'
+---
+
+
+
+<div id="background" class="section level1">
+<h1>Background</h1>
+<p>In object oriented programming, everything is an object – even functions. One of the defining features of <a href="https://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a>, and especially that of R, is that all objects are characterized by their classes. Each class on the other hand have their repective attributes and methods defined.</p>
+<p>Having talked in a brief on some features of object oriented paradigm, it is also imperative to know how the objects are stored in memories. Each block of memory has its unique memory address, which is referenced by the object being saved. Since all objects in R can structurally be represented by an object tree (See this very informative <a href="https://www.youtube.com/watch?v=g1h-YDWVRLc">video</a> by <a href="http://hadley.nz/">Hadley Wickham</a>), It can also be drawn that memory allocation of different objects in R is highly structured activity. We could get by most of the curiosities surrounding an object just by knowing its size in memory block. This tutorial is how to just do that.</p>
+<p>First off, there are some basic understandings to start with:</p>
+<ul>
+<li>Objects stored in environment could be referenced by their namespace (Using <code>ls</code>)</li>
+<li>Erasing namespace (using <code>rm</code>) from the environment does not fee up the memory allocated to the object.</li>
+<li>Basic tree structure of an object could be seen using <code>str()</code> function.</li>
+</ul>
+</div>
+<div id="memory-basics" class="section level1">
+<h1>Memory basics</h1>
+<div id="create-an-object-and-store-it" class="section level2">
+<h2>Create an object and store it</h2>
+<p>Create a list object <code>x</code> and store it in the memory.</p>
+<pre class="r"><code>x &lt;- runif(1e5)
+print(object.size(x), units = &quot;KiB&quot;, standard = &quot;IEC&quot;)</code></pre>
+<pre><code>## 781.3 KiB</code></pre>
+<p>The object size of the assigned object <code>x</code> could be known from the <code>object.size()</code> function in base R. Additional print wrapper allows to make printing the output more human readable, for example, I’ve passed units argument to show the Kilobytes measure of the object and the IEC standard ensures that one KiB is equivalent of 1024 bytes and not 1000 bytes.</p>
+<p>Hadley has repacked this above and similar set of exciting functions with added features and improvements in an effort to getting things tidier into <strong>lobstr</strong> package. (See <a href="https://www.tidyverse.org/">tidyverse</a> movement).</p>
+<pre class="r"><code># devtools::install_github(&quot;r-lib/lobstr&quot;)
+require(lobstr)
+obj_size(x)</code></pre>
+<pre><code>## 800,048 B</code></pre>
+<p>One quick mention of its functionality is that it allows combined printing of multiple object size/s. For example, take this:</p>
+<pre class="r"><code>obj_size(x, man = &quot;happy man&quot;)</code></pre>
+<pre><code>## 800,168 B</code></pre>
+<p>Plural counterpart of the function similar as above exists which prints objects sizes unique to each item, as the name <code>obj_sizes()</code> suggests.</p>
+<pre class="r"><code>obj_sizes(x, man = &quot;happy man&quot;)</code></pre>
+<pre><code>##    : 800,048 B
+## man:     120 B</code></pre>
+<p>To learn more about memory allocation process and some seemingly anomalous features of R, watch the video referenced above about lobstr package and <a href="https://www.youtube.com/watch?v=nERXS3ssntw">this</a> one about tidy evaluation – the heart of <code>rlang</code> package and an embedded language. For the time being, don’t bang your head thinking about what really is happening in the statements below.</p>
+<pre class="r"><code>y &lt;- list(x, x, x)
+purrr::map_dbl(y, obj_size) # size of components of y</code></pre>
+<pre><code>## [1] 800048 800048 800048</code></pre>
+<pre class="r"><code>obj_size(y) # size of complete object y</code></pre>
+<pre><code>## 800,128 B</code></pre>
+<pre class="r"><code># assigning some values to y
+y[[1]][[1]] &lt;- NA
+obj_size(y) # notice how the size of y doubles!</code></pre>
+<pre><code>## 1,600,176 B</code></pre>
+</div>
+</div>
