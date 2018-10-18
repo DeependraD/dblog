@@ -1,0 +1,1418 @@
+---
+title: Tidyverse and tidbits
+author: Deependra Dhakal
+date: '2018-10-18'
+slug: tidyverse-and-tidbits
+categories:
+  - R
+  - tidyverse
+tags:
+  - R
+  - tidyverse
+header:
+  caption: ''
+  image: ''
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="ideas-surrounding-tidy-evaluation" class="section level1">
+<h1>Ideas surrounding tidy evaluation</h1>
+<ol style="list-style-type: decimal">
+<li><p>R code is a tree</p>
+<p>Every expression in R can be broken down to a form represented by a tree. For instance, on top of the tree there is “a function call” followed by it’s branches: first child = function name itself, other children = function arguments. Complex calls have multiple levels of branching.</p></li>
+<li><p>The code tree could be captured by quoting</p>
+<p>expr() quotes <strong>your</strong>(function developer) expression</p>
+<p>f1 &lt;- function(z) expr(z) f1(a + b)</p>
+<p>enexpr() quotes <strong>user’s</strong> expression f2 &lt;- function(z) enexpr(z) f2(x + y)</p></li>
+<li><p>Quoting and unquoting of expression enables building up of complex code trees Unquoting is achieved by bang bang operator (!!)</p></li>
+</ol>
+<p>For example, let’s create a function that makes scatter plot fed a dataframe, x-variable and y-variable:</p>
+<pre class="r"><code>scatter_maker &lt;- function(df, xvar, yvar) {
+  xvar &lt;- enexpr(xvar)
+  yvar &lt;- enexpr(yvar)
+  
+  ggplot(df, aes(!!xvar, !!yvar)) +
+    geom_point()
+}</code></pre>
+<p>The function is executed in the demo below:</p>
+<pre class="r"><code>scatter_maker(mtcars, disp, mpg) + 
+  theme_bw()</code></pre>
+<div class="figure"><span id="fig:scatter-demo"></span>
+<img src="/post/2018-10-18-tidyverse-and-tidbits_files/figure-html/scatter-demo-1.png" alt="Scatterplot of displacement versus miles per gallon of mtcars dataset" width="672" />
+<p class="caption">
+Figure 1: Scatterplot of displacement versus miles per gallon of mtcars dataset
+</p>
+</div>
+<ol start="4" style="list-style-type: decimal">
+<li>Quosures capture both expression and environment</li>
+</ol>
+</div>
+<div id="quote-and-eval" class="section level1">
+<h1>quote() and eval()</h1>
+<ol style="list-style-type: decimal">
+<li>Quoting an expression is a bit like quoting a string</li>
+</ol>
+<pre class="r"><code>hm_quoted &lt;- quote(height / mass)
+hm_quoted</code></pre>
+<pre><code>## height/mass</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>But it’s R code that can be evaluated and with a data mask it works!</li>
+</ol>
+<pre class="r"><code># eval(hm_quoted) # doesn&#39;t work because lacks data mask
+head(eval(hm_quoted, starwars)) # works</code></pre>
+<pre><code>## [1] 2.233766 2.226667 3.000000 1.485294 3.061224 1.483333</code></pre>
+</div>
+<div id="why-quote-at-all" class="section level1">
+<h1>Why quote at-all</h1>
+<ol style="list-style-type: decimal">
+<li>Data masking</li>
+<li>Allows you to refer to data objects directly</li>
+</ol>
+<pre class="r"><code># because transmute() is a quoting function,
+transmute(starwars, height / mass)</code></pre>
+<pre><code>## Warning: The `printer` argument is soft-deprecated as of rlang 0.3.0.
+## This warning is displayed once per session.</code></pre>
+<pre><code>## # A tibble: 87 x 1
+##    `height/mass`
+##            &lt;dbl&gt;
+##  1          2.23
+##  2          2.23
+##  3          3   
+##  4          1.49
+##  5          3.06
+##  6          1.48
+##  7          2.2 
+##  8          3.03
+##  9          2.18
+## 10          2.36
+## # ... with 77 more rows</code></pre>
+<pre class="r"><code># # unlike below where data objects could not be directly refered to
+# height / mass
+# starwars$height / starwars$mass</code></pre>
+</div>
+<div id="resolved-messy-data-with-tidy-evaluation" class="section level1">
+<h1>Resolved messy data with tidy evaluation</h1>
+<p>A messy dataset exists despite all the sufferings. No wonder, it is resolvable, though.</p>
+<p>The identification is done through keywords like “gen1”, “gen2”, … The rowtype and the height columns occur in precedence to the identifier key. Our function will break apart the respective entries of rowtype and height into separate columns.</p>
+<pre class="r"><code>dat &lt;- tibble(mess = c(&quot;row:Three-row&quot;, &quot;ht:Short height&quot;, &quot;gen1&quot;, 
+                       &quot;row:Two-row&quot;, &quot;ht:Tall height&quot;, &quot;gen2&quot;,
+                       &quot;row:Three-row&quot;, &quot;ht:Short height&quot;, &quot;gen4&quot;,
+                       &quot;ht:Tall height&quot;, &quot;row:Three-row&quot;, &quot;gen3&quot;,  
+                       &quot;row:Three-row&quot;))</code></pre>
+<pre><code>## Warning: `list_len()` is soft-deprecated as of rlang 0.2.0.
+## Please use `new_list()` instead
+## This warning is displayed once per session.</code></pre>
+<pre class="r"><code>dat</code></pre>
+<pre><code>## # A tibble: 13 x 1
+##    mess           
+##    &lt;chr&gt;          
+##  1 row:Three-row  
+##  2 ht:Short height
+##  3 gen1           
+##  4 row:Two-row    
+##  5 ht:Tall height 
+##  6 gen2           
+##  7 row:Three-row  
+##  8 ht:Short height
+##  9 gen4           
+## 10 ht:Tall height 
+## 11 row:Three-row  
+## 12 gen3           
+## 13 row:Three-row</code></pre>
+<p>Let’s define new verb <code>untangle2()</code>.</p>
+<pre class="r"><code>untangle2 &lt;- function(df, regex, orig, new) {
+  orig &lt;- enexpr(orig)
+  new &lt;- sym(quo_name(enexpr(new)))
+  # orig &lt;- enquo(orig) # this too works!
+  # new &lt;- sym(quo_name(enquo(new))) # this too works!
+  
+  df %&gt;% 
+    mutate(
+      !!new := if_else(grepl(regex, !! orig), !! orig, NA_character_)
+    ) %&gt;% 
+    fill(!! new) %&gt;% 
+    filter(! grepl(regex, !! orig))
+}
+
+dat %&gt;% 
+  untangle2(&quot;^row&quot;, mess, rowtype) %&gt;% 
+  untangle2(&quot;^ht&quot;, mess, height)</code></pre>
+<pre><code>## # A tibble: 4 x 3
+##   mess  rowtype       height         
+##   &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt;          
+## 1 gen1  row:Three-row ht:Short height
+## 2 gen2  row:Two-row   ht:Tall height 
+## 3 gen4  row:Three-row ht:Short height
+## 4 gen3  row:Three-row ht:Tall height</code></pre>
+</div>
+<div id="using-pmap-to-perform-list-operations-inside-a-dataframe" class="section level1">
+<h1>Using pmap to perform list operations inside a dataframe</h1>
+<pre class="r"><code>params &lt;- expand.grid(param_a = c(2, 4, 6), 
+                      param_b = c(3, 6, 9), 
+                      param_c = c(50, 100), 
+                      param_d = c(1, 0))
+
+params %&gt;%
+  knitr::kable(caption = &quot;Fictious data set to be used as template&quot;, 
+               format = &quot;html&quot;) %&gt;% 
+  kableExtra::kable_styling(bootstrap_options = &quot;striped&quot;, font_size = 10)</code></pre>
+<table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:list-col-df-purrr">Table 1: </span>Fictious data set to be used as template
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+param_a
+</th>
+<th style="text-align:right;">
+param_b
+</th>
+<th style="text-align:right;">
+param_c
+</th>
+<th style="text-align:right;">
+param_d
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># using map function to obtain a list
+df.preprocessed &lt;- as.tbl(params) %&gt;% 
+  mutate(test_var = purrr::map(param_a, function(x){rep(5, x)}))
+
+# using pmap for more flexible operation and unnesting to get expanded list
+df.preprocessed1 &lt;- dplyr::as.tbl(params) %&gt;%
+  mutate(test_var = purrr::pmap(., 
+                                function(param_a, param_b, ...){
+                                  rep(5, param_a) * param_b
+                                })) %&gt;% 
+  tidyr::unnest()</code></pre>
+<pre><code>## Warning: Unquoting language objects with `!!!` is soft-deprecated as of rlang 0.3.0.
+## Please use `!!` instead.
+## 
+##   # Bad:
+##   dplyr::select(data, !!!enquo(x))
+## 
+##   # Good:
+##   dplyr::select(data, !!enquo(x))    # Unquote single quosure
+##   dplyr::select(data, !!!enquos(x))  # Splice list of quosures
+## 
+## This warning is displayed once per session.</code></pre>
+<pre class="r"><code># rowwise operation will also enable the same
+my_fun &lt;- function(param_a, param_b){
+  rep(5, param_a) * param_b
+}
+
+dplyr::as.tbl(params) %&gt;%
+  rowwise() %&gt;% 
+  dplyr::mutate(test_var = list(my_fun(param_a, param_b))) %&gt;% 
+  tidyr::unnest()</code></pre>
+<pre><code>## # A tibble: 144 x 5
+##    param_a param_b param_c param_d test_var
+##      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+##  1       2       3      50       1       15
+##  2       2       3      50       1       15
+##  3       4       3      50       1       15
+##  4       4       3      50       1       15
+##  5       4       3      50       1       15
+##  6       4       3      50       1       15
+##  7       6       3      50       1       15
+##  8       6       3      50       1       15
+##  9       6       3      50       1       15
+## 10       6       3      50       1       15
+## # ... with 134 more rows</code></pre>
+<pre class="r"><code># of all pmap solution could be the most flexible option
+dplyr::as.tbl(params) %&gt;%
+  dplyr::mutate(test_var = purrr::pmap(list(x = param_a
+                                            ,y = param_b
+                                            ,z = param_c
+                                            ,u = param_d),
+                                       ~ rep(5,..1)*..2)
+  )</code></pre>
+<pre><code>## # A tibble: 36 x 5
+##    param_a param_b param_c param_d test_var 
+##      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;list&gt;   
+##  1       2       3      50       1 &lt;dbl [2]&gt;
+##  2       4       3      50       1 &lt;dbl [4]&gt;
+##  3       6       3      50       1 &lt;dbl [6]&gt;
+##  4       2       6      50       1 &lt;dbl [2]&gt;
+##  5       4       6      50       1 &lt;dbl [4]&gt;
+##  6       6       6      50       1 &lt;dbl [6]&gt;
+##  7       2       9      50       1 &lt;dbl [2]&gt;
+##  8       4       9      50       1 &lt;dbl [4]&gt;
+##  9       6       9      50       1 &lt;dbl [6]&gt;
+## 10       2       3     100       1 &lt;dbl [2]&gt;
+## # ... with 26 more rows</code></pre>
+</div>
+<div id="apply-a-function-to-certain-columns-only-by-rows" class="section level1">
+<h1>Apply a function to certain columns only, by rows</h1>
+<pre class="r"><code>mtcars %&gt;% 
+  select(am, gear, carb) %&gt;% 
+  purrrlyr::by_row(sum, .collate = &quot;cols&quot;, .to = &quot;sum_am_gear_carb&quot;)</code></pre>
+<pre><code>## # tibble [32 x 4]
+##       am  gear  carb sum_am_gear_carb
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt;
+##  1     1     4     4                9
+##  2     1     4     4                9
+##  3     1     4     1                6
+##  4     0     3     1                4
+##  5     0     3     2                5
+##  6     0     3     1                4
+##  7     0     3     4                7
+##  8     0     4     2                6
+##  9     0     4     2                6
+## 10     0     4     4                8
+## # ... with 22 more rows</code></pre>
+</div>
+<div id="do-any-arbitrary-operation" class="section level1">
+<h1>Do any arbitrary operation</h1>
+<pre class="r"><code>mtcars %&gt;% 
+  group_by(cyl) %&gt;% 
+  do(models = lm(mpg ~ drat + wt, data = .)) %&gt;% 
+  broom::tidy(models)</code></pre>
+<pre><code>## Warning: `env_bind_fns()` is soft-deprecated as of rlang 0.3.0.
+## Please use `env_bind_active()` instead.
+## This warning is displayed once per session.</code></pre>
+<pre><code>## Warning: `new_overscope()` is soft-deprecated as of rlang 0.2.0.
+## Please use `new_data_mask()` instead
+## This warning is displayed once per session.</code></pre>
+<pre><code>## Warning: `overscope_eval_next()` is soft-deprecated as of rlang 0.2.0.
+## Please use `eval_tidy()` with a data mask instead
+## This warning is displayed once per session.</code></pre>
+<pre><code>## Warning: `overscope_clean()` is soft-deprecated as of rlang 0.2.0.
+## This warning is displayed once per session.</code></pre>
+<pre><code>## # A tibble: 9 x 6
+## # Groups:   cyl [3]
+##     cyl term        estimate std.error statistic p.value
+##   &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1     4 (Intercept)   33.2      17.1       1.94  0.0877 
+## 2     4 drat           1.32      3.45      0.384 0.711  
+## 3     4 wt            -5.24      2.22     -2.37  0.0456 
+## 4     6 (Intercept)   30.7       7.51      4.08  0.0151 
+## 5     6 drat          -0.444     1.17     -0.378 0.725  
+## 6     6 wt            -2.99      1.57     -1.91  0.129  
+## 7     8 (Intercept)   29.7       7.09      4.18  0.00153
+## 8     8 drat          -1.47      1.63     -0.903 0.386  
+## 9     8 wt            -2.45      0.799    -3.07  0.0107</code></pre>
+<p>The do call is combined with group_by to get any summary of current dataframe</p>
+<pre class="r"><code>iris %&gt;%
+  group_by(Species) %&gt;%
+  do({
+    mod &lt;- lm(Sepal.Length ~ Sepal.Width, data = .)
+    pred &lt;- predict(mod, newdata = .[&quot;Sepal.Width&quot;])
+    data.frame(., pred)
+  })</code></pre>
+<pre><code>## # A tibble: 150 x 6
+## # Groups:   Species [3]
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species  pred
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   &lt;dbl&gt;
+##  1          5.1         3.5          1.4         0.2 setosa   5.06
+##  2          4.9         3            1.4         0.2 setosa   4.71
+##  3          4.7         3.2          1.3         0.2 setosa   4.85
+##  4          4.6         3.1          1.5         0.2 setosa   4.78
+##  5          5           3.6          1.4         0.2 setosa   5.12
+##  6          5.4         3.9          1.7         0.4 setosa   5.33
+##  7          4.6         3.4          1.4         0.3 setosa   4.99
+##  8          5           3.4          1.5         0.2 setosa   4.99
+##  9          4.4         2.9          1.4         0.2 setosa   4.64
+## 10          4.9         3.1          1.5         0.1 setosa   4.78
+## # ... with 140 more rows</code></pre>
+<pre class="r"><code># # same thing could be done through explicit function call with do
+# iris %&gt;%
+#   group_by(Species) %&gt;%
+#   do((function(df) {
+#     mod &lt;- lm(Sepal.Length ~ Sepal.Width, data = df)
+#     pred &lt;- predict(mod,newdata = df[&quot;Sepal.Width&quot;])
+#     data.frame(df,pred)
+#   })(.))</code></pre>
+</div>
+<div id="using-dplyr-functions-inside-your-own-functions" class="section level1">
+<h1>Using dplyr functions inside your own functions</h1>
+<p>Create column selection/extraction function, for example.</p>
+<pre class="r"><code>extract_vars &lt;- function(data, some_string){
+  data %&gt;% 
+    select_(lazyeval::interp(~contains(some_string))) -&gt; data
+  
+  return(data)
+}
+
+extract_vars(mtcars, &quot;drat&quot;)</code></pre>
+<pre><code>##                     drat
+## Mazda RX4           3.90
+## Mazda RX4 Wag       3.90
+## Datsun 710          3.85
+## Hornet 4 Drive      3.08
+## Hornet Sportabout   3.15
+## Valiant             2.76
+## Duster 360          3.21
+## Merc 240D           3.69
+## Merc 230            3.92
+## Merc 280            3.92
+## Merc 280C           3.92
+## Merc 450SE          3.07
+## Merc 450SL          3.07
+## Merc 450SLC         3.07
+## Cadillac Fleetwood  2.93
+## Lincoln Continental 3.00
+## Chrysler Imperial   3.23
+## Fiat 128            4.08
+## Honda Civic         4.93
+## Toyota Corolla      4.22
+## Toyota Corona       3.70
+## Dodge Challenger    2.76
+## AMC Javelin         3.15
+## Camaro Z28          3.73
+## Pontiac Firebird    3.08
+## Fiat X1-9           4.08
+## Porsche 914-2       4.43
+## Lotus Europa        3.77
+## Ford Pantera L      4.22
+## Ferrari Dino        3.62
+## Maserati Bora       3.54
+## Volvo 142E          4.11</code></pre>
+</div>
+<div id="effiecient-ways-to-operate-on-list" class="section level1">
+<h1>Effiecient ways to operate on list</h1>
+<pre class="r"><code>x &lt;- list(
+  list(name = &quot;sue&quot;, number = 1, veg = c(&quot;onion&quot;, &quot;carrot&quot;)),
+  list(name = &quot;doug&quot;, number = 2, veg = c(&quot;potato&quot;, &quot;beet&quot;))
+)</code></pre>
+<p>Base <code>rbind()</code> returns a matrix of lists. However, a complete list object <code>x</code> is packed in a single row, with two list columns for each next level list.</p>
+<pre class="r"><code>rbind(x)</code></pre>
+<pre><code>##   [,1]   [,2]  
+## x List,3 List,3</code></pre>
+</div>
+<div id="binds-each-element-as-row-but-third-element-is-list" class="section level1">
+<h1>Binds each element as row but third element is list</h1>
+<p>Throwing a <code>do.call()</code> call leads to desired results.</p>
+<pre class="r"><code>do.call(rbind, x)</code></pre>
+<pre><code>##      name   number veg        
+## [1,] &quot;sue&quot;  1      Character,2
+## [2,] &quot;doug&quot; 2      Character,2</code></pre>
+<pre class="r"><code>do.call(rbind, x) %&gt;% class()</code></pre>
+<pre><code>## [1] &quot;matrix&quot;</code></pre>
+</div>
+<div id="produces-rowbinding-for-dataframe-but-doesnt-work-with-list-elements" class="section level1">
+<h1>Produces rowbinding for dataframe but doesn’t work with list elements</h1>
+<pre class="r"><code>map_dfr(x, ~ .x[c(&quot;name&quot;, &quot;number&quot;)])</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   name  number
+##   &lt;chr&gt;  &lt;dbl&gt;
+## 1 sue        1
+## 2 doug       2</code></pre>
+</div>
+<div id="tibble-and-map-data-to-list-column-in-isolation" class="section level1">
+<h1>Tibble and map data to list column in isolation</h1>
+<pre class="r"><code>tibble(
+  name = map_chr(x, &quot;name&quot;), 
+  number = map_dbl(x, &quot;number&quot;), 
+  veg = map(x, &quot;veg&quot;)
+)</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   name  number veg      
+##   &lt;chr&gt;  &lt;dbl&gt; &lt;list&gt;   
+## 1 sue        1 &lt;chr [2]&gt;
+## 2 doug       2 &lt;chr [2]&gt;</code></pre>
+</div>
+<div id="modeling-exploration-summary-extraction-and-visualization-examples-using-dplyr-verbs." class="section level1">
+<h1>Modeling, exploration, summary extraction and visualization examples using dplyr verbs.</h1>
+<pre class="r"><code>library(gapminder)
+gap &lt;- gapminder %&gt;%
+  filter(continent == &quot;Asia&quot;) %&gt;%
+  mutate(yr1952 = year - 1952)
+
+ggplot(gap, aes(x = lifeExp, y = country)) +
+  geom_point()</code></pre>
+<p><img src="/post/2018-10-18-tidyverse-and-tidbits_files/figure-html/modeling-and-visualization-1.png" width="672" /></p>
+<pre class="r"><code>gap &lt;- gap %&gt;%
+  mutate(country = fct_reorder2(country, .x = year, .y = lifeExp))
+
+ggplot(gap, aes(x = lifeExp, y = country)) +
+  geom_point()</code></pre>
+<p><img src="/post/2018-10-18-tidyverse-and-tidbits_files/figure-html/modeling-and-visualization-2.png" width="672" /></p>
+<pre class="r"><code>gap_nested &lt;- gap %&gt;%
+  group_by(country) %&gt;%
+  nest()
+
+gap_nested$data[[3]]</code></pre>
+<pre><code>## # A tibble: 12 x 6
+##    continent  year lifeExp       pop gdpPercap yr1952
+##    &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;     &lt;int&gt;     &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Asia       1952    37.5  46886859      684.      0
+##  2 Asia       1957    39.3  51365468      662.      5
+##  3 Asia       1962    41.2  56839289      686.     10
+##  4 Asia       1967    43.5  62821884      721.     15
+##  5 Asia       1972    45.3  70759295      630.     20
+##  6 Asia       1977    46.9  80428306      660.     25
+##  7 Asia       1982    50.0  93074406      677.     30
+##  8 Asia       1987    52.8 103764241      752.     35
+##  9 Asia       1992    56.0 113704579      838.     40
+## 10 Asia       1997    59.4 123315288      973.     45
+## 11 Asia       2002    62.0 135656790     1136.     50
+## 12 Asia       2007    64.1 150448339     1391.     55</code></pre>
+<pre class="r"><code>gap_fitted &lt;- gap_nested %&gt;%
+  mutate(fit = map(data, ~ lm(lifeExp ~ yr1952, data = .x)))
+gap_fitted</code></pre>
+<pre><code>## # A tibble: 33 x 3
+##    country          data              fit     
+##    &lt;fct&gt;            &lt;list&gt;            &lt;list&gt;  
+##  1 Afghanistan      &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
+##  2 Bahrain          &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
+##  3 Bangladesh       &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
+##  4 Cambodia         &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
+##  5 China            &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
+##  6 Hong Kong, China &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
+##  7 India            &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
+##  8 Indonesia        &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
+##  9 Iran             &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
+## 10 Iraq             &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
+## # ... with 23 more rows</code></pre>
+<pre class="r"><code>gap_fitted &lt;- gap_fitted %&gt;%
+  mutate(
+    intercept = map_dbl(fit, ~ coef(.x)[[&quot;(Intercept)&quot;]]),
+    slope = map_dbl(fit, ~ coef(.x)[[&quot;yr1952&quot;]]),
+    r_squared = map_dbl(fit, ~ summary(.x)[[&quot;r.squared&quot;]])
+  )
+
+gap_fitted %&gt;% 
+  top_n(n = 5, wt = r_squared) # whoa! Nepal is 4th</code></pre>
+<pre><code>## # A tibble: 5 x 6
+##   country   data              fit      intercept slope r_squared
+##   &lt;fct&gt;     &lt;list&gt;            &lt;list&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Indonesia &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;      36.9 0.635     0.997
+## 2 Iran      &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;      45.0 0.497     0.995
+## 3 Israel    &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;      66.3 0.267     0.995
+## 4 Nepal     &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;      34.4 0.529     0.992
+## 5 Pakistan  &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;      43.7 0.406     0.997</code></pre>
+<pre class="r"><code>ggplot(gap_fitted, aes(x = intercept, y = country)) +
+  geom_point()</code></pre>
+<p><img src="/post/2018-10-18-tidyverse-and-tidbits_files/figure-html/modeling-and-visualization-3.png" width="672" /></p>
+<pre class="r"><code>ggplot(gap_fitted, aes(x = slope, y = country)) +
+  geom_point()</code></pre>
+<p><img src="/post/2018-10-18-tidyverse-and-tidbits_files/figure-html/modeling-and-visualization-4.png" width="672" /></p>
+<p>To get summary statistics implementing certain custom functions on list items. The case example below shows application of some high level functions available in tidyverse.</p>
+<pre class="r"><code>set.seed(1)
+
+# construct a dataframe
+d &lt;- data_frame(n = c(5, 1, 3))
+e &lt;- d %&gt;% group_by(n) %&gt;% 
+  do(data_frame(y = rnorm(.$n), dat = list(data.frame(a = 1)))) 
+
+# this method is tranmutating type (drops original)
+e %&gt;% rowwise() %&gt;% do(data_frame(sum = .$y + .$n))</code></pre>
+<pre><code>## Source: local data frame [9 x 1]
+## Groups: &lt;by row&gt;
+## 
+## # A tibble: 9 x 1
+##     sum
+## * &lt;dbl&gt;
+## 1 0.374
+## 2 3.18 
+## 3 2.16 
+## 4 4.60 
+## 5 5.33 
+## 6 4.18 
+## 7 5.49 
+## 8 5.74 
+## 9 5.58</code></pre>
+<pre class="r"><code># this only adds the mutated summary (keeps original)
+mutate(e, sum = purrr::map2_dbl(y, n, `+`))</code></pre>
+<pre><code>## # A tibble: 9 x 4
+## # Groups:   n [3]
+##       n      y dat                    sum
+##   &lt;dbl&gt;  &lt;dbl&gt; &lt;list&gt;               &lt;dbl&gt;
+## 1     1 -0.626 &lt;data.frame [1 x 1]&gt; 0.374
+## 2     3  0.184 &lt;data.frame [1 x 1]&gt; 3.18 
+## 3     3 -0.836 &lt;data.frame [1 x 1]&gt; 2.16 
+## 4     3  1.60  &lt;data.frame [1 x 1]&gt; 4.60 
+## 5     5  0.330 &lt;data.frame [1 x 1]&gt; 5.33 
+## 6     5 -0.820 &lt;data.frame [1 x 1]&gt; 4.18 
+## 7     5  0.487 &lt;data.frame [1 x 1]&gt; 5.49 
+## 8     5  0.738 &lt;data.frame [1 x 1]&gt; 5.74 
+## 9     5  0.576 &lt;data.frame [1 x 1]&gt; 5.58</code></pre>
+<pre class="r"><code># # .f should be able to work with a list or a data frame. As it
+# happens, sum() handles data frame so the following works:
+mtcars %&gt;% purrrlyr::by_row(sum)</code></pre>
+<pre><code>## # tibble [32 x 12]
+##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out 
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lis&gt;
+##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl~
+##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl~
+##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl~
+##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl~
+##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl~
+##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl~
+##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl~
+##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl~
+##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl~
+## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl~
+## # ... with 22 more rows</code></pre>
+<pre class="r"><code># # Other functions such as mean() may need to be adjusted with one
+# # of the lift_xy() helpers:
+mtcars %&gt;% purrrlyr::by_row(purrr::lift_vl(mean))</code></pre>
+<pre><code>## # tibble [32 x 12]
+##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out 
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lis&gt;
+##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl~
+##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl~
+##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl~
+##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl~
+##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl~
+##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl~
+##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl~
+##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl~
+##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl~
+## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl~
+## # ... with 22 more rows</code></pre>
+<pre class="r"><code># To run a function with invoke_rows(), make sure it is variadic (that
+# it accepts dots) or that .f&#39;s signature is compatible with the
+# column names
+mtcars %&gt;% purrrlyr::invoke_rows(.f = sum)</code></pre>
+<pre><code>## # tibble [32 x 12]
+##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out 
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lis&gt;
+##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl~
+##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl~
+##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl~
+##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl~
+##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl~
+##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl~
+##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl~
+##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl~
+##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl~
+## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl~
+## # ... with 22 more rows</code></pre>
+<pre class="r"><code>mtcars %&gt;% purrrlyr::invoke_rows(.f = purrr::lift_vd(mean))</code></pre>
+<pre><code>## # tibble [32 x 12]
+##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out 
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lis&gt;
+##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl~
+##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl~
+##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl~
+##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl~
+##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl~
+##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl~
+##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl~
+##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl~
+##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl~
+## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl~
+## # ... with 22 more rows</code></pre>
+<pre class="r"><code># # invoke_rows() with cols collation is equivalent to plyr::mdply()
+p &lt;- expand.grid(mean = 1:5, sd = seq(0, 1, length = 10))
+p %&gt;% purrrlyr::invoke_rows(.f = rnorm, n = 5, .collate = &quot;cols&quot;)</code></pre>
+<pre><code>## # tibble [50 x 7]
+##     mean    sd .out1 .out2 .out3 .out4 .out5
+##    &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1 0     1      1     1    1     1    
+##  2     2 0     2      2     2    2     2    
+##  3     3 0     3      3     3    3     3    
+##  4     4 0     4      4     4    4     4    
+##  5     5 0     5      5     5    5     5    
+##  6     1 0.111 0.966  1.17  1.04 0.931 0.754
+##  7     2 0.111 2.12   2.00  2.00 2.10  2.09 
+##  8     3 0.111 3.07   3.10  3.09 3.01  2.78 
+##  9     4 0.111 4.07   3.99  3.98 3.84  3.95 
+## 10     5 0.111 5.05   5.15  4.99 5.04  4.99 
+## # ... with 40 more rows</code></pre>
+<pre class="r"><code># p %&gt;% plyr::mdply(rnorm, n = 5) %&gt;% dplyr::tbl_df()
+
+# # To integrate the result as part of the data frame, use rows or
+# # cols collation:
+mtcars[1:2] %&gt;% purrrlyr::by_row(function(x) 1:5)</code></pre>
+<pre><code>## # tibble [32 x 3]
+##      mpg   cyl .out     
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;   
+##  1  21       6 &lt;int [5]&gt;
+##  2  21       6 &lt;int [5]&gt;
+##  3  22.8     4 &lt;int [5]&gt;
+##  4  21.4     6 &lt;int [5]&gt;
+##  5  18.7     8 &lt;int [5]&gt;
+##  6  18.1     6 &lt;int [5]&gt;
+##  7  14.3     8 &lt;int [5]&gt;
+##  8  24.4     4 &lt;int [5]&gt;
+##  9  22.8     4 &lt;int [5]&gt;
+## 10  19.2     6 &lt;int [5]&gt;
+## # ... with 22 more rows</code></pre>
+<pre class="r"><code>mtcars[1:2] %&gt;% purrrlyr::by_row(function(x) 1:5, .collate = &quot;rows&quot;)</code></pre>
+<pre><code>## # tibble [160 x 4]
+##      mpg   cyl  .row  .out
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;
+##  1    21     6     1     1
+##  2    21     6     1     2
+##  3    21     6     1     3
+##  4    21     6     1     4
+##  5    21     6     1     5
+##  6    21     6     2     1
+##  7    21     6     2     2
+##  8    21     6     2     3
+##  9    21     6     2     4
+## 10    21     6     2     5
+## # ... with 150 more rows</code></pre>
+<pre class="r"><code>mtcars[1:2] %&gt;% purrrlyr::by_row(function(x) 1:5, .collate = &quot;cols&quot;)</code></pre>
+<pre><code>## # tibble [32 x 7]
+##      mpg   cyl .out1 .out2 .out3 .out4 .out5
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1  21       6     1     2     3     4     5
+##  2  21       6     1     2     3     4     5
+##  3  22.8     4     1     2     3     4     5
+##  4  21.4     6     1     2     3     4     5
+##  5  18.7     8     1     2     3     4     5
+##  6  18.1     6     1     2     3     4     5
+##  7  14.3     8     1     2     3     4     5
+##  8  24.4     4     1     2     3     4     5
+##  9  22.8     4     1     2     3     4     5
+## 10  19.2     6     1     2     3     4     5
+## # ... with 22 more rows</code></pre>
+<pre class="r"><code># # getting custom summary functions with purrr and dplyr verbs
+mtcars %&gt;% 
+  group_by(cyl) %&gt;% 
+  tidyr::nest() %&gt;% 
+  mutate(model = purrr::map(data, ~lm(qsec ~ hp, .)),
+         coef  = purrr::map_dbl(model, ~coef(.)[2])) %&gt;% 
+  tidyr::unnest(data)</code></pre>
+<pre><code>## # A tibble: 32 x 12
+##      cyl    coef   mpg  disp    hp  drat    wt  qsec    vs    am  gear
+##    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     6 -0.0442  21    160    110  3.9   2.62  16.5     0     1     4
+##  2     6 -0.0442  21    160    110  3.9   2.88  17.0     0     1     4
+##  3     6 -0.0442  21.4  258    110  3.08  3.22  19.4     1     0     3
+##  4     6 -0.0442  18.1  225    105  2.76  3.46  20.2     1     0     3
+##  5     6 -0.0442  19.2  168.   123  3.92  3.44  18.3     1     0     4
+##  6     6 -0.0442  17.8  168.   123  3.92  3.44  18.9     1     0     4
+##  7     6 -0.0442  19.7  145    175  3.62  2.77  15.5     0     1     5
+##  8     4 -0.0143  22.8  108     93  3.85  2.32  18.6     1     1     4
+##  9     4 -0.0143  24.4  147.    62  3.69  3.19  20       1     0     4
+## 10     4 -0.0143  22.8  141.    95  3.92  3.15  22.9     1     0     4
+## # ... with 22 more rows, and 1 more variable: carb &lt;dbl&gt;</code></pre>
+<pre class="r"><code># # run a regression after group_by operation
+# # and save results to dataframe
+group_by(mtcars, gear) %&gt;% do(res = residuals(lm(mpg~carb, .)))</code></pre>
+<pre><code>## Source: local data frame [3 x 2]
+## Groups: &lt;by row&gt;
+## 
+## # A tibble: 3 x 2
+##    gear res       
+## * &lt;dbl&gt; &lt;list&gt;    
+## 1     3 &lt;dbl [15]&gt;
+## 2     4 &lt;dbl [12]&gt;
+## 3     5 &lt;dbl [5]&gt;</code></pre>
+<pre class="r"><code># # yet better way to capture the results -- residuals.
+# # then it can be combined with original data. 
+mtcars %&gt;%
+  group_by(cyl) %&gt;%
+  do(model = lm(mpg ~ wt, data=.)) %&gt;%
+  do((function(reg_mod) {
+    data.frame(reg_res = residuals(reg_mod$model))
+  })(.))</code></pre>
+<pre><code>## Source: local data frame [32 x 1]
+## Groups: &lt;by row&gt;
+## 
+## # A tibble: 32 x 1
+##    reg_res
+##  *   &lt;dbl&gt;
+##  1 -3.67  
+##  2  2.84  
+##  3  1.02  
+##  4  5.25  
+##  5 -0.0513
+##  6  4.69  
+##  7 -4.15  
+##  8 -1.34  
+##  9 -1.49  
+## 10 -0.627 
+## # ... with 22 more rows</code></pre>
+<pre class="r"><code># # Custom data modeling
+# # using dplyr do() calls
+fertility &lt;- read_csv(&quot;./data/fertility.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   AGE = col_integer(),
+##   Year = col_integer(),
+##   fertility = col_double()
+## )</code></pre>
+<pre class="r"><code># # binding predictions to original dataframe
+fertility %&gt;%
+  group_by(Year) %&gt;%
+  do(data.frame(.,pred = predict(mgcv::gam(fertility ~ s(AGE), data=.))))</code></pre>
+<pre><code>## # A tibble: 60 x 4
+## # Groups:   Year [2]
+##      AGE  Year fertility     pred
+##    &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+##  1    15  1930      5.17   -0.828
+##  2    16  1930     14.2    16.2  
+##  3    17  1930     27.7    33.4  
+##  4    18  1930     44.6    51.1  
+##  5    19  1930     59.1    69.2  
+##  6    20  1930     89.7    87.3  
+##  7    21  1930    105.    104.   
+##  8    22  1930    120.    120.   
+##  9    23  1930    137.    132.   
+## 10    24  1930    149.    141.   
+## # ... with 50 more rows</code></pre>
+<pre class="r"><code># # same but different approach
+do.call(rbind,
+        lapply(split(fertility, fertility$Year), function(df) {
+          df$pred &lt;- predict(mgcv::gam(fertility ~ s(AGE), data=df))
+          df
+        }))</code></pre>
+<pre><code>## # A tibble: 60 x 4
+##      AGE  Year fertility     pred
+##  * &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+##  1    15  1930      5.17   -0.828
+##  2    16  1930     14.2    16.2  
+##  3    17  1930     27.7    33.4  
+##  4    18  1930     44.6    51.1  
+##  5    19  1930     59.1    69.2  
+##  6    20  1930     89.7    87.3  
+##  7    21  1930    105.    104.   
+##  8    22  1930    120.    120.   
+##  9    23  1930    137.    132.   
+## 10    24  1930    149.    141.   
+## # ... with 50 more rows</code></pre>
+<pre class="r"><code># # same using data.table library
+fertility %&gt;%
+  data.table::data.table() %&gt;%
+  group_by(Year) %&gt;%
+  mutate(pred = predict(mgcv::gam(fertility ~ s(AGE))))</code></pre>
+<pre><code>## # A tibble: 60 x 4
+## # Groups:   Year [2]
+##      AGE  Year fertility     pred
+##    &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+##  1    15  1930      5.17   -0.828
+##  2    16  1930     14.2    16.2  
+##  3    17  1930     27.7    33.4  
+##  4    18  1930     44.6    51.1  
+##  5    19  1930     59.1    69.2  
+##  6    20  1930     89.7    87.3  
+##  7    21  1930    105.    104.   
+##  8    22  1930    120.    120.   
+##  9    23  1930    137.    132.   
+## 10    24  1930    149.    141.   
+## # ... with 50 more rows</code></pre>
+<pre class="r"><code># # this fails at last line
+# fertility %&gt;%
+#   group_by(Year) %&gt;%
+#   dplyr::do(model = mgcv::gam(fertility ~ s(AGE), data = .)) %&gt;%
+#   left_join(fertility, .) %&gt;%
+#   mutate(smoothed = predict(model, newdata = AGE))
+
+# # multiple model fitting and parameter extraction
+fitmodel &lt;- function(d) lm(mpg ~ disp, data = mtcars)
+by_cyl &lt;- mtcars %&gt;% 
+  group_by(cyl) %&gt;% 
+  tidyr::nest() %&gt;%
+  mutate(mod = purrr::map(data, fitmodel), 
+         pars = purrr::map(mod, broom::tidy), 
+         pred = purrr::map(mod, broom::augment))
+
+pars &lt;- by_cyl %&gt;% tidyr::unnest(pars)
+pars</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##     cyl term        estimate std.error statistic  p.value
+##   &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1     6 (Intercept)  29.6      1.23        24.1  3.58e-21
+## 2     6 disp         -0.0412   0.00471     -8.75 9.38e-10
+## 3     4 (Intercept)  29.6      1.23        24.1  3.58e-21
+## 4     4 disp         -0.0412   0.00471     -8.75 9.38e-10
+## 5     8 (Intercept)  29.6      1.23        24.1  3.58e-21
+## 6     8 disp         -0.0412   0.00471     -8.75 9.38e-10</code></pre>
+<pre class="r"><code>prediction &lt;- by_cyl %&gt;% tidyr::unnest(pred)
+prediction</code></pre>
+<pre><code>## # A tibble: 96 x 11
+##      cyl .rownames   mpg  disp .fitted .se.fit .resid   .hat .sigma .cooksd
+##    &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1     6 Mazda RX4  21    160     23.0   0.664 -2.01  0.0418   3.29 8.65e-3
+##  2     6 Mazda RX~  21    160     23.0   0.664 -2.01  0.0418   3.29 8.65e-3
+##  3     6 Datsun 7~  22.8  108     25.1   0.815 -2.35  0.0629   3.28 1.87e-2
+##  4     6 Hornet 4~  21.4  258     19.0   0.589  2.43  0.0328   3.27 9.83e-3
+##  5     6 Hornet S~  18.7  360     14.8   0.838  3.94  0.0663   3.22 5.58e-2
+##  6     6 Valiant    18.1  225     20.3   0.575 -2.23  0.0313   3.28 7.82e-3
+##  7     6 Duster 3~  14.3  360     14.8   0.838 -0.462 0.0663   3.31 7.70e-4
+##  8     6 Merc 240D  24.4  147.    23.6   0.698  0.846 0.0461   3.30 1.72e-3
+##  9     6 Merc 230   22.8  141.    23.8   0.714 -0.997 0.0482   3.30 2.50e-3
+## 10     6 Merc 280   19.2  168.    22.7   0.647 -3.49  0.0396   3.24 2.48e-2
+## # ... with 86 more rows, and 1 more variable: .std.resid &lt;dbl&gt;</code></pre>
+</div>
+<div id="workarounds-on-unequal-length-lists" class="section level1">
+<h1>Workarounds on unequal length lists</h1>
+<pre class="r"><code>hareramshyam &lt;- list(harry = c(1, 2, 3, 4, 5), ram = c(2, 3, 4, 6, 8), shyam = c(3, 4, 5, 3, 2, 4, 5, 6, 3))
+
+require(tidyverse)
+
+## binding rows for two list items of equal lengths is possible
+bind_rows(hareramshyam[1:2])</code></pre>
+<pre><code>## # A tibble: 5 x 2
+##   harry   ram
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     2
+## 2     2     3
+## 3     3     4
+## 4     4     6
+## 5     5     8</code></pre>
+<pre class="r"><code># bind_rows(hareramshyam) ## this fails
+
+## so to complete the list by filling with nas to match the 
+## length of each element in list, use
+
+hareramshyam %&gt;% lapply(length) %&gt;% unlist %&gt;% max -&gt; mymax
+hareramshyam %&gt;% lapply(function(x) c(x, rep(NA_integer_, mymax-length(x)))) %&gt;% bind_rows()</code></pre>
+<pre><code>## # A tibble: 9 x 3
+##   harry   ram shyam
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     2     3
+## 2     2     3     4
+## 3     3     4     5
+## 4     4     6     3
+## 5     5     8     2
+## 6    NA    NA     4
+## 7    NA    NA     5
+## 8    NA    NA     6
+## 9    NA    NA     3</code></pre>
+<pre class="r"><code>## the code above works, but is a two liner
+## that could be shortened by
+
+lapply(hareramshyam, `length&lt;-`, 
+       max(lengths(hareramshyam))) %&gt;% 
+  bind_rows()</code></pre>
+<pre><code>## # A tibble: 9 x 3
+##   harry   ram shyam
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     2     3
+## 2     2     3     4
+## 3     3     4     5
+## 4     4     6     3
+## 5     5     8     2
+## 6    NA    NA     4
+## 7    NA    NA     5
+## 8    NA    NA     6
+## 9    NA    NA     3</code></pre>
+<pre class="r"><code>## to fill, for example above, dataframe of NAs with other
+## elements of the dataframe
+
+lapply(hareramshyam, `length&lt;-`, 
+       max(lengths(hareramshyam))) %&gt;% 
+  bind_rows() %&gt;% 
+  mutate(harry = dplyr::coalesce(harry, shyam), 
+         ram = dplyr::coalesce(ram, shyam))</code></pre>
+<pre><code>## # A tibble: 9 x 3
+##   harry   ram shyam
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     2     3
+## 2     2     3     4
+## 3     3     4     5
+## 4     4     6     3
+## 5     5     8     2
+## 6     4     4     4
+## 7     5     5     5
+## 8     6     6     6
+## 9     3     3     3</code></pre>
+</div>
