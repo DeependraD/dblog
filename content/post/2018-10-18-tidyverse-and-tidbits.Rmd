@@ -24,25 +24,27 @@ library("tidyverse")
 
 1. R code is a tree
 
-    Every expression in R can be broken down to a form represented by a tree.
-    For instance, on top of the tree there is "a function call" followed by it's branches: first child = function name itself, other children = function arguments.
-    Complex calls have multiple levels of branching.
+    Every expression in R can be broken down to a form represented by a tree. For instance, on top of the tree there is "a function call" followed by it's branches: first child = function name itself, other children = function arguments. Complex calls have multiple levels of branching.
 
 2. The code tree could be captured by quoting
 
     expr() quotes **your**(function developer) expression
     
     f1 <- function(z) expr(z)
+    
     f1(a + b)
     
     enexpr() quotes **user's** expression
+    
     f2 <- function(z) enexpr(z)
+    
     f2(x + y)
 
 3. Quoting and unquoting of expression enables building up of complex code trees
+    
     Unquoting is achieved by bang bang operator (!!)
 
-For example, let's create a function that makes scatter plot fed a dataframe, x-variable and y-variable:
+For example, let's create a function that makes scatter plot when fed a dataframe, x-variable and y-variable:
     
 ```{r scatter-maker}
 scatter_maker <- function(df, xvar, yvar) {
@@ -130,6 +132,34 @@ dat %>%
   untangle2("^row", mess, rowtype) %>% 
   untangle2("^ht", mess, height)
 ```
+
+
+# List behavior
+
+When supplied a list to a dataframe as argument, list elements will be attempted to be supplied as individual column vectors. As long as the length of list element is same as the number of rows in dataframe, columns will be appended without an error.
+
+However, if the complete list object is to be added in as a column vector, it's identity needs to be preserved. Function `I()` preserves the identity by wrapping the object around "AsIs" class. For example, let's create a dataframe with a list object containing it's elements.
+
+```{r list-equal-length}
+# all list elements of equal length as `nrow`.
+df1 <- data.frame(x = 1:3, y = list(3:5, 4:6, 5:7))
+df
+
+# this results in error due to an attempt to bind list elements of unequal length as columns
+# df <- data.frame(x = 1:3, y = list(3:9, 1:3, 1:3))
+```
+
+When dealing with unequal length lists, try wrapping the list around in `I()` function, as shown below.
+
+```{r list-unequal-length}
+df <- data.frame(x = 1:3, y = I(list(3:9, 1:3, 1:3)))
+df
+
+# Distinction can be made based on the classes
+purrr::compose(class)(list(3:9, 1:3, 1:3))
+purrr::compose(class, I)(list(3:9, 1:3, 1:3)) # compose applies multiple functions right to left
+```
+
 
 # Using pmap to perform list operations inside a dataframe
 
@@ -432,8 +462,6 @@ prediction
 ```{r dealing-unequal-length}
 hareramshyam <- list(harry = c(1, 2, 3, 4, 5), ram = c(2, 3, 4, 6, 8), shyam = c(3, 4, 5, 3, 2, 4, 5, 6, 3))
 
-require(tidyverse)
-
 ## binding rows for two list items of equal lengths is possible
 bind_rows(hareramshyam[1:2])
 
@@ -441,25 +469,29 @@ bind_rows(hareramshyam[1:2])
 
 ## so to complete the list by filling with nas to match the 
 ## length of each element in list, use
+mymax <- hareramshyam %>% 
+  lapply(length) %>% 
+  unlist %>% 
+  max
 
-hareramshyam %>% lapply(length) %>% unlist %>% max -> mymax
-hareramshyam %>% lapply(function(x) c(x, rep(NA_integer_, mymax-length(x)))) %>% bind_rows()
+hareramshyam %>% 
+  lapply(function(x) c(x, rep(NA_integer_, mymax-length(x)))) %>% 
+  bind_rows()
 
-## the code above works, but is a two liner
-## that could be shortened by
-
+## here is a two liner that could be cause the same
 lapply(hareramshyam, `length<-`, 
        max(lengths(hareramshyam))) %>% 
   bind_rows()
 
+# or use plyr's binder to avoid recycling
+plyr::rbind.fill(map(hareramshyam, ~ as.data.frame(t(.x),stringsAsFactors=FALSE)))
+
 ## to fill, for example above, dataframe of NAs with other
 ## elements of the dataframe
-
 lapply(hareramshyam, `length<-`, 
        max(lengths(hareramshyam))) %>% 
   bind_rows() %>% 
   mutate(harry = dplyr::coalesce(harry, shyam), 
          ram = dplyr::coalesce(ram, shyam))
-
 ```
 

@@ -1,0 +1,232 @@
+---
+title: Grade X result
+author: Deependra Dhakal
+date: '2018-10-19'
+link-citations: yes
+math: yes
+slug: grade-x-result
+categories:
+  - tidyverse
+  - R
+tags:
+  - tidyverse
+  - R
+header:
+  caption: ''
+  image: ''
+---
+
+<style type="text/css">
+
+h1.title {
+  font-size: 50px;
+  color: DarkRed;
+  text-align: center;
+}
+h4.author { /* Header 4 - and the author and data headers use this too  */
+    font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkRed;
+  text-align: center;
+}
+h4.date { /* Header 4 - and the author and data headers use this too  */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkBlue;
+  text-align: center;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, 
+                      message = FALSE, cache = FALSE, 
+                      fig.align = "center")
+require(tidyverse)
+options(knitr.kable.NA = "", digits = 3)
+```
+
+---
+
+<center>
+
+## Total Marks and Final Grades {-}
+
+```{r import}
+result_9 <- read_csv("./data/score_sheet.csv")
+
+org_colname <- result_9 %>% 
+  colnames() %>% 
+  stringr::str_subset("X.*")
+
+paste_with1 <- result_9[2,] %>% 
+  t() %>% 
+  map_chr(c(1)) %>% 
+  unique() %>% 
+  magrittr::extract(-1)
+
+paste_with2 <- result_9[1, ] %>% 
+  map_chr(1) %>% 
+  set_names(nm = NULL) %>% 
+  unique() %>% 
+  magrittr::extract(-1)
+
+final_name44 <- expand.grid(paste_with1, paste_with2) %>% 
+  select(rev(everything())) %>% 
+  unite(col = paste12) %>% 
+  pull(paste12)
+
+# contains scores in upto X34
+result_9 <- result_9 %>% 
+  rename_at(vars(`Subject`:`X34`), function(x)x <- final_name44)
+
+# scoresheet columns
+# English_Theory:`O. Maths_Aggregate Grades`
+
+# split the character coded marks of each student to a list
+result_9 <- result_9 %>% 
+  slice(-c(1, 2)) %>% 
+  mutate_at(vars(contains("Theory"), contains("Practical")), .funs = function(x)str_split(x, pattern = "\\+", simplify = FALSE))
+
+# change the list to numeric type for algebraic operation
+result_9 <- result_9 %>% 
+  mutate_at(vars(contains("Theory"), contains("Practical")), 
+            function(x)map(x, ~ as.numeric(unlist(.x))))
+
+# give a custom function to aggregate each marks of students
+sumthree <- function(x){x[1]*.1 + x[2]*.3+x[3]*.6}
+result_9 <- result_9 %>% 
+  mutate_at(vars(contains("Theory"), contains("Practical")), 
+            function(x)map_dbl(x, sumthree))
+
+# mutate manually
+result_9 <- result_9 %>% 
+  mutate(`English_Total Marks` = English_Theory+English_Practical, 
+         `Nepali_Total Marks` = Nepali_Theory+Nepali_Practical,
+         `C. Maths_Total Marks` = `C. Maths_Theory`, # no practical
+         `Science_Total Marks` = Science_Theory+Science_Practical,
+         `Extension_Total Marks` = Extension_Theory+Extension_Practical,
+         `Soil_Total Marks` = Soil_Theory+Soil_Practical,
+         `Plant protection_Total Marks` = `Plant protection_Theory`+`Plant protection_Practical`,
+         `Fruit_Total Marks` = Fruit_Theory+Fruit_Practical,
+         `Agronomy_Total Marks` = Agronomy_Theory+Agronomy_Practical,
+         `Computer_Total Marks` = Computer_Theory+Computer_Practical,
+         `O. Maths_Total Marks` = `O. Maths_Theory` # no practical
+  )
+
+# colnames(result_9)[-c(1, 2, 47)] %>%
+#   stringr::str_replace_all(c("_Total Marks|_Practical|_Theory|_Aggregate Grades"), "") %>% unique()
+
+result_9 <- result_9 %>% 
+  mutate_at(vars(contains("Total")), 
+            funs(Agg_grade = case_when(
+    . >= 90 & . < 100 ~ "A+",
+    . >= 80 & . < 90 ~ "A",
+    . >= 70 & . < 80 ~ "B+",
+    . >= 60 & . < 70 ~ "B",
+    . >= 50 & . < 60 ~ "C+",
+    . >= 40 & . < 50 ~ "C",
+    . >= 20 & . < 40 ~ "D",
+    . >= 1 & . < 20 ~ "E",
+    . >= 0 & . < 1 ~ "N",
+    TRUE ~ as.character(`.`)
+  )))
+
+color_composer <- function(x){
+  kableExtra::cell_spec(x, 
+                        "html", 
+                        color = case_when(is.na(x) ~ "white",
+                                          x >= 40 ~ "blue",
+                                          x < 40 ~ "red"
+                        ))
+}
+
+bg_composer <- function(x)kableExtra::cell_spec(x, 
+                                                "html", 
+                                                color = case_when(
+                                                  is.na(x) ~ "white",
+                                                  TRUE ~ as.character(x)
+                                                  ),
+                                                background = case_when(
+                                                  is.na(x) ~ "", # white
+                                                  x %in% c("D", "E", "N") ~ "burlywood",
+                                                  !x %in% c("D", "E", "N") & !is.na(x) ~ "aliceblue"
+                                                ))
+
+```
+
+
+```{r printable-kable, results="asis"}
+
+result_9 %>% 
+  select_at(vars(1, contains("Total"), contains("Agg"))) %>% 
+  rename_all(.funs = function(x)stringr::str_replace_all(x, "_", " ")) %>% 
+  mutate_at(vars(ends_with("Total Marks")), color_composer) %>% 
+  mutate_at(vars(contains("Agg")), bg_composer) %>% 
+  knitr::kable(format = "html", 
+               booktabs = TRUE, 
+               align = "c", escape = FALSE,
+               longtable = TRUE) %>% 
+  kableExtra::kable_styling(position = "center", font_size = 14, 
+                            bootstrap_options = c("striped", "hover")) %>% 
+  kableExtra::row_spec(0, bold = TRUE) %>% 
+  kableExtra::column_spec(1, width = "1.1cm", bold = TRUE) %>% 
+  # kableExtra::column_spec(2:13, width = "1.3cm") %>% 
+  kableExtra::landscape()
+
+# # latex format
+# result_9 %>% 
+#   select_at(vars(1, 2, contains("Aggregate"))) %>% 
+#   rename_all(.funs = function(x)stringr::str_replace_all(x, "_", " ")) %>% 
+#   knitr::kable(format = "latex", 
+#                booktabs = TRUE, 
+#                align = "c", 
+#                longtable = TRUE) %>% 
+#   kableExtra::kable_styling(position = "center", font_size = 10, latex_options = c("striped", "Hold_position")) %>% 
+#   kableExtra::row_spec(0, bold = TRUE) %>% 
+#   kableExtra::column_spec(1, width = "1.1cm") %>% 
+#   kableExtra::column_spec(2, width = "3.0cm") %>% 
+#   kableExtra::column_spec(3:13, width = "1.3cm") %>% 
+#   kableExtra::landscape()
+```
+
+**NA** indicates the absence of student
+
+---
+
+Formula used for calculating Aggregate GPA:
+
+\begin{aligned}
+Aggregate\ GPA = \frac{1^{st}\times 10 + 2^{nd}\times 30 + 3^{rd}\times 60}{100}
+\end{aligned}
+
+---
+
+## Subjectwise marks distribution of all students {-}
+
+```{r visualization-pass, fig.asp=0.8, fig.width=6, warning=FALSE, message=FALSE, fig.cap="Subjectwise percentage distribution of grade 9 Final examination"}
+# # tidy gather, extract and spread
+subject_wise <- result_9 %>%
+  gather(key = Subject, value = Score,
+         -`Roll Number`) %>%
+  extract(col = Subject, into = c("Subject", "Th_Pr"), "^(.*)_(Theory|Practical)") %>%
+  mutate(Score = as.numeric(Score)) %>%
+  group_by(`Roll Number`, Subject, Th_Pr) %>%
+  summarise_at(vars(Score), function(x)mean(x, na.rm = TRUE)) %>%
+  spread(key = Subject, value = Score)
+
+subject_wise %>% 
+  filter(!is.na(Th_Pr)) %>% 
+  select(-`<NA>`) %>% 
+  gather(key = "Subject", value = "Scores", -Th_Pr, -`Roll Number`) %>% 
+  group_by(Th_Pr, Subject) %>% 
+  summarise_at(vars(Scores), function(x)mean(x, na.rm = TRUE)) %>% 
+  ggplot(aes(as.factor(Subject), Scores)) +
+  geom_col(position = "stack", aes(fill = Th_Pr)) +
+  coord_flip() +
+  ylab("Percentage Score") +
+  xlab("Subject") +
+  labs(fill = "Course type\n")
+```
+
+</center>
+
