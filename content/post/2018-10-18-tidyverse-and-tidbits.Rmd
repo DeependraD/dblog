@@ -9,6 +9,9 @@ categories:
 tags:
   - R
   - tidyverse
+output:
+  blogdown::html_page:
+    toc: true  
 header:
   caption: ''
   image: ''
