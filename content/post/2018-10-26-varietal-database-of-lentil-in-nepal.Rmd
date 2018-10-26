@@ -1,18 +1,17 @@
 ---
-title: Varietal database of lentil in Nepal
-  of Nepal
-author: Deependra Dhakal
+title: "Varietal database of lentil in Nepal of Nepal"
+author: "Deependra Dhakal"
 date: '2018-10-26'
-slug: varietal-database-of-lentil-in-nepal
-categories:
-  - agriculture
-  - Plant Breeding
-tags:
-  - agriculture
-  - research-review
 header:
   caption: ''
   image: ''
+slug: varietal-database-of-lentil-in-nepal
+tags:
+- agriculture
+- research-review
+categories:
+- agriculture
+- Plant Breeding
 ---
 
 ```{r setup, include=FALSE}
