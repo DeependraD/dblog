@@ -40,4 +40,4 @@ lentil_vars %>%
   kableExtra::column_spec(1, bold = TRUE)
 ```
 
-It it very unfortunate that we have very contrasting information published (without explaination) in different versions of national databases. For instance, in Table \@ref(tab:varieties-list), `Production1(ton_per_ha)` column was borrowed from "Krishi Diary, 2075" and the other column for the same yield trait (`Production2(ton_per_ha)`) from elsewhere. I defer the exact reference and citation for a later date.
+It it very unfortunate that we have very contrasting information published (without explaination) in different versions of national databases. For instance, in Table \@ref(tab:varieties-list), `Production1 (ton_per_ha)` column was borrowed from "Krishi Diary, 2075" and the other column for the same yield trait (`Production2 (ton_per_ha)`) from elsewhere. I defer the exact reference and citation for a later date.
