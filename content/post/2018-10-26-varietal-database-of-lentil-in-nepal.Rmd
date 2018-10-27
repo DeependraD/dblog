@@ -35,9 +35,11 @@ As for this post, the database will to be updated as the information comes along
 lentil_vars <- read_csv("https://raw.githubusercontent.com/DeependraD/publicdata/master/lentil_varieties.csv")
 
 lentil_vars %>%
-  knitr::kable(caption = "Released and registered varieties of lentil in Nepal") %>% 
-  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10) %>%
-  kableExtra::column_spec(1, bold = TRUE)
+  knitr::kable(caption = "Released and registered varieties of lentil in Nepal", format = "html") %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12) %>%
+  kableExtra::column_spec(1, bold = TRUE) %>% 
+  kableExtra::scroll_box(width = "800px", height = "100%", 
+                         box_css = "border: 2px solid #22d0dd; padding: 10px; ")
 ```
 
 It it very unfortunate that we have very contrasting information published (without explaination) in different versions of national databases. For instance, in Table \@ref(tab:varieties-list), `Production1 (ton_per_ha)` column was borrowed from "Krishi Diary, 2075" and the other column for the same yield trait (`Production2 (ton_per_ha)`) from elsewhere. I defer the exact reference and citation for a later date.
