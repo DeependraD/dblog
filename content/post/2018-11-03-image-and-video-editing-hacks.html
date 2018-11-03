@@ -42,5 +42,9 @@ stringr::str_pad(seq_along(filenames), width = 3, pad = &quot;0&quot;) # this al
 <li><p>-pix_fmt yuv420p should be used to enable 4:2:0 downsampling for the PNG input, which usually isn’t downsampled at all (4:4:4, as observed in your output) and often contains an Alpha channel. YouTube won’t handle this correctly.</p></li>
 <li><p>-r is for -rate; it is specification of output frame rate in Hz.</p></li>
 <li><p>-r is not needed for setting the output framerate, as YouTube will handle almost all frame rates anyway. When reading 10 images per second as input, changing the output frame rate to something higher (e.g. 30) will only duplicate frames, which is not necessary.</p></li>
-<li><p>-s:v 1380x720 is a weird resolution. Think about using the native 16:9 720p resolution 1280</p></li>
+<li><p>Generally, unconventional resolutions like <code>-s:v 1380x720</code> are avoided. Think about using the native 16:9 (720p resolution; 1280 x 720) and regenerating your plots if necessary. This will save from troubles mainly relating to letterboxing on YouTube, and sticking to unusual dimensions might prevent your video from being shown in full resolution or offered at 720p quality settings.</p></li>
+<li><p>Use the MP4 container instead of MOV, which YouTube suggests you to use. MP4 is virtually identical in functionality to MOV, but has better support in playback devices. In general, prefer that over MOV when you can.</p></li>
 </ul>
+<p>Besides these, converting videos back and forth between formats is really easy either. For example, an easy way to convert high compression mkv format to mp4 so that most decoder could play the video can be accomplished by the following.</p>
+<pre><code>ffmpeg -i inputfilename.mkv outputfilename.mp4</code></pre>
+<p>This is all for now. Enjoy media editing with open source tools.</p>

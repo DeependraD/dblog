@@ -76,11 +76,12 @@ ffmpeg.exe -y -framerate 1/2 -start_number 1 -i "IMG_%03d.JPG" -c:v libx264 -pix
 
 - -r is not needed for setting the output framerate, as YouTube will handle almost all frame rates anyway. When reading 10 images per second as input, changing the output frame rate to something higher (e.g. 30) will only duplicate frames, which is not necessary.
 
-- -s:v 1380x720 is a weird resolution. Think about using the native 16:9 720p resolution 1280×720, and re-generating your plots if necessary. This will spare you some trouble and letterboxing issues on YouTube, and sticking to unusual dimensions might prevent your video from being shown in full resolution or offered at the 720p quality setting.
+- Generally, unconventional resolutions like `-s:v 1380x720` are avoided. Think about using the native 16:9 (720p resolution; 1280 x 720) and regenerating your plots if necessary. This will save from troubles mainly relating to letterboxing on YouTube, and sticking to unusual dimensions might prevent your video from being shown in full resolution or offered at 720p quality settings.
 
 - Use the MP4 container instead of MOV, which YouTube suggests you to use. MP4 is virtually identical in functionality to MOV, but has better support in playback devices. In general, prefer that over MOV when you can.
 
-Besides these, converting videos back and forth between formats is really easy either. For example, an easy way to convert high compression mkv format to mp4 so that most decoder could play the video can be accomplished by:
+
+Besides these, converting videos back and forth between formats is really easy either. For example, an easy way to convert high compression mkv format to mp4 so that most decoder could play the video can be accomplished by the following.
 
 ```
 ffmpeg -i inputfilename.mkv outputfilename.mp4
