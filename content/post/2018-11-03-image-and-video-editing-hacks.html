@@ -1,0 +1,46 @@
+---
+title: Image and video editing hacks using ffmpeg
+author: Deependra Dhakal
+date: '2018-11-03'
+slug: image-and-video-editing-hacks
+categories:
+  - "image editing"
+tags: []
+header:
+  caption: ''
+  image: ''
+---
+
+
+
+<p>This is beginner’s tutorial for starting up with open source <a href="https://www.ffmpeg.org/">ffmpeg</a> library.</p>
+<p>In the beginning, it’s shown how we can convert an image gallery to a video slideshow. For example we have a directory called <code>images</code> filled with photos that we want to knit together to obtain a slideshow. A video, however, has an additional time/length attribute besides the attribute that controls which order the images are sawn together in. Along with these, several other features underlie a video composition, some of which will be discussed in this tutorial.</p>
+<p>In an ideal scenario we start off at the directory of images (<code>images</code>).</p>
+<p>In windows machine,</p>
+<pre><code>cd images\</code></pre>
+<p>In <code>r</code> interface</p>
+<pre><code>setwd(&quot;./images/&quot;)</code></pre>
+<p>Now before stitching images together, we need to specify the order in which that will be done. File name plays a role in that. For the sake of easiness, we ignore a situation where filename alphabets specify the order. Let’s assume that, ordering is specified by numerics; i.e. 1, 2, 3, … n.</p>
+<p>Talking about an actual case scenario, most modern digital cameras produce well named image files, like IMG_01.*, or IMG_002*. An <code>r</code> code to list all the files in the current directory is shown below.</p>
+<pre><code>filenames &lt;- list.files(&quot;.&quot;, &quot;.JPG&quot;)</code></pre>
+<p>The command saves the list of filenames in the ascending order of alphanumerics that appear in the filename prefix. This is important step in order to also ensure that original filename can be recovered after tampering with the names. Filenames might come in all sorts of peculiar name formats – some even devoid of any. Nevertheless, it is always desirable that the original filenames are renamed to correctly represent an ordered file presentation.</p>
+<p>This could be done by a creating a vector equal to the length of files (<code>len(filenames)</code>).</p>
+<pre><code>chfilenames &lt;- paste(&quot;IMG_&quot;, sprintf(&quot;%03d&quot;, seq_along(filenames)), &quot;.JPG&quot;, sep = &quot;&quot;)
+stringr::str_pad(seq_along(filenames), width = 3, pad = &quot;0&quot;) # this also pads &quot;0&quot; in numbers</code></pre>
+<p>Now just replace the original file-names with new, order specified file-names using low level <code>R</code> function.</p>
+<pre><code>file.rename(from = chfilenames, to = chfilenames)</code></pre>
+<p>Finally to weave a video use ffmpeg. Note that ffmpeg should be added to path for calling from shell (<code>cmd</code>) readily.</p>
+<pre><code>ffmpeg.exe -y -framerate 1/2 -start_number 1 -i &quot;IMG_%03d.JPG&quot; -c:v libx264 -pix_fmt yuv420p -s:v 1280x720 output_filename.mp4</code></pre>
+<ul>
+<li><p>-framerate in fraction represents 2 seconds per frame</p></li>
+<li><p>-y: to overwrite existing file</p></li>
+<li><p>-f: to force any operation</p></li>
+<li><p>image2pipe: plugin that allows to pipe input; while passing input use “-i -” in the command syntax</p></li>
+<li><p>-s 1280x720: scale the images</p></li>
+<li><p>-qscale is a way to set quality, but -qscale alone is ambiguous. Use -qscale:v for video and -qscale:a for audio encoders that support it. Don’t use this option unless you know what it means.</p></li>
+<li><p>x264 has a better option for setting quality: -crf. The Constant Rate Factor is a constant quality encoding mode. Lower values mean better quality, but anything below 18 might not be visually better. The default is 23, but something like 20 would be better since YouTube re-encodes your video again.</p></li>
+<li><p>-pix_fmt yuv420p should be used to enable 4:2:0 downsampling for the PNG input, which usually isn’t downsampled at all (4:4:4, as observed in your output) and often contains an Alpha channel. YouTube won’t handle this correctly.</p></li>
+<li><p>-r is for -rate; it is specification of output frame rate in Hz.</p></li>
+<li><p>-r is not needed for setting the output framerate, as YouTube will handle almost all frame rates anyway. When reading 10 images per second as input, changing the output frame rate to something higher (e.g. 30) will only duplicate frames, which is not necessary.</p></li>
+<li><p>-s:v 1380x720 is a weird resolution. Think about using the native 16:9 720p resolution 1280</p></li>
+</ul>
