@@ -1,0 +1,139 @@
+---
+title: Expressing timestamp data in calendar
+author: Deependra Dhakal
+date: '2018-11-04'
+slug: expressing-timestamp-data-in-calendar
+categories:
+  - R
+  - tidyverse
+tags:
+  - R
+  - Dates
+  - tidyverse
+header:
+  caption: ''
+  image: ''
+---
+
+
+
+<p>Unlike composing a text memos and keeping tracks of those, calendar graphics is a highly effective visual aid to taking notes and summarizing them. Well, we all have used calendar, one way or the other, in our lifetimes.</p>
+<p>Calendar based graphics enables an accurate catch at the very first glance; For example, it is very easy relating one activity of a period to another when they are laid linearly with precise graduations. Calendar graphics does exactly that – some features (usually tiles) provide graduation, representing fixed interval of time (e.g., a day). This when combined with text allows unlimited freedom to provide narration for specific intervals.</p>
+<p>In this post, I show how ggplot2’s graphics capabilities can be exploited while constructing an activity calendar. Some of the tidy-eval features are also borrowed and integrated to extend the flexibility of the function.</p>
+<p>Any events referred to in this article is fully contrieved.</p>
+<div id="discrete-value-mapping-in-calendar-graphics" class="section level2">
+<h2>Discrete value mapping in calendar graphics</h2>
+<pre class="r"><code># a function to take calendar data and necessary arugments and spit a calendar plot
+ggcal_spit &lt;- function(year_month_day, calendar_data, date_column, activities_column){
+  # year_month_day declares which month to construct calendar of
+  # for example to refer to june: &quot;2018-06-1&quot;
+  cdcol &lt;- enquo(date_column)
+  act &lt;- enquo(activities_column)
+  start &lt;- as.Date(year_month_day)
+  dates &lt;- data.frame(date=seq(start, length.out=lubridate::days_in_month(start), by=&quot;1 day&quot;)) %&gt;% 
+    mutate(weeknum = lubridate::week(date)-1, # or similar to lubridate::epiweek(): as.numeric(format(as.Date(date, format = &quot;%Y-%m-%d&quot;), &quot;%U&quot;)), 
+           month = format(date, &quot;%m&quot;),
+           weekday = factor(format(date, &quot;%a&quot;), levels=c(&quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;, &quot;Fri&quot;, &quot;Sat&quot;, &quot;Sun&quot;)),
+           day = format(date, &quot;%d&quot;) %&gt;% as.numeric()) %&gt;% 
+    # given a pseudocalendar (datewise record of activities)
+    # extract activities of the month specified in year_month_day
+    mutate(Activities = calendar_data %&gt;% 
+             filter(!!cdcol &gt;= start, !!cdcol &lt; start + lubridate::days(lubridate::days_in_month(start))) %&gt;% 
+             pull(!!act) %&gt;% 
+             str_wrap(width = 30))
+  
+  ggcal &lt;- ggplot(dates, aes(x=weekday, y=weeknum)) + 
+    geom_tile(colour = &quot;black&quot;, fill = &quot;turquoise&quot;, alpha = 0.8) +
+    geom_text(aes(label=day), size = 9, alpha = 0.5, color = &quot;red&quot;, check_overlap = FALSE, nudge_y = -0.4) +
+    geom_text(aes(label=Activities), size = 3.5, alpha = 1, color = &quot;blue&quot;, check_overlap = FALSE) +
+    scale_x_discrete(expand = c(0,0)) +
+    theme(axis.ticks = element_blank()) +
+    theme(axis.title.y = element_blank()) +
+    theme(axis.title.x = element_blank()) +
+    theme(panel.background = element_rect(fill = &quot;transparent&quot;))+
+    theme(legend.position = &quot;none&quot;) +
+    theme()
+  return(ggcal)
+}</code></pre>
+<p>For example to generate calendar graphs for two months: January and February, we map the data over dates specifying those two months in some way.</p>
+<pre class="r"><code># import calendar data
+calendar &lt;- read_csv(&quot;./data/Calendar_of_activities_year_xy.csv&quot;) %&gt;% 
+    mutate(Date_eng = as.Date(Date_eng, &quot;%d-%b-%y&quot;)) %&gt;% 
+    mutate(Date_eng_start = as.Date(Date_eng, &quot;%d-%b-%y&quot;), 
+        Date_eng_end = Date_eng_start + lubridate::days(1))
+
+# generate a ggplot list object of calender
+month_calendar &lt;- purrr::map(.x = seq.Date(as.Date(&quot;2018-01-01&quot;), 
+    by = &quot;month&quot;, length.out = 2), .f = ~ggcal_spit(.x, 
+    calendar_data = calendar, date_column = Date_eng, 
+    activities_column = Activity1))
+
+walk(month_calendar, print)
+
+# # save all monthly calendars as png image
+# purrr::walk2(.x =
+# paste(&#39;Calendar_of_activities_&#39;, month.abb[1:2],
+# &#39;_2018&#39;, &#39;.png&#39;, sep = &#39;&#39;), .y = month_calendar,
+# .f = ~ggsave(.x, plot = .y, device = &#39;png&#39;, width
+# = 12, height = 8, units = &#39;in&#39;, dpi = 250))</code></pre>
+<p><img src="/post/2018-11-04-expressing-timestamp-data-in-calendar_files/figure-html/calendar-plot-1.png" width="960" style="display: block; margin: auto;" /><img src="/post/2018-11-04-expressing-timestamp-data-in-calendar_files/figure-html/calendar-plot-2.png" width="960" style="display: block; margin: auto;" /></p>
+<p>Note that calendar weekdays start at monday, but this might be misleading in some instances so a few other tweaks are required.</p>
+</div>
+<div id="numeric-value-mapping-in-calendar-graphics" class="section level2">
+<h2>Numeric value mapping in calendar graphics</h2>
+<pre class="r"><code>require(forcats)
+require(tibble)
+
+mydate &lt;- seq(as.Date(&quot;2017-02-01&quot;), as.Date(&quot;2017-07-22&quot;), by=&quot;1 day&quot;)
+myfills &lt;- rnorm(length(mydate))
+
+ggcal &lt;- function(dates, fills) {
+  # get ordered vector of month names
+  months &lt;- format(seq(as.Date(&quot;2016-01-01&quot;), as.Date(&quot;2016-12-01&quot;), by=&quot;1 month&quot;), &quot;%B&quot;)
+  
+  # get lower and upper bound to fill in missing values
+  mindate &lt;- as.Date(format(min(dates), &quot;%Y-%m-01&quot;))
+  maxdate &lt;- (seq(as.Date(format(max(dates), &quot;%Y-%m-01&quot;)), length.out = 2, by=&quot;1 month&quot;)-1)[2]
+  # set up tibble with all the dates.
+  filler &lt;- tibble(date = seq(mindate, maxdate, by=&quot;1 day&quot;))
+  
+  t1 &lt;- tibble(date = dates, fill=fills) %&gt;%
+    right_join(filler, by=&quot;date&quot;) %&gt;% # fill in missing dates with NA
+    mutate(dow = as.numeric(format(date, &quot;%w&quot;))) %&gt;%
+    mutate(month = format(date, &quot;%B&quot;)) %&gt;%
+    mutate(woy = as.numeric(format(date, &quot;%U&quot;))) %&gt;%
+    mutate(year = as.numeric(format(date, &quot;%Y&quot;))) %&gt;%
+    mutate(month = factor(month, levels=months, ordered=TRUE)) %&gt;%
+    arrange(year, month) %&gt;%
+    mutate(monlabel=month)
+  
+  if (length(unique(t1$year))&gt;1) { # multi-year data set
+    t1$monlabel &lt;- paste(t1$month, t1$year)
+  }
+  
+  t2 &lt;- t1 %&gt;%
+    mutate(monlabel = factor(monlabel, ordered=TRUE)) %&gt;%
+    mutate(monlabel = fct_inorder(monlabel)) %&gt;%
+    mutate(monthweek = woy-min(woy),
+           y=max(monthweek)-monthweek+1)
+  
+  weekdays &lt;- c(&quot;S&quot;, &quot;M&quot;, &quot;T&quot;, &quot;W&quot;, &quot;T&quot;, &quot;F&quot;, &quot;S&quot;)
+  ggplot(t2, aes(dow, y, fill=fill)) +
+    geom_tile(color=&quot;gray80&quot;) +
+    facet_wrap(~monlabel, ncol=3, scales=&quot;free&quot;) +
+    scale_x_continuous(expand=c(0,0), position=&quot;top&quot;,
+                       breaks=seq(0,6), labels=weekdays) +
+    scale_y_continuous(expand=c(0,0)) +
+    theme(panel.background=element_rect(fill=NA, color=NA),
+          strip.background = element_rect(fill=NA, color=NA),
+          strip.text.x = element_text(hjust=0, face=&quot;bold&quot;),
+          legend.title = element_blank(),
+          axis.ticks=element_blank(),
+          axis.title=element_blank(),
+          axis.text.y = element_blank(),
+          strip.placement = &quot;outsite&quot;)
+}
+
+print(ggcal(mydate, myfills))</code></pre>
+<p><img src="/post/2018-11-04-expressing-timestamp-data-in-calendar_files/figure-html/calendar-numeric-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
