@@ -1,0 +1,80 @@
+---
+title: 'Developing flowcharts: an illustration of wheat breeding scheme'
+author: Deependra Dhakal
+date: '2018-11-04'
+slug: developing-flowcharts-an-illustration
+categories:
+  - Plant Breeding
+  - R
+tags:
+  - R
+  - agriculture
+header:
+  caption: ''
+  image: ''
+---
+
+
+
+<p>Flow diagrams are jam-packed with information. They normally describe a process and actors that are involved in making that happen.</p>
+<p>With r package <strong>diagram</strong>, which uses r’s basic plotting capabilities, constructing flowcharts is as easy as drawing any other graphics.</p>
+<p>This post expands on creating simple flowdiagrams using example scenario of a wheat breeding program. The information for this graph was, most notably, deduced from those provided by senior wheat breeder of Nepal, Mr. Madan Raj Bhatta.</p>
+<pre class="r"><code>suppressPackageStartupMessages(require(diagram))
+## Wheat breeding ##
+## flow diagram template ##
+par(mar = c(1, 1, 3, 1))
+openplotmat()
+
+# position in whole page from top to bottom
+elpos &lt;- coordinates(c(3, 3, 3, 3, 3, 3, 3)) # how many columns of graphic shape to adjust in each row, also implies alignment
+
+from_to &lt;- matrix(ncol = 2, byrow = TRUE, 
+                  data = c(1, 2, 3, 2, 2, 5, 6, 5, 5, 8, 8, 9, 8, 11, 
+                           9, 11, 11, 12, 11, 13, 11, 14, 12, 15, 
+                           14, 15, 14, 17, 15, 18, 17, 20, 18, 21))
+nr &lt;- nrow(from_to)
+arrpos &lt;- matrix(ncol = 2, nrow = nr)
+for (i in 1:nr)
+  arrpos[i, ] &lt;- straightarrow(to = elpos[from_to[i, 2], ], 
+                               from = elpos[from_to[i, 1], ], 
+                               lwd = 1.0, arr.pos = 0.5, 
+                               arr.length = 0.4, arr.type = &quot;curved&quot;, 
+                               endhead = TRUE)
+textrect(elpos[2,], 0.15, 0.05,lab = c(&quot;Crossing&quot;, &quot;+&quot;, &quot;Segregating population&quot;), box.col = &quot;blue&quot;,
+         shadow.col = &quot;darkblue&quot;, shadow.size = 0.005, cex = 2)
+textellipse(elpos[1,], radx = 0.12, rady = 0.07, lab = &quot;Local germplasm&quot;, box.col = &quot;green&quot;, 
+            shadow.col = &quot;darkgreen&quot;, shadow.size = 0.005, cex = 2)
+textellipse(elpos[3,], 0.12, 0.07, lab = c(&quot;Exotic germplasm\n from international nurseries&quot;), box.col = &quot;orange&quot;,
+            shadow.col = &quot;red&quot;, shadow.size = 0.005, cex = 2)
+textrect(elpos[5,], 0.15, 0.05,lab = c(&quot;Multilocation testing&quot;, &quot;/&quot;, &quot;Screening nurseries&quot;), box.col = &quot;blue&quot;,
+         shadow.col = &quot;darkblue&quot;, shadow.size = 0.005, cex = 2)
+textrect(elpos[6,], 0.15, 0.05,lab = c(&quot;Selected bulk&quot;, &quot;F2-F4&quot;), box.col = &quot;thistle1&quot;,
+         shadow.col = &quot;thistle&quot;, shadow.size = 0.005, cex = 2)
+textrect(elpos[8,], 0.15, 0.05,lab = c(&quot;Initial evaluation trial&quot;), box.col = &quot;blue&quot;,
+         shadow.col = &quot;darkblue&quot;, shadow.size = 0.005, cex = 2)
+textrect(elpos[9,], 0.15, 0.05,lab = c(&quot;Seed increase of test entries&quot;, &quot;(Breeder&#39;s plot)&quot;), box.col = &quot;thistle1&quot;,
+         shadow.col = &quot;thistle&quot;, shadow.size = 0.005, cex = 2)
+textrect(elpos[11,], 0.15, 0.05,lab = c(&quot;Advanced varietal trial&quot;), box.col = &quot;blue&quot;,
+         shadow.col = &quot;darkblue&quot;, shadow.size = 0.005, cex = 2)
+textrect(elpos[12,], 0.15, 0.05,lab = c(&quot;Seed increase of test entries&quot;), box.col = &quot;thistle1&quot;,
+         shadow.col = &quot;thistle&quot;, shadow.size = 0.005, cex = 2)
+textrect(elpos[13,], 0.15, 0.05,lab = c(&quot;Participatory variety selection&quot;), box.col = &quot;tomato1&quot;,
+         shadow.col = &quot;tomato2&quot;, shadow.size = 0.005, cex = 2)
+textrect(elpos[14,], 0.15, 0.05,lab = c(&quot;Farmer&#39;s field trial&quot;), box.col = &quot;blue&quot;,
+         shadow.col = &quot;darkblue&quot;, shadow.size = 0.005, cex = 2)
+textrect(elpos[15,], 0.15, 0.05,lab = c(&quot;Head to row progeny&quot;, &quot;N/S + B/S&quot;), box.col = &quot;thistle1&quot;,
+         shadow.col = &quot;thistle&quot;, shadow.size = 0.005, cex = 2)
+textrect(elpos[17,], 0.15, 0.05,lab = c(&quot;Variety release&quot;), box.col = &quot;blue&quot;,
+         shadow.col = &quot;darkblue&quot;, shadow.size = 0.005, cex = 2)
+textrect(elpos[20,], 0.15, 0.05,lab = c(&quot;Seed multiplication&quot;), box.col = &quot;blue&quot;,
+         shadow.col = &quot;darkblue&quot;, shadow.size = 0.005, cex = 2)
+textrect(elpos[18,], 0.15, 0.05,lab = c(&quot;Head-to-row progeny&quot;, &quot;N/S + B/S + F/S&quot;), box.col = &quot;thistle1&quot;,
+         shadow.col = &quot;thistle&quot;, shadow.size = 0.005, cex = 2)
+textrect(elpos[21,], 0.15, 0.05,lab = c(&quot;Seed multiplication&quot;), box.col = &quot;thistle1&quot;,
+         shadow.col = &quot;thistle&quot;, shadow.size = 0.005, cex = 2)</code></pre>
+<div class="figure" style="text-align: center"><span id="fig:wheat-breeding-flow"></span>
+<img src="/post/2018-11-04-developing-flowcharts-an-illustration_files/figure-html/wheat-breeding-flow-1.png" alt="An overview of wheat breeding program in combination with rapid seed multiplication strategy" width="4200" />
+<p class="caption">
+Figure 1: An overview of wheat breeding program in combination with rapid seed multiplication strategy
+</p>
+</div>
