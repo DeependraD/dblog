@@ -64,7 +64,7 @@ single_factor_design <- design.rcbd(trt = treatments, r = 3, serie = 2,
 
 ```
 
-A glimpse of what data looks like is shown in Table \@ref(tab:single-factor-data)
+A glimpse of what data looks like is shown in Table \@ref(tab:single-factor-data).
 
 ```{r single-factor-data}
 single_factor %>%
@@ -74,7 +74,7 @@ single_factor %>%
   kableExtra::row_spec(0, bold = TRUE)
 ```
 
-The `agricolae::design.rcbd()` function generates design and the field book associated with the design which looks like as shown in Table \@ref(tab:single-factor-des-fieldbook)
+The `agricolae::design.rcbd()` function generates design and the field book associated with the design. The field book looks like the one below in Table \@ref(tab:single-factor-des-fieldbook)
 
 ```{r single-factor-des-fieldbook}
 single_factor_design$book %>%
@@ -123,7 +123,7 @@ table(ihyb_multiple$Entry)
 
 ## Means
 
-The means for each factor level can be calculated, as well as for each factor level combination.  The notation for the an interaction is "A:B".
+The means for each factor level can be calculated, as well as for combination of different factor levels. The notation for the an interaction is "A:B".
 
 ```{r ex1means}
 with(ihyb_multiple,tapply(`Plant height`,Entry,function(x){mean(x, na.rm = T)}))
@@ -145,7 +145,7 @@ with(ihyb_multiple,interaction.plot(Rep,Entry,`Plant height`, legend = FALSE))
 
 After the priliminary diagnostics is done, and transformations are made (if required), next we model the variable relationships.
 
-There are two ways to conduct the variance analysis in R -- one specifying a regression model, other speficying a variance component model. Since, we are dealing with single factor only experiment with replicates, we can use model formula $A+B$ for specifying the regressors or grouping variables (in case of factorial ANOVA), where $A$ is the factor of interest and $B$ is the recogizable source of source variation controlled through replication/blocking. The standard model for a randomized complete block design (with $s = 1$ observation on each treatment in each block) is 
+There are two ways to conduct the variance analysis in R -- one specifying a regression model, the other by speficying a variance component model. Since, we are dealing with single factor experiment with replicates, we can use model formula $A+B$ for specifying the regressors or a.k.a grouping variables (in case of factorial ANOVA), where $A$ is the factor of interest and $B$ is the recogizable source of source variation controlled through replication/blocking. The standard model for a randomized complete block design (with $s = 1$ observation on each treatment in each block) is 
 
 $$
 Y_{hi} = \mu + \theta_h + \tau_i + \epsilon_{hi}, \\
