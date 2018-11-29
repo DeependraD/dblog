@@ -1,0 +1,85 @@
+---
+title: Batch scripting and using open source video downloader
+author: Deependra Dhakal
+date: '2018-11-29'
+slug: batch-scripting-and-using-open
+categories:
+  - batch
+  - productivity
+  - open-souce
+tags:
+  - open-source
+  - productivity
+header:
+  caption: ''
+  image: ''
+---
+
+
+
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>Open source community is a host of invaluable tools for raising productivity. One of these tools include <strong>youtube-dl</strong> which is a shell/command line based tool for making requests and streaming data. In addition, it links to the popular <strong>ffmpeg</strong> library to weave together video and streams, all seamlessly.</p>
+</div>
+<div id="script" class="section level2">
+<h2>Script</h2>
+<p>Below is a batch script that could be ran independently in windows, downloaded videos from any given streaming site that <code>youtube-dl</code> supports.</p>
+<pre><code>@echo off
+color 17
+cls
+echo ==========================================================
+echo ==========================================================
+echo Getting ready for download...
+echo ==========================================================
+echo ==========================================================
+echo Set a directory(for eg., &quot;E:\DD\&quot;, with quotes) to download to...
+set /P &quot;dir_name=&quot;
+echo ==========================================================
+echo ==========================================================
+echo You have set directory to %dir_name%
+if not exist %dir_name% (
+    rem file exists
+    echo The directory does not already exist. Creating the directory...
+    mkdir %dir_name%
+    color 71
+    echo Successfully created &quot;%dir_name%&quot;.
+) else (
+    rem file doesn&#39;t exist
+    echo The directory already exists. You are ready to go.
+    color 71
+)
+cd /d %dir_name%
+echo ==========================================================
+echo ==========================================================
+echo Changed directory successfully.
+echo ==========================================================
+echo ==========================================================
+echo Starting download of individual videos from &quot;%userprofile%\Desktop\dean_batch.txt&quot; at &quot;-f 22&quot;...
+pause
+youtube-dl -citk -f 22 --batch-file=&quot;%userprofile%\Desktop\dean_batch.txt&quot;
+echo ==========================================================
+echo ==========================================================
+echo Download complete of individual videos.
+echo ==========================================================
+echo ==========================================================
+echo Do you want to continue to download playlist too? (Y/N)
+set /p &quot;playlist_also=&quot;
+if %playlist_also%==Y (
+    echo ======================================================
+    echo ======================================================
+    echo You selected to continue downloading the playlist items.
+    echo Starting download of playlist items from &quot;%userprofile%\Desktop\dean_batch_playlist.txt&quot; at &quot;-f 22&quot;...
+    pause
+    youtube-dl -citk -f 22 --batch-file=&quot;%userprofile%\Desktop\dean_batch_playlist.txt&quot;
+    echo ======================================================
+    echo ======================================================
+    echo Download complete of playlist items.
+) else (
+    echo You deferred the download of playlist items.
+    echo ======================================================
+    echo ======================================================
+)
+pause
+color 07
+cmd /k</code></pre>
+</div>

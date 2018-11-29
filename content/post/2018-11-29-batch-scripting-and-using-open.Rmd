@@ -1,0 +1,85 @@
+---
+title: Batch scripting and using open source video downloader
+author: Deependra Dhakal
+date: '2018-11-29'
+slug: batch-scripting-and-using-open
+categories:
+  - batch
+  - productivity
+  - open-souce
+tags:
+  - open-source
+  - productivity
+header:
+  caption: ''
+  image: ''
+---
+
+## Background
+
+Open source community is a host of invaluable tools for raising productivity. One of these tools include **youtube-dl** which is a shell/command line based tool for making requests and streaming data. In addition, it links to the popular **ffmpeg** library to weave together video and streams, all seamlessly.
+
+## Script
+
+Below is a batch script that could be ran independently in windows, downloaded videos from any given streaming site that `youtube-dl` supports.
+
+```
+@echo off
+color 17
+cls
+echo ==========================================================
+echo ==========================================================
+echo Getting ready for download...
+echo ==========================================================
+echo ==========================================================
+echo Set a directory(for eg., "E:\DD\", with quotes) to download to...
+set /P "dir_name="
+echo ==========================================================
+echo ==========================================================
+echo You have set directory to %dir_name%
+if not exist %dir_name% (
+    rem file exists
+    echo The directory does not already exist. Creating the directory...
+    mkdir %dir_name%
+    color 71
+    echo Successfully created "%dir_name%".
+) else (
+    rem file doesn't exist
+    echo The directory already exists. You are ready to go.
+    color 71
+)
+cd /d %dir_name%
+echo ==========================================================
+echo ==========================================================
+echo Changed directory successfully.
+echo ==========================================================
+echo ==========================================================
+echo Starting download of individual videos from "%userprofile%\Desktop\dean_batch.txt" at "-f 22"...
+pause
+youtube-dl -citk -f 22 --batch-file="%userprofile%\Desktop\dean_batch.txt"
+echo ==========================================================
+echo ==========================================================
+echo Download complete of individual videos.
+echo ==========================================================
+echo ==========================================================
+echo Do you want to continue to download playlist too? (Y/N)
+set /p "playlist_also="
+if %playlist_also%==Y (
+    echo ======================================================
+    echo ======================================================
+    echo You selected to continue downloading the playlist items.
+    echo Starting download of playlist items from "%userprofile%\Desktop\dean_batch_playlist.txt" at "-f 22"...
+    pause
+    youtube-dl -citk -f 22 --batch-file="%userprofile%\Desktop\dean_batch_playlist.txt"
+    echo ======================================================
+    echo ======================================================
+    echo Download complete of playlist items.
+) else (
+    echo You deferred the download of playlist items.
+    echo ======================================================
+    echo ======================================================
+)
+pause
+color 07
+cmd /k
+```
