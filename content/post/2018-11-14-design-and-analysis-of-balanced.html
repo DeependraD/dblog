@@ -1,8 +1,8 @@
 ---
-title: Design and analysis of balanced two factor randomized complete block (RCBD) experiment
+title: Design and analysis of balanced randomized complete block (RCBD) experiment
 author: Deependra Dhakal
 date: '2018-11-14'
-slug: design-and-analysis-of-balanced-two-factor
+slug: design-and-analysis-of-balanced
 categories:
   - R
   - Plant Breeding
@@ -15,17 +15,17 @@ tags:
 header:
   caption: ''
   image: ''
-bibliography: ./bib/2018-11-14-design-and-analysis-of-balanced-two-factor.bib
+bibliography: ./bib/2018-11-14-design-and-analysis-of-balanced.bib
 ---
 
 
 
-<div id="introduction" class="section level1">
-<h1>Introduction</h1>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
 <p>Balanced block designs are a class of randomized experimental design that contain equal number of records for a particular level of categorical variable across all blocks.</p>
 </div>
-<div id="example-1" class="section level1">
-<h1>Example 1</h1>
+<div id="example-1" class="section level2">
+<h2>Example 1</h2>
 <p>Let us generate some data from random process mimicking a single factor process consisting of 3 levels.</p>
 <p>A glimpse of what data looks like is shown in Table <a href="#tab:single-factor-data">1</a>.</p>
 <table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
@@ -245,8 +245,8 @@ Treatment6
 </tr>
 </tbody>
 </table>
-<div id="box-plots" class="section level2">
-<h2>Box Plots</h2>
+<div id="box-plots" class="section level3">
+<h3>Box Plots</h3>
 <p>To deal with real case scenario, let’s import a dataset from hybrid maize trial of intermediate duration maturing types, which was conducted on summer of 2018. The plant height trait will be dealt.</p>
 <p>After import, type conversion and cleaning the data looks like as shown in Table <a href="#tab:ihyb-height">3</a></p>
 <table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
@@ -567,10 +567,10 @@ Plant height
 </table>
 <p>Although the block component exists for given dataset, for the sake of making case with analysing single factor RCBD experiment, we ignore the factor the effect.</p>
 <p>A good thing to start with is plots of the data. Box plots are good for checking constant variances and to look for outliers.</p>
-<p><img src="/post/2018-11-14-design-and-analysis-of-balanced-two-factor_files/figure-html/boxplot1-1.png" width="672" style="display: block; margin: auto;" /><img src="/post/2018-11-14-design-and-analysis-of-balanced-two-factor_files/figure-html/boxplot1-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2018-11-14-design-and-analysis-of-balanced_files/figure-html/boxplot1-1.png" width="672" style="display: block; margin: auto;" /><img src="/post/2018-11-14-design-and-analysis-of-balanced_files/figure-html/boxplot1-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="balanced" class="section level2">
-<h2>Balanced?</h2>
+<div id="balanced" class="section level3">
+<h3>Balanced?</h3>
 <p>It is always a good idea to check to see if the data is balanced.</p>
 <pre class="r"><code>table(ihyb_multiple$Entry)</code></pre>
 <pre><code>## 
@@ -581,8 +581,8 @@ Plant height
 <pre class="r"><code># with(ihyb_multiple, table(Entry, Rep)) # if two
 # way table is to be generated</code></pre>
 </div>
-<div id="means" class="section level2">
-<h2>Means</h2>
+<div id="means" class="section level3">
+<h3>Means</h3>
 <p>The means for each factor level can be calculated, as well as for combination of different factor levels. The notation for the an interaction is “A:B”.</p>
 <pre><code>##   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18 
 ## 278 243 279 245 256 273 249 278 281 280 276 268 273 300 300 266 294 272 
@@ -593,13 +593,13 @@ Plant height
 <pre><code>##   1   2   3 
 ## 257 274 270</code></pre>
 </div>
-<div id="treatment-mean-plotsinteraction-plots" class="section level2">
-<h2>Treatment Mean Plots/Interaction Plots</h2>
+<div id="treatment-mean-plotsinteraction-plots" class="section level3">
+<h3>Treatment Mean Plots/Interaction Plots</h3>
 <p>The other plot that is useful is the treatment means plot. It is a good idea to look at it both ways and look for possible interactions.</p>
-<p><img src="/post/2018-11-14-design-and-analysis-of-balanced-two-factor_files/figure-html/ex1tmplot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2018-11-14-design-and-analysis-of-balanced_files/figure-html/ex1tmplot-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="running-the-anova" class="section level2">
-<h2>Running the ANOVA</h2>
+<div id="running-the-anova" class="section level3">
+<h3>Running the ANOVA</h3>
 <p>After the priliminary diagnostics is done, and transformations are made (if required), next we model the variable relationships.</p>
 <p>There are two ways to conduct the variance analysis in R – one specifying a regression model, the other by speficying a variance component model. Since, we are dealing with single factor experiment with replicates, we can use model formula <span class="math inline">\(A+B\)</span> for specifying the regressors or a.k.a grouping variables (in case of factorial ANOVA), where <span class="math inline">\(A\)</span> is the factor of interest and <span class="math inline">\(B\)</span> is the recogizable source of source variation controlled through replication/blocking. The standard model for a randomized complete block design (with <span class="math inline">\(s = 1\)</span> observation on each treatment in each block) is</p>
 <p><span class="math display">\[
@@ -614,7 +614,7 @@ h = 1,..., b;\ i = 1,..., v ,
 <p>The standard block-treatment model implementation of RCB design using Plant height as response variable is coded below. The model ANOVA is shown in Table <a href="#tab:rcb-block-treatment">4</a>. We first plot the residuals and the Box-Cox plot to check assumptions. Once we are satisfied, we can examine the ANOVA.</p>
 <pre class="r"><code>res &lt;- aov(`Plant height` ~ Rep + Entry, data = ihyb_multiple)
 plot(res, 1)</code></pre>
-<p><img src="/post/2018-11-14-design-and-analysis-of-balanced-two-factor_files/figure-html/ex1anova-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2018-11-14-design-and-analysis-of-balanced_files/figure-html/ex1anova-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code># # test for homogeneity of variance
 # bartlett.test(`Plant
 # height`~Rep,data=ihyb_multiple)
@@ -623,7 +623,7 @@ plot(res, 1)</code></pre>
 
 # boxcox diagnostics
 boxCox(res)  # if lambda parameter lies near to zero then, log transformation is useful to maintain assumption about distribution of the variable for further tests.</code></pre>
-<p><img src="/post/2018-11-14-design-and-analysis-of-balanced-two-factor_files/figure-html/ex1anova-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2018-11-14-design-and-analysis-of-balanced_files/figure-html/ex1anova-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The residuals look good and the Box-Cox plot indicates no transformation is needed.</p>
 <table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
@@ -712,8 +712,8 @@ Residuals
 </tbody>
 </table>
 </div>
-<div id="means-and-tukey-hsd" class="section level2">
-<h2>Means and Tukey HSD</h2>
+<div id="means-and-tukey-hsd" class="section level3">
+<h3>Means and Tukey HSD</h3>
 <p>R has some additional commands to find means as well as the effects of each factor level (think <span class="math inline">\(\alpha_i\)</span> and <span class="math inline">\(\beta_i\)</span>). Since both the replication and the entry effects are significant, we require Tukey pairwise comparisons test to distinguish which two among the levels of each factors are different.</p>
 <pre class="r"><code>model.tables(res, &quot;means&quot;)</code></pre>
 <pre><code>## Tables of means
@@ -764,11 +764,11 @@ TukeyHSD(res, &quot;Entry&quot;)$Entry %&gt;% head()</code></pre>
 ## 6-1  -5.86 -42.5 30.762 1.0000
 ## 7-1 -29.34 -66.0  7.289 0.3913</code></pre>
 <p>Since there are significant differences between the entries, a plot of the means may be appropriate. We can use the <code>model.tables()</code> to obtain the means (it behaves similar to <code>tapply()</code>).</p>
-<p><img src="/post/2018-11-14-design-and-analysis-of-balanced-two-factor_files/figure-html/ex1meanplots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2018-11-14-design-and-analysis-of-balanced_files/figure-html/ex1meanplots-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
-<div id="example-2" class="section level1">
-<h1>Example 2</h1>
+<div id="example-2" class="section level2">
+<h2>Example 2</h2>
 <p>In this example, we wish to see how the addition of sulphur and nitrogen affect the yield (bushels per acre) of soybeans(data source: “<a href="http://personal.psu.edu/~mar36/stat_461/sulpher.csv" class="uri">http://personal.psu.edu/~mar36/stat_461/sulpher.csv</a>”). The final goal is to determine which combination, if any, of sulphur and nitrogen produces the highest yield.</p>
 <pre><code>## # A tibble: 6 x 3
 ##   nitrogen sulpher yield
@@ -789,21 +789,21 @@ TukeyHSD(res, &quot;Entry&quot;)$Entry %&gt;% head()</code></pre>
 ## 5        0       3  4.65 3     0    
 ## 6        0       3  4.57 3     0</code></pre>
 <p>A quick look at the data and a check to see if it is balanced. Do the treatment means plots indicate a significant interaction?</p>
-<p><img src="/post/2018-11-14-design-and-analysis-of-balanced-two-factor_files/figure-html/ex2dataplots-1.png" width="672" style="display: block; margin: auto;" /><img src="/post/2018-11-14-design-and-analysis-of-balanced-two-factor_files/figure-html/ex2dataplots-2.png" width="672" style="display: block; margin: auto;" /><img src="/post/2018-11-14-design-and-analysis-of-balanced-two-factor_files/figure-html/ex2dataplots-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2018-11-14-design-and-analysis-of-balanced_files/figure-html/ex2dataplots-1.png" width="672" style="display: block; margin: auto;" /><img src="/post/2018-11-14-design-and-analysis-of-balanced_files/figure-html/ex2dataplots-2.png" width="672" style="display: block; margin: auto;" /><img src="/post/2018-11-14-design-and-analysis-of-balanced_files/figure-html/ex2dataplots-3.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>##     nitf
 ## sulf 0 20
 ##    0 3  3
 ##    3 3  3
 ##    6 3  3
 ##    9 3  3</code></pre>
-<p><img src="/post/2018-11-14-design-and-analysis-of-balanced-two-factor_files/figure-html/ex2dataplots-4.png" width="672" style="display: block; margin: auto;" /><img src="/post/2018-11-14-design-and-analysis-of-balanced-two-factor_files/figure-html/ex2dataplots-5.png" width="672" style="display: block; margin: auto;" /></p>
-<div id="residuals-and-box-cox-plot" class="section level2">
-<h2>Residuals and Box-Cox plot</h2>
+<p><img src="/post/2018-11-14-design-and-analysis-of-balanced_files/figure-html/ex2dataplots-4.png" width="672" style="display: block; margin: auto;" /><img src="/post/2018-11-14-design-and-analysis-of-balanced_files/figure-html/ex2dataplots-5.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="residuals-and-box-cox-plot" class="section level3">
+<h3>Residuals and Box-Cox plot</h3>
 <pre class="r"><code>res.2 &lt;- aov(yield ~ sulf * nitf, data = ex.2)
 plot(res.2, 1)</code></pre>
-<p><img src="/post/2018-11-14-design-and-analysis-of-balanced-two-factor_files/figure-html/ex2assumptions-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2018-11-14-design-and-analysis-of-balanced_files/figure-html/ex2assumptions-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>boxCox(res.2)</code></pre>
-<p><img src="/post/2018-11-14-design-and-analysis-of-balanced-two-factor_files/figure-html/ex2assumptions-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2018-11-14-design-and-analysis-of-balanced_files/figure-html/ex2assumptions-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>There seems to be no issues with the assumptions of ANOVA, so we will proceed to interpreting the results.</p>
 <table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
@@ -921,12 +921,12 @@ Residuals
 ##  &quot;a&quot;  &quot;b&quot;  &quot;c&quot;  &quot;c&quot;  &quot;d&quot;  &quot;c&quot;  &quot;e&quot;  &quot;a&quot;</code></pre>
 <pre><code>##  0:0 0:20  3:0 3:20  6:0 6:20  9:0 9:20 
 ## 4.54 5.75 4.64 7.05 5.24 5.81 5.91 6.30</code></pre>
-<p><img src="/post/2018-11-14-design-and-analysis-of-balanced-two-factor_files/figure-html/ex2groups1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2018-11-14-design-and-analysis-of-balanced_files/figure-html/ex2groups1-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>From the above plot, it appears that a combination of 3 units of sulpher and 20 units of nitrogen produce the highest yield of soybeans.</p>
 </div>
 </div>
-<div id="references" class="section level1 unnumbered">
-<h1>References</h1>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-dean2017complete">
 <p>Dean, Angela, Daniel Voss, and Danel Draguljić. 2017. “Complete Block Designs.” In <em>Design and Analysis of Experiments</em>, 305–47. Springer.</p>

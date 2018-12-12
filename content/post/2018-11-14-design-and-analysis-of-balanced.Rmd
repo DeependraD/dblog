@@ -1,8 +1,8 @@
 ---
-title: Design and analysis of balanced two factor randomized complete block (RCBD) experiment
+title: Design and analysis of balanced randomized complete block (RCBD) experiment
 author: Deependra Dhakal
 date: '2018-11-14'
-slug: design-and-analysis-of-balanced-two-factor
+slug: design-and-analysis-of-balanced
 categories:
   - R
   - Plant Breeding
@@ -15,7 +15,7 @@ tags:
 header:
   caption: ''
   image: ''
-bibliography: ./bib/2018-11-14-design-and-analysis-of-balanced-two-factor.bib
+bibliography: ./bib/2018-11-14-design-and-analysis-of-balanced.bib
 ---
 
 ```{r setup, include=FALSE, warning=FALSE, message=FALSE}
@@ -34,11 +34,11 @@ library(multcompView)
 set.seed(453)
 ```
 
-# Introduction
+## Introduction
 
 Balanced block designs are a class of randomized experimental design that contain equal number of records for a particular level of categorical variable across all blocks.
 
-# Example 1
+## Example 1
 
 Let us generate some data from random process mimicking a single factor process consisting of 3 levels.
 
@@ -84,7 +84,7 @@ single_factor_design$book %>%
   kableExtra::row_spec(0, bold = TRUE)
 ```
 
-## Box Plots
+### Box Plots
 
 To deal with real case scenario, let's import a dataset from hybrid maize trial of intermediate duration maturing types, which was conducted on summer of 2018. The plant height trait will be dealt.
 
@@ -112,7 +112,7 @@ boxplot(`Plant height` ~ Rep,data=ihyb_multiple)
 boxplot(`Plant height` ~ row,data=ihyb_multiple)
 ```
 
-## Balanced?
+### Balanced?
 
 It is always a good idea to check to see if the data is balanced.
 
@@ -121,7 +121,7 @@ table(ihyb_multiple$Entry)
 # with(ihyb_multiple, table(Entry, Rep)) # if two way table is to be generated
 ```
 
-## Means
+### Means
 
 The means for each factor level can be calculated, as well as for combination of different factor levels. The notation for the an interaction is "A:B".
 
@@ -131,7 +131,7 @@ with(ihyb_multiple,tapply(`Plant height`,Rep,function(x){mean(x, na.rm = T)}))
 # with(ihyb_multiple,tapply(`Plant height`,Rep:Entry,function(x){mean(x, na.rm = T)})) # this essentially equals all observations for a single factor RCBD
 ```
 
-## Treatment Mean Plots/Interaction Plots
+### Treatment Mean Plots/Interaction Plots
 
 The other plot that is useful is the treatment means plot.  It is a good idea to look at it both ways and look for possible interactions.
 
@@ -141,7 +141,7 @@ par(cex=.5)
 with(ihyb_multiple,interaction.plot(Rep,Entry,`Plant height`, legend = FALSE))
 ```
 
-## Running the ANOVA
+### Running the ANOVA
 
 After the priliminary diagnostics is done, and transformations are made (if required), next we model the variable relationships.
 
@@ -185,7 +185,7 @@ res %>%
 ```
 
 
-## Means and Tukey HSD
+### Means and Tukey HSD
 
 R has some additional commands to find means as well as the effects of each factor level (think $\alpha_i$ and $\beta_i$).  Since both the replication and the entry effects are significant, we require Tukey pairwise comparisons test to distinguish which two among the levels of each factors are different.
 
@@ -211,7 +211,7 @@ bp <- barplot2(Y.bar.j,ylim=c(0,350),ci.l=lb,ci.u=ub,plot.ci=TRUE)
 # text(bp,ub,letters,cex=1,pos=3) # plotting letters might look aweful if factor levels are large in number
 ```
 
-# Example 2
+## Example 2
 
 In this example, we wish to see how the addition of sulphur and nitrogen affect the yield (bushels per acre) of soybeans(data source: "http://personal.psu.edu/~mar36/stat_461/sulpher.csv"). The final goal is to determine which combination, if any, of sulphur and nitrogen produces the highest yield.
 
@@ -235,7 +235,7 @@ with(ex.2,interaction.plot(nitf,sulf,yield))
 with(ex.2,interaction.plot(sulf,nitf,yield))
 ```
 
-## Residuals and Box-Cox plot
+### Residuals and Box-Cox plot
 
 ```{r ex2assumptions, echo=TRUE}
 res.2 <- aov(yield~sulf*nitf,data=ex.2)
@@ -272,4 +272,4 @@ text(bp,Y.bar.ij,letters,cex=1,pos=3)
 
 From the above plot, it appears that a combination of 3 units of sulpher and 20 units of nitrogen produce the highest yield of soybeans.
 
-# References
+## References

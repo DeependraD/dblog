@@ -1,0 +1,40 @@
+---
+title: Variance component based parameter estimation of incomplete block designs
+author: Deependra Dhakal
+date: '2018-12-12'
+slug: variance-component-based-parameter-estimation
+categories: 
+  - R
+  - Plant Breeding
+tags: 
+  - R
+header:
+  caption: ''
+  image: ''
+---
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Variance component models are also suited for analysis of incomplete block designs, besides complete block designs. This post aims to demonstrate exactly that. Using a dataset generated from alpha lattice design, I show how the design can be properly modeled and fit using OLS regression having various fixed model components. This system of model fitting is analogous to classical ANOVA based technique of estimating parameters.</p>
+</div>
+<div id="the-dataset" class="section level2">
+<h2>The dataset</h2>
+<pre><code>## # A tibble: 150 x 15
+##      Rep Block  Plot Entry   col   row tillering moisture1 moisture2
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1     1     1     1     1     1     1        NA       3         3.5
+##  2     1     1     2     3     1     2        NA       3         3.5
+##  3     1     1     3    18     1     3        NA       3.5       4  
+##  4     1     1     4    32     1     4        NA       4         4.5
+##  5     1     1     5    37     1     5        NA       4         4.5
+##  6     1     2     6    27     1     6        NA       4         4.5
+##  7     1     2     7    21     1     7        NA       4         4.5
+##  8     1     2     8    13     1     8        NA       3.5       4  
+##  9     1     2     9    24     1     9        NA       3.5       4  
+## 10     1     2    10    42     1    10        NA       3.5       4  
+## # ... with 140 more rows, and 6 more variables: `Plant height1` &lt;dbl&gt;,
+## #   `Plant height2` &lt;dbl&gt;, `Plant height3` &lt;dbl&gt;, `Plant height4` &lt;dbl&gt;,
+## #   `Plant height5` &lt;dbl&gt;, `Ear count` &lt;int&gt;</code></pre>
+</div>

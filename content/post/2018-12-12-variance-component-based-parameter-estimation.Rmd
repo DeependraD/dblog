@@ -1,0 +1,38 @@
+---
+title: Variance component based parameter estimation of incomplete block designs
+author: Deependra Dhakal
+date: '2018-12-12'
+slug: variance-component-based-parameter-estimation
+categories: 
+  - R
+  - Plant Breeding
+tags: 
+  - R
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(tidy = TRUE, cache = FALSE, echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.6, 
+                      message = FALSE, warning = FALSE, cache = TRUE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+library(tidyverse)
+library(agricolae)
+require(desplot)
+set.seed(453)
+```
+
+
+## Introduction
+
+Variance component models are also suited for analysis of incomplete block designs, besides complete block designs. This post aims to demonstrate exactly that. Using a dataset generated from alpha lattice design, I show how the design can be properly modeled and fit using OLS regression having various fixed model components. This system of model fitting is analogous to classical ANOVA based technique of estimating parameters.
+
+## The dataset
+
+```{r import-data}
+read_csv("./data/ihyb_2018.csv")
+```
+
