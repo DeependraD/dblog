@@ -8,8 +8,8 @@ categories:
 tags:
   - agriculture
 header:
-  caption: ''
-  image: ''
+  caption: 'Anadi rice growing near maturity; Source: Baluwaphanta, Kailali'
+  image: 'rice_landraces/anadi_kailali.jpg'
 ---
 
 ```{r setup, include=FALSE, warning=FALSE, message=FALSE}
