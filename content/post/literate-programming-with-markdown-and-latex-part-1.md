@@ -10,6 +10,7 @@ categories:
 tags:
   - productivity
   - open-source
+math: yes
 header:
   caption: ''
   image: ''
@@ -17,11 +18,11 @@ header:
 
 # Introduction
 
-\LaTeX is a Turing complete langauge besides being one of the popular typesetting systems in action since a very long ago. \LaTeX workflows are fully reproducible and extremely customizable, hence its popularity over WYSIWYG softwares.
+$\LaTeX$ is a Turing complete langauge besides being one of the popular typesetting systems in action since a very long ago. $\LaTeX$ workflows are fully reproducible and extremely customizable, hence its popularity over WYSIWYG softwares.
 
-This my first in a series of lessons about easing the workflow with LaTeX. I do not expect an all encompassing content, even for something that sets forth the starting point. I could only hope that with passage of time the code and workflow does not break, and even if it does, it does so with audibility.
+This my first in a series of lessons about easing the workflow with $\LaTeX$. I do not expect an all encompassing content, even for something that sets forth the starting point. I could only hope that with passage of time the code and workflow does not break, and even if it does, it does so with audibility.
 
-Since I mostly integrate my R workflows with \LaTeX in Rmarkdown documents, and very rarely fully in the typetting system, this post will be meaningful when connected to `pdf_document*` rendering of rmarkdowns. One major thing one should heed before setting forth on literate programming with LaTeX and R is the role of intermediate engine -- pandoc. It is a critical horse that hauls the conversion to pdf (or virtually any other document formats). Get this in [GitHub](https://github.com/jgm/pandoc/releases).
+Since I mostly integrate my R workflows with $\LaTeX$ in Rmarkdown documents, and very rarely fully in the typetting system, this post will be meaningful when connected to `pdf_document*` rendering of rmarkdowns. One major thing one should heed before setting forth on literate programming with $\LaTeX$ and R is the role of intermediate engine -- pandoc. It is a critical horse that hauls the conversion to pdf (or virtually any other document formats). Get this in [GitHub](https://github.com/jgm/pandoc/releases).
 
 ## Tip 1
 
@@ -37,7 +38,7 @@ output:
 
 ## Tip 2
 
-A typical \LaTeX document header will contain following packages loaded at its preamble. Generally, use these \LaTeX packages in conjunction with R package `kableExtra`.
+A typical $\LaTeX$ document header will contain following packages loaded at its preamble. Generally, use these $\LaTeX$ packages in conjunction with R package `kableExtra`.
 
 Note, however, the order of package specification might have to be tweaked. Anyway, if reordering has to be done (in case of package/option clash), always compile from the intermediate `.tex` file to cut short the time/resource to render output from rmd again.
 
@@ -88,7 +89,7 @@ options(knitr.kable.NA = "", digits = 3, knitr.table.format = "latex")
 ```
 ## Tip 5
 
-For the tip mentioned in Tip 2, there is now a recommended way of loading \LaTeX packages: Setting yet another setup options' argument:
+For the tip mentioned in Tip 2, there is now a recommended way of loading $\LaTeX$ packages: Setting yet another setup options' argument:
 
 ```
 options(kableExtra.latex.load_packages = TRUE) # this is the default
