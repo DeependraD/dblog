@@ -1,0 +1,47 @@
+---
+title: 'String tip: vectorized pattern replacement'
+author: Deependra Dhakal
+date: '2018-12-22'
+slug: string-tip-vectorized-pattern-replacement
+categories:
+  - R
+  - tidyverse
+tags:
+  - R
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(tidy = TRUE, cache = FALSE, echo = TRUE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.6, 
+                      message = FALSE, warning = FALSE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+library(tidyverse)
+```
+
+## Example case
+
+Suppose you have a bunch of really filthy names, which makes you puke... You can go about fixing those with the help of `stringi` and `stringr`
+
+Lets say following character vector hosts those filthy names.
+
+```{r filthy-chars}
+filthy <- c("Grains %", "Moisture (gm/kg)", "Plant height (cm)", "White   spaces", "White space  (filth%)")
+filthy
+```
+
+Now to get rid of the filth use string manipulation.
+
+```{r filth-clean}
+filthy %>% 
+  stringr::str_squish() %>% # remove any duplicate whitespaces
+  stringi::stri_replace_all_fixed(pattern = c(" ", "/", "%",  "(", ")"), 
+                                  replacement = c("_", "_per_", "_percent_", "_", "_"), 
+                                  vectorize_all = FALSE) %>% # itemwise vector element match for search and replacement
+  stringr::str_replace_all("__", "_") %>% 
+  stringr::str_replace_all("_$", "")
+```
+

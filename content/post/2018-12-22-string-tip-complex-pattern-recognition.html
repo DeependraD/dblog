@@ -1,0 +1,30 @@
+---
+title: 'String tip: complex pattern recognition'
+author: Deependra Dhakal
+date: '2018-12-22'
+slug: string-tip-complex-pattern-recognition
+categories:
+  - tidyverse
+  - R
+  - productivity
+tags:
+  - R
+  - tidyverse
+header:
+  caption: ''
+  image: ''
+---
+
+
+
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>This post is all about examples and use cases. So…Let’s break a leg.</p>
+<ol style="list-style-type: decimal">
+<li>Extract all words except last one using <em>anchors</em> and <em>look arounds</em></li>
+</ol>
+<pre class="r"><code>nasty_char &lt;- c(&quot;I love playing wildly&quot;)  # remove the last word &#39;wildly&#39;
+
+stringr::str_extract(nasty_char, &quot;.*(?=\\s[:alpha:]*$)&quot;)</code></pre>
+<pre><code>## [1] &quot;I love playing&quot;</code></pre>
+</div>

@@ -115,3 +115,41 @@ kable(df, format = "latex",
 - Make use of `kable()` function with argument `longtable = TRUE` to get enable page breaks in table.
 - Note that above two options are mutually exclusive.
 
+## Tip 8
+
+How to getting really long and wide tables done.
+
+- Use `pdf_document2` output format
+- Change geometry of output document in yaml header, with as simple as
+
+```
+geometry: "left=.85cm,right=0.85cm,top=1.5cm,bottom=1.0cm"
+```
+- Change \tabcolsep in yaml header in `header-includes` option
+
+```
+  - \setlength{\tabcolsep}{1pt}
+```
+- Use landscape orientation. 
+  - Method 1: To manually specify breakpoint somewhere in the markdown body, using landscape command:
+  - Method 2: Use `kableExtra::landscape()` in the table. But be warned that it does not work with `longtable=TRUE` environment.
+
+```
+  - \newcommand{\blandscape}{\begin{landscape}}
+  - \newcommand{\elandscape}{\end{landscape}}
+```
+- Load a few extra \LaTeX packages in the header:
+
+```
+  - \usepackage{dcolumn}
+  - \usepackage{tabularx}
+```
+- Lower down the text font_size in kableExtra::kable_styling
+- Use options for column width specification and header row rotation. Additionally, enable borders_* and set alignment to increase legibility.
+
+```
+kableExtra::kable_styling(..., latex_options = c("striped", "hold_position", "repeat_header"))
+kableExtra::column_spec(..., 3:ncol(df), "3.8em", border_left = T)
+kableExtra::row_spec(..., 0, bold = TRUE, font_size = 8, angle = 45)
+knitr::kable(..., align = paste0(rep("l", times = ncol(df)))) # don't collapse while working with kable
+```

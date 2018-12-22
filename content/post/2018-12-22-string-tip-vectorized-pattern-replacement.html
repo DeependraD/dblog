@@ -1,0 +1,38 @@
+---
+title: 'String tip: vectorized pattern replacement'
+author: Deependra Dhakal
+date: '2018-12-22'
+slug: string-tip-vectorized-pattern-replacement
+categories:
+  - R
+  - tidyverse
+tags:
+  - R
+header:
+  caption: ''
+  image: ''
+---
+
+
+
+<div id="example-case" class="section level2">
+<h2>Example case</h2>
+<p>Suppose you have a bunch of really filthy names, which makes you puke… You can go about fixing those with the help of <code>stringi</code> and <code>stringr</code></p>
+<p>Lets say following character vector hosts those filthy names.</p>
+<pre class="r"><code>filthy &lt;- c(&quot;Grains %&quot;, &quot;Moisture (gm/kg)&quot;, &quot;Plant height (cm)&quot;, 
+    &quot;White   spaces&quot;, &quot;White space  (filth%)&quot;)
+filthy</code></pre>
+<pre><code>## [1] &quot;Grains %&quot;              &quot;Moisture (gm/kg)&quot;      &quot;Plant height (cm)&quot;    
+## [4] &quot;White   spaces&quot;        &quot;White space  (filth%)&quot;</code></pre>
+<p>Now to get rid of the filth use string manipulation.</p>
+<pre class="r"><code>filthy %&gt;% 
+  stringr::str_squish() %&gt;% # remove any duplicate whitespaces
+  stringi::stri_replace_all_fixed(pattern = c(&quot; &quot;, &quot;/&quot;, &quot;%&quot;,  &quot;(&quot;, &quot;)&quot;), 
+                                  replacement = c(&quot;_&quot;, &quot;_per_&quot;, &quot;_percent_&quot;, &quot;_&quot;, &quot;_&quot;), 
+                                  vectorize_all = FALSE) %&gt;% # itemwise vector element match for search and replacement
+  stringr::str_replace_all(&quot;__&quot;, &quot;_&quot;) %&gt;% 
+  stringr::str_replace_all(&quot;_$&quot;, &quot;&quot;)</code></pre>
+<pre><code>## [1] &quot;Grains_percent&quot;            &quot;Moisture_gm_per_kg&quot;       
+## [3] &quot;Plant_height_cm&quot;           &quot;White_spaces&quot;             
+## [5] &quot;White_space_filth_percent&quot;</code></pre>
+</div>
