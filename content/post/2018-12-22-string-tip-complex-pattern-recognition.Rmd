@@ -6,7 +6,6 @@ slug: string-tip-complex-pattern-recognition
 categories:
   - tidyverse
   - R
-  - productivity
 tags:
   - R
   - tidyverse
