@@ -81,12 +81,14 @@ do.call(grid.arrange,c(myplots, ncol=3))
 
 Using built-in function `desplot()` in desplot package, we can generate similar field design layout. In the plot below, individual entries (a factor variable) are highlighted as cell features. The process follows as shown below. In addition to default plotting, we can also generate serpentine design layout using simple mutating trick. Plus, block grouping has also been added to show the nested factor component.
 
+**Note**: In order to plot in required layout, just specify: `layout = c(number_of_rows, number_of_columns)` argument (Thanks to (Kevin Wright)[https://github.com/kwstat] for helping me figure this out.)  
+
 ```{r desplot-layout, warning=FALSE, fig.width=10}
 ihyb_multiple <- ihyb_multiple %>% 
   mutate(row_new = if_else(col == 2, rev(row), row))
 
-desplot(Entry ~ col*row_new|Rep, 
-        data = ihyb_multiple, aspect=12/12,
+desplot(Entry ~ col*row_new|Rep, layout = c(3, 1),
+        data = ihyb_multiple, aspect=12/8,
         text = Entry, out1 = Block, 
         midpoint = "midrange",
         out2 = row_new, show.key = FALSE, 
