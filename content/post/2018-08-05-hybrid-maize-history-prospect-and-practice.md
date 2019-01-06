@@ -183,3 +183,7 @@ Among several topics of hybrid production, seed production management aspect has
 4. Intervene in seed production chain
 - After being fairly acquainted, personalized system should be developed to intervene in seed production process.
 - This system should include recommendation system (intended for farmers) and record keeping system (intended for production/sales manager/personnel). An example recommendation system to farmers regarding specific hybrid seed production is given in @macrobert2014maize (page 10).
+
+5. Knowing the production economics
+- Work out the seed grower price models with estimates of profit margin, variable cost and total income.
+- Choose the production pricing model wisely among Production cost model (Cost plus model), Market price model and Gross income model. Each model is described in detail in @macrobert2009seed.
