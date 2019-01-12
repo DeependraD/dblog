@@ -10,8 +10,8 @@ tags:
   - agriculture
   - optimization
 header:
-  caption: ''
-  image: ''
+  caption: 'Seed storage unit of Unique Seed Company, Dhangadhi, Kailali, Nepal'
+  image: 'seed/usc_bag_stacks.jpg'
 bibliography: ./bib/2019-01-12-seed-business-process-management-guide.bib  
 ---
 
