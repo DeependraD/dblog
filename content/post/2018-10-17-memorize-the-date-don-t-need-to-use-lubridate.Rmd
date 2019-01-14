@@ -10,6 +10,15 @@ header:
   image: 'forgetfulness.jpg'
 ---
 
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(tidy = TRUE, cache = FALSE, echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.6, 
+                      message = FALSE, warning = FALSE, cache = TRUE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+library(tidyverse)
+```
+
 # My sufferance
 
 Time and again, I've suffered due to my humanistic limitations of memorizing things promptly. I **suck** at remembering stuffs, dates particularly. So, In this blog trip (Oh! this is a trip btw, because I don't forsee myself surpassing my memory limitations any sooner than death), I will be stating if not rambing on some lifesaving tricks of picking up pieces of your faulty brain. 
@@ -124,4 +133,24 @@ mdy_h("Oct 17, 2018, 12") - days(18)
 # adding or subtracting is supported for a difftime object too from a date
 mdy_h("Oct 17, 2018, 12") - (mdy_hm("Sep 28, 2018 12:45")-mdy_hm("Dec 30, 2016 9:12"))
 ```
+
+## Duration and period
+
+Duration is the absolute representation of time difference, while period signifies the relative difference.
+
+> Duration displays as the number of seconds in a time span. Units larger than weeks are not used due to their variablity.
+
+An example use case of duration is to express age of a person or likewise, till the current date. Beware, the time format display of a system is locale dependent.
+
+```{r duration}
+time_differ <- (lubridate::date() %>% 
+  strptime(format = "%a %b %d %H:%M:%S %Y") %>% # suited for existing locale settings
+  lubridate::as_date()) - lubridate::as_date(strptime("30-12-1992", format = "%d-%m-%Y"))
+
+# shows duration in seconds and most readable units
+time_differ %>% lubridate::as.duration()
+
+time_differ/lubridate::dyears(1)
+```
+
 

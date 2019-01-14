@@ -49,48 +49,31 @@ header:
 <li><code>strftime()</code> outputs to character class.</li>
 <li>Simply, One is “to” and one is “from”.</li>
 </ul>
-<p>Suppose you have today’s date and current time: Wednesday, Oct 17, 2018, 9:00 AM. Let’s start with formatting this character to represent date time using <code>strptime()</code>. BTW, you can call <code>date()</code> to display current datetime, and as of now in my system, it prints Wed Oct 17 10:43:27 2018.</p>
-<pre class="r"><code>today &lt;- c(&quot;Wednesday, Oct 17, 2018&quot;)
-current &lt;- c(&quot;Wed, October 17, 2018, 9:00 AM&quot;)
-
-sapply(c(today, current), class)</code></pre>
+<p>Suppose you have today’s date and current time: Wednesday, Oct 17, 2018, 9:00 AM. Let’s start with formatting this character to represent date time using <code>strptime()</code>. BTW, you can call <code>date()</code> to display current datetime, and as of now in my system, it prints Mon Jan 14 12:12:19 2019.</p>
 <pre><code>##        Wednesday, Oct 17, 2018 Wed, October 17, 2018, 9:00 AM 
 ##                    &quot;character&quot;                    &quot;character&quot;</code></pre>
-<pre class="r"><code>strptime(today, format = &quot;%A, %b %d, %Y&quot;, tz = &quot;Asia/Kathmandu&quot;) #%A for fullname of weekday, %b for shortname of month</code></pre>
 <pre><code>## [1] &quot;2018-10-17 +0545&quot;</code></pre>
-<pre class="r"><code># both are correct
-strptime(current, format = &quot;%a, %B %d, %Y, %H:%M&quot;, tz = &quot;Asia/Kathmandu&quot;) #%H for 24 hour clock</code></pre>
 <pre><code>## [1] &quot;2018-10-17 09:00:00 +0545&quot;</code></pre>
-<pre class="r"><code>strptime(current, format = &quot;%a, %B %d, %Y, %I:%M %p&quot;, tz = &quot;Asia/Kathmandu&quot;) #%I for 12 hour clock and %p for AM/PM indicator</code></pre>
 <pre><code>## [1] &quot;2018-10-17 09:00:00 +0545&quot;</code></pre>
 <p>If you’re not sure (And I can attest, NOBODY is!), how to express timezone (tz) use the function <code>Sys.timezone()</code>. The default formating of datetime on any system (output of <code>date()</code>) is locale specific, however. You can test what locale is currently set on your system using <code>Sys.getlocale()</code> function. Besides, locale could be set using various valid locale types (A character string; See <code>?locales</code> for more details).</p>
 <p>If anything further bugs for correctly formatting character vector to datetime, the documentation on <code>?strptime</code> is pretty thorough and example-rich.</p>
 <p>To soothen things a bit, if you haven’t already heard of lubridate package, get your a** of this rant and spend some time researching about it. Below, I point to a helper function, available in lubridate, that enables you to quickly format available character vector to <em>Date</em> object.</p>
-<pre class="r"><code>require(lubridate)</code></pre>
-<pre><code>## Loading required package: lubridate</code></pre>
-<pre><code>## 
-## Attaching package: &#39;lubridate&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:base&#39;:
-## 
-##     date</code></pre>
-<pre class="r"><code># the helper functions are quite flexible with input format
-myd(&quot;Oct 2018, 17&quot;) # month year day</code></pre>
 <pre><code>## [1] &quot;2018-10-17&quot;</code></pre>
-<pre class="r"><code>myd(&quot;Oct 2018 17&quot;)</code></pre>
 <pre><code>## [1] &quot;2018-10-17&quot;</code></pre>
-<pre class="r"><code>myd(&quot;Oct-2018-17&quot;)</code></pre>
 <pre><code>## [1] &quot;2018-10-17&quot;</code></pre>
-<pre class="r"><code>myd(&quot;Oct,2018,17&quot;)</code></pre>
 <pre><code>## [1] &quot;2018-10-17&quot;</code></pre>
-<pre class="r"><code># other valid helper functions are: mdy, mdy_h, mdy_hm, mdy_hms</code></pre>
 <p>The arithmetics of date could be bewildering sometimes, but to ease this often necessary burden, Below I show some example scenarios using lubridate helpers.</p>
-<pre class="r"><code># time difference; difftime object
-mdy_hm(&quot;Sep 28, 2018 12:45&quot;)-mdy_hm(&quot;Dec 30, 2016 9:12&quot;)</code></pre>
-<pre><code>## Time difference of 637.1479 days</code></pre>
-<pre class="r"><code># add or subtract arbitrary period from a date
-mdy_h(&quot;Oct 17, 2018, 12&quot;) - days(18)</code></pre>
+<pre><code>## Time difference of 637 days</code></pre>
 <pre><code>## [1] &quot;2018-09-29 12:00:00 UTC&quot;</code></pre>
-<pre class="r"><code># adding or subtracting is supported for a difftime object too from a date
-mdy_h(&quot;Oct 17, 2018, 12&quot;) - (mdy_hm(&quot;Sep 28, 2018 12:45&quot;)-mdy_hm(&quot;Dec 30, 2016 9:12&quot;))</code></pre>
 <pre><code>## [1] &quot;2017-01-18 08:27:00 UTC&quot;</code></pre>
+<div id="duration-and-period" class="section level2">
+<h2>Duration and period</h2>
+<p>Duration is the absolute representation of time difference, while period signifies the relative difference.</p>
+<blockquote>
+<p>Duration displays as the number of seconds in a time span. Units larger than weeks are not used due to their variablity.</p>
+</blockquote>
+<p>An example use case of duration is to express age of a person or likewise, till the current date. Beware, the time format display of a system is locale dependent.</p>
+<pre><code>## [1] &quot;821750400s (~26.04 years)&quot;</code></pre>
+<pre><code>## [1] 26.1</code></pre>
+</div>
 </div>
