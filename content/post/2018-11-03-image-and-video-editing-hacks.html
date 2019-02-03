@@ -13,6 +13,8 @@ header:
 
 
 
+<div id="compose-a-slideshow" class="section level1">
+<h1>Compose a slideshow</h1>
 <p>This is beginner’s tutorial for starting up with open source <a href="https://www.ffmpeg.org/">ffmpeg</a> library.</p>
 <p>In the beginning, it’s shown how we can convert an image gallery to a video slideshow. For example we have a directory called <code>images</code> filled with photos that we want to knit together to obtain a slideshow. A video, however, has an additional time/length attribute besides the attribute that controls which order the images are sawn together in. Along with these, several other features underlie a video composition, some of which will be discussed in this tutorial.</p>
 <p>In an ideal scenario we start off at the directory of images (<code>images</code>).</p>
@@ -45,6 +47,43 @@ stringr::str_pad(seq_along(filenames), width = 3, pad = &quot;0&quot;) # this al
 <li><p>Generally, unconventional resolutions like <code>-s:v 1380x720</code> are avoided. Think about using the native 16:9 (720p resolution; 1280 x 720) and regenerating your plots if necessary. This will save from troubles mainly relating to letterboxing on YouTube, and sticking to unusual dimensions might prevent your video from being shown in full resolution or offered at 720p quality settings.</p></li>
 <li><p>Use the MP4 container instead of MOV, which YouTube suggests you to use. MP4 is virtually identical in functionality to MOV, but has better support in playback devices. In general, prefer that over MOV when you can.</p></li>
 </ul>
+</div>
+<div id="video-format-conversion" class="section level1">
+<h1>Video format conversion</h1>
 <p>Besides these, converting videos back and forth between formats is really easy either. For example, an easy way to convert high compression mkv format to mp4 so that most decoder could play the video can be accomplished by the following.</p>
 <pre><code>ffmpeg -i inputfilename.mkv outputfilename.mp4</code></pre>
+</div>
+<div id="muxing-streams" class="section level1">
+<h1>Muxing streams</h1>
+<p>Often times, we may have isolated streams of audio and videos; For example, only video stream may be extracted from a stream with noisy voice recordings in the background and we may desire to add in some music or alikes. So, the easiest way to do that would be:</p>
+<pre><code># Following command uses both the streams to mux together into a media format
+
+ffmpeg -i &quot;input_audio.mp3&quot; -i input_video.mp4 -vcodec copy -acodec copy -shortest output_format.mp4</code></pre>
+<p>Note that the length of output media is equal to the duration of the shortest stream specified by <code>-shortest</code> flag.</p>
+</div>
+<div id="batch-conversion-of-videos-using-rstudio-and-its-shell-interface" class="section level1">
+<h1>Batch conversion of videos using Rstudio and its shell interface</h1>
+<p>Firstly, load the following libraries.</p>
+<pre><code>require(tidyverse)
+require(glue)</code></pre>
+<p>Then specify the input filenames, and output filenames alike through extension pattern substitution. <code>purrr</code> and <code>stringr</code> libraries come to the rescue.</p>
+<pre><code># input filename
+iflist &lt;- map(c(&quot;.mkv&quot;, &quot;.webm&quot;), 
+              ~list.files(path = &quot;.&quot;, 
+                          recursive = T, pattern = .x, full.names = TRUE)) %&gt;% 
+  unlist()
+
+# output filename
+oflist &lt;- str_replace_all(iflist, &quot;\\.\\w*$&quot;, &quot;.mp4&quot;)</code></pre>
+<p>Now, get the batch script run at once. All three lines, for example as in the code below may selected and ran, if there are three media files of interest.</p>
+<pre><code># glue function demo
+glue(&quot;I love {iflist[1]} and hate {oflist[1]}&quot;)
+# call CMD shell for conversion from R
+# shell(cmd = &quot;ffmpeg --help&quot;)
+# run all in sequence and not in a single statement
+
+shell(cmd = glue(&#39;ffmpeg -i &quot;{iflist[1]}&quot; &quot;{oflist[1]}&quot;&#39;))
+shell(cmd = glue(&#39;ffmpeg -i &quot;{iflist[2]}&quot; &quot;{oflist[2]}&quot;&#39;))
+shell(cmd = glue(&#39;ffmpeg -i &quot;{iflist[3]}&quot; &quot;{oflist[3]}&quot;&#39;))</code></pre>
 <p>This is all for now. Enjoy media editing with open source tools.</p>
+</div>

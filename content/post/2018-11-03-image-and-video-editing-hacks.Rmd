@@ -11,6 +11,8 @@ header:
   image: ''
 ---
 
+# Compose a slideshow
+
 This is beginner's tutorial for starting up with open source [ffmpeg](https://www.ffmpeg.org/) library.
 
 In the beginning, it's shown how we can convert an image gallery to a video slideshow. For example we have a directory called `images` filled with photos that we want to knit together to obtain a slideshow. A video, however, has an additional time/length attribute besides the attribute that controls which order the images are sawn together in. Along with these, several other features underlie a video composition, some of which will be discussed in this tutorial.    
@@ -80,11 +82,58 @@ ffmpeg.exe -y -framerate 1/2 -start_number 1 -i "IMG_%03d.JPG" -c:v libx264 -pix
 
 - Use the MP4 container instead of MOV, which YouTube suggests you to use. MP4 is virtually identical in functionality to MOV, but has better support in playback devices. In general, prefer that over MOV when you can.
 
+# Video format conversion
 
 Besides these, converting videos back and forth between formats is really easy either. For example, an easy way to convert high compression mkv format to mp4 so that most decoder could play the video can be accomplished by the following.
 
 ```
 ffmpeg -i inputfilename.mkv outputfilename.mp4
+```
+
+# Muxing streams
+
+Often times, we may have isolated streams of audio and videos; For example, only video stream may be extracted from a stream with noisy voice recordings in the background and we may desire to add in some music or alikes. So, the easiest way to do that would be:
+
+```
+# Following command uses both the streams to mux together into a media format
+
+ffmpeg -i "input_audio.mp3" -i input_video.mp4 -vcodec copy -acodec copy -shortest output_format.mp4
+```
+Note that the length of output media is equal to the duration of the shortest stream specified by `-shortest` flag. 
+
+# Batch conversion of videos using Rstudio and its shell interface
+
+Firstly, load the following libraries.
+
+```
+require(tidyverse)
+require(glue)
+```
+
+Then specify the input filenames, and output filenames alike through extension pattern substitution. `purrr` and `stringr` libraries come to the rescue.
+
+```
+# input filename
+iflist <- map(c(".mkv", ".webm"), 
+              ~list.files(path = ".", 
+                          recursive = T, pattern = .x, full.names = TRUE)) %>% 
+  unlist()
+
+# output filename
+oflist <- str_replace_all(iflist, "\\.\\w*$", ".mp4")
+```
+
+Now, get the batch script run at once. All three lines, for example as in the code below may selected and ran, if there are three media files of interest.
+```
+# glue function demo
+glue("I love {iflist[1]} and hate {oflist[1]}")
+# call CMD shell for conversion from R
+# shell(cmd = "ffmpeg --help")
+# run all in sequence and not in a single statement
+
+shell(cmd = glue('ffmpeg -i "{iflist[1]}" "{oflist[1]}"'))
+shell(cmd = glue('ffmpeg -i "{iflist[2]}" "{oflist[2]}"'))
+shell(cmd = glue('ffmpeg -i "{iflist[3]}" "{oflist[3]}"'))
 ```
 
 This is all for now. Enjoy media editing with open source tools.
