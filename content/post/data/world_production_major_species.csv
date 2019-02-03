@@ -1,0 +1,28 @@
+"# Seed composition data from Bewley et al. (2013), Sinclair and de Wit (1975), Langer and Hill (1991), Hulse et al. (1980), and Alberta Agriculture and Forestry (2015)",,,,,,
+,,,,,,
+Crop,Crop species,"World production^[Average of 2011 to 2014, FAOSTAT (2016)] (1000 t)",Harvested unit, Seed carbohydrate (g_per_kg),Seed oil (g_per_kg),Seed protein (g_per_kg)
+Poaceae,,,,,,
+Maize,Zea mays L.,"950,394",Caryopsis,800,50,100
+Rice,Oryza sativa L.,"733,424",Caryopsis,880,20,80
+Wheat,Triticum spp.,"700,828",Caryopsis,750,20,120
+Barley,Hordeum vulgare L.,"138,252",Caryopsis^[Harvested grain usually includes the lemma and palea],760,30,120
+Sorghum,Sorghum bicolor (L.) Moench,"58,647",Caryopsis,820,40,120
+"Millet^[May include members of other genera such as Pennisetum, Papspalm, Setoria and Echinochla]",Panicum miliaceum L.,"26,528",Caryopsis,690,50,110
+Oat,Avena sativa L.,"22,639",Caryopsis^[Harvested grain usually includes the lemma and palea],660,80,130
+Rye,Secale cereale L.,"14,906",Caryopsis,760,20,120
+Triticale,X Triticosecale Wittm ex A. Camus,"14,653",Caryopsis,594,18,131
+Fabaceae,,,,,,
+Soybean,Glycine max (L.) Merrill,"272,426",Non-endospermic seed,260,170,370
+Groundnut^[In the shell],Arachis hypogaea L.,"41,366",Non-endospermic seed,120,480,310
+"Bean^[Also includes other species of Phaseolus and, in some countries, Vigna species.]",Phaseolus vulgaris L.,"23,898",Non-endospermic seed,620,20,240
+Chickpea,Cicer arietinum L.,"12,735",Non-endospermic seed,680,50,230
+"Pea, dry^[May include P. arvense (field pea).]",Pisum sativum L.,"11,013",Non-endospermic seed,520,60,250
+Cowpea,Vigna unguiculata (L.) Walp.,"6,661",Non-endospermic seed,570,10,250
+Lentil,Lens culinaris Medikus,"4,831",Non-endospermic seed,670,10,280
+Broad bean,Vicia faba L.,"4,332",Non-endospermic seed,560,10,230
+Pigeon pea,Cajanus cajan L. Millsp.,"4,454",Non-endospermic seed,560,20,250
+"Others^[Rapeseed is in the Brassicaceae, sunflower and safflower are in the Asteraceae, and sesame is in Pedaliaceae.]",,,,,,
+"Rapeseed^[May include industrial and edible (canola) types, data from some countries includes mustard (Brassica juncea (L.) Czern, et Coss)]","Brassica napus L., B campestris L.","67,789",Non-endospermic seed,190,480,210
+Sunflower,Helianthus annuus L.,"40,931",Cypsela,480,290,200
+Sesame,Sesamum indicum L.,"4,738",Non-endospermic seed,190,540,200
+Safflower,Carthamus tinctoris L.,776,Cypsela,500,330,140
