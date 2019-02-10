@@ -46,6 +46,12 @@ descriptors_bean %>%
                          box_css = "border: 2px solid #22d0dd; padding: 10px; ")
 ```
 
+## Where to look for
+
+### [Crop Ontology Curation Tool](http://www.cropontology.org/ontology)
+
+About section of the website referred to in the title briefs on Crop Ontology Project. Interestingly, the project was the result of Generation Challenge Programme (GCP), the program which from the beginning underlined the importance of controlled vocabularies and ontologies for digital annotation of data. Ontological description enables logical definition of the relationship between terms which, inturn, is computationally structured. While it is being increasingly important that the definition of terms frequented in agriculture, especially plant breeding and germplasm be explicitly stated, several projects notably Integrated Breeding Platform are working on dynamically validating ontological terms so as to enable its refinement, to add standardized protocols for trait measurement and to conviniently map published experimental results to standardized ontological database.
+
 ## References
 
 https://www.genesys-pgr.org/c/fababean
