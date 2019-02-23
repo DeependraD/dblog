@@ -262,7 +262,7 @@ enableGitInfo = false
   [[params.social]]
     icon = "cv"
     icon_pack = "ai"
-    link = "files/Deependra_CV.pdf"
+    link = "https://github.com/DeependraD/tex-for-beauty/raw/master/Deependra_CV.pdf"
 
 # Navigation Links
 #   To link a homepage widget, specify the URL as a hash `#` followed by the filename of the
