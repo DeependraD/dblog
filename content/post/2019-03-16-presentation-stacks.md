@@ -1,5 +1,5 @@
 ---
-title: 'Seed production and allied fields\' presentations'
+title: 'Seed production and allied fields presentations'
 author: Deependra Dhakal
 date: '2019-03-16'
 slug: presentation-stacks

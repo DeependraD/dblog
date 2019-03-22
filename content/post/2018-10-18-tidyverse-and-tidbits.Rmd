@@ -498,3 +498,20 @@ lapply(hareramshyam, `length<-`,
          ram = dplyr::coalesce(ram, shyam))
 ```
 
+
+# Quick saving dataframe as image/vector
+
+```{r eval = FALSE}
+library(gridExtra)
+df <- augd[augd %>% str_detect("age$") %>% # augd is a character vector
+             which()] %>% 
+  tibble() %>% 
+  split(f = as.factor(rep(1:4))) %>% 
+  bind_cols() %>% 
+  magrittr::set_colnames(paste0("shitlist", 1:4))
+
+png("./shitlist.png", height = 22*nrow(df), width = 100*ncol(df))
+grid.table(df)
+dev.off()
+```
+
