@@ -2,8 +2,8 @@
 title: Correlation and pathway analysis with path diagrams
 author: Deependra Dhakal
 date: '2019-03-21'
-slug: correlation-and-pathway-analysis
 math: yes
+slug: correlation-and-pathway-analysis
 categories:
   - R
   - statistics
