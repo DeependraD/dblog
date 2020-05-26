@@ -5,33 +5,28 @@ The source repo has its remote on https://github.com/deependraD/dblog.
 
 ## Build instructions
 
-- Rstudio's native build option tends to build all pages without searching for cache, better use `blogdown::serve_site()`.
+- Rstudio's native build option tends to build all pages without searching for cache, so better use `blogdown::serve_site()` to quicken the build process.
   - This option builds site so that it is locally renderable too.
   
-- Adding only `posts` does not disrupt built.
+- Building/serving a desired site, only then move to **deployment** stage.
+
+- Hugo builds the site in public folder with netlify providing the necessary commands and rendering the site.
 
 ## Content addition and modification
 
 - Creating/modifying means to just create a new markdown/rmarkdown post, or modifying any source files that will be built using hugo. Simplest way to do that would be:
+  
   ```
   R -e 'blogdown::new_post(title="create_new_title_for_your_post", author="Deependra", ext=".Rmd")'
   ```
   
-## Site deployment steps
+## Diagnosis and update
 
-- Building/serving a desired site, only then move to **deployment** stage.
+Time and again check for hugo updates, especially if the build fails. This could be because of inconsistencies between hugo and blogdown project structure. Also check for the Hugo academic repo once in a while so that in case any [breaking changes]() are made, be noted about in time. These changes are addressed in released notes with instructions for fixing website. Also equally worth noting is that, some `hugo-academic` theme updates require certain minimum version of hugo to build.
 
-- Building the site with hugo/blogdown entails:
-  ```
-  R -e "blogdown::build_site()"
-  ```
-- You may wish to serve (or not) the site locally with:
-  ```
-  R -e "blogdown::serve_site(port=4005)"
-  ```
-- Hugo builds the site in public folder with netlify providing the necessary commands and rendering the site.
+### Instructions on updating theme [Hugo academic](https://github.com/gcushen/hugo-academic)
 
-## Instructions on updating theme [Hugo academic](https://github.com/gcushen/hugo-academic)
+Obtain a submodule of the remote theme repository under `theme/` and update it periodically. Check tutorial on submodules (https://git-scm.com/book/en/v2/Git-Tools-Submodules) for understanding the details.
 
 - Current version of hugo-academic template
 
