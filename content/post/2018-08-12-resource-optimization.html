@@ -16,8 +16,12 @@ header:
   image: ''
 ---
 
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
+<pre class="r"><code>library(lpSolve)
+library(tidyverse)
+library(formattable)</code></pre>
 <p><span class="math display">\[
 \begin{align}
 \textbf{Question}
@@ -31,7 +35,8 @@ header:
 \end{align}
 \]</span></p>
 <p>The problem can be formulated as an optimization problem with following notation:</p>
-<p><span class="math inline">\(X_1\)</span> = katthas of Maize <span class="math inline">\(X_2\)</span> = katthas of Rice</p>
+<p><span class="math inline">\(X_1\)</span> = katthas of Maize
+<span class="math inline">\(X_2\)</span> = katthas of Rice</p>
 <p>The objective function is:</p>
 <p><span class="math display">\[
 max(1000X_1+2000X_2)
@@ -47,9 +52,6 @@ Fertilizer
 20X_1 + 25X_2 \leq 11000
 \end{bmatrix}
 \]</span></p>
-<pre class="r"><code>library(lpSolve)
-library(tidyverse)
-library(formattable)</code></pre>
 <p>Define objective function to be optimized.</p>
 <pre class="r"><code>objective.in &lt;- 
   c(

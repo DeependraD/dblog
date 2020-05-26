@@ -18,6 +18,7 @@ header:
   preview: yes
 ---
 
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 <script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
 
 
@@ -845,11 +846,11 @@ path_coeffs &lt;- agricolae::path.analysis(corr_matx,
 ## Residual Effect^2 =  0.0121</code></pre>
 <pre class="r"><code># path_coeffs</code></pre>
 <p>In fact, the path coefficients is just the result of matrix product between inverse matrix, of explainatory variables, and the dependent variable. For any <a href="https://en.wikipedia.org/wiki/Well-posed_problem">Well-posed problem</a> being modeled as ordinary least squares problem let us consider known vector <span class="math inline">\(A\)</span> and <span class="math inline">\(b\)</span>. Now, we seek to find vector <span class="math inline">\(\mathbf{x}\)</span>. This could be solved as shown in the Equation <a href="#eq:solve-x">(1)</a>.</p>
-<span class="math display" id="eq:solve-x">\[\begin{equation}
+<p><span class="math display" id="eq:solve-x">\[\begin{equation}
 \tag{1}
 {\displaystyle A\mathbf {x} =\mathbf {b}} \\
 {\displaystyle \mathbf{x} =A^{-1}\mathbf {b}}
-\end{equation}\]</span>
+\end{equation}\]</span></p>
 <p>Hence the solution for vector <span class="math inline">\(\mathbf x\)</span> gives the direct effects path coefficients, between two variables. Then the indirect coefficients (<span class="math inline">\(Z\)</span>) are scalar products of direct effects (<span class="math inline">\(\mathbf {x}\)</span>) and correlation matrix of explainatory variables (<span class="math inline">\(A\)</span>).</p>
 <p><span class="math display">\[
 Z = \mathbf {x} . A

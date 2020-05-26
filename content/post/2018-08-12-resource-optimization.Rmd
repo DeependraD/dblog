@@ -16,6 +16,13 @@ header:
   image: ''
 ---
 
+```{r library-loadings, warning=FALSE, message=FALSE}
+library(lpSolve)
+library(tidyverse)
+library(formattable)
+```
+
+
 $$
 \begin{align}
 \textbf{Question}
@@ -56,12 +63,6 @@ Fertilizer
 20X_1 + 25X_2 \leq 11000
 \end{bmatrix}
 \]
-
-```{r library-loadings, warning=FALSE, message=FALSE}
-library(lpSolve)
-library(tidyverse)
-library(formattable)
-```
 
 Define objective function to be optimized.
 

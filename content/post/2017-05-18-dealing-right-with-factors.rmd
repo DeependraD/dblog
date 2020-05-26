@@ -17,6 +17,7 @@ knitr::opts_chunk$set(tidy = TRUE, cache = TRUE, echo = TRUE,
                       message = FALSE, warning = FALSE)
 options(knitr.kable.NA = "", digits = 3)
 library(tidyverse)
+library(ggplot2) # load library
 ```
 
 ## A `factor` is an headache
@@ -24,7 +25,7 @@ library(tidyverse)
 I have a dataset, cleaning which has been a pain lately. I'm going to use 20 observations of the imported dataset in this post to demonstrate how pathetically have I been advancing with it. 
 
 ```{r import, echo=FALSE, results='asis'}
-head_boot <- read_csv("./data/factor_data.csv", na = "") %>% 
+head_boot <- read_csv(here::here("content", "post", "data", "factor_data.csv"), na = "") %>% 
   mutate_if(is.character, factor)
 # str(head_boot)
 knitr::kable(head(head_boot), format = "html", align = "c") %>% 
@@ -120,14 +121,13 @@ knitr::kable(head(head_boot), format = "html", align = "c") %>%
 Bar plotting of the ordinal data might reveal interesting insights, so let's prepare ggplot graphs.
 
 ```{r ggbar-viz, fig.cap="Growth stages at different dates"}
-library(ggplot2) # load library
-
-walk2(.x = head_boot %>% select(jan_23_2017:feb_02_2017),
-      .y = strptime(str_subset(colnames(head_boot), "^\\w{3}_\\d{2}"), format = "%b_%d_%Y"),
-      .f = ~print(ggplot(aes(x = .x), data = head_boot) +
-        geom_bar(position = "dodge", stat = "count", width = .5) +
-        xlab(as.character(.y)) +
-        theme(axis.text.x = element_text(angle = 40, size = 9, vjust = 0.6))))
+walk2(.x = head_boot %>% select(jan_23_2017:feb_02_2017) %>% colnames(),
+      .y = as.character(strptime(str_subset(colnames(head_boot), "^\\w{3}_\\d{2}"), 
+                                 format = "%b_%d_%Y")),
+      .f = ~print(ggplot(aes(x = get(.x)), data = head_boot) +
+                    geom_bar(position = "dodge", stat = "count", width = .5) +
+                    xlab(.y) +
+                    theme(axis.text.x = element_text(angle = 40, size = 9, vjust = 0.6))))
 ```
 
 With dplyr, It's seemless to obtain a tabular summary of what has been visualized above.

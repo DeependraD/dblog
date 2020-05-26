@@ -1,9 +1,69 @@
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
+# IDEs
+.idea/
+
+# Hugo
+resources/
 public/
-/**/Thumbs.db
-blogdown/
-_cache/
-drafts/
+.Rproj.user
+
+
+# Created by https://www.gitignore.io/api/r,hugo,bookdown
+# Edit at https://www.gitignore.io/?templates=r,hugo,bookdown
+
+### Bookdown ###
+# R package: bookdown caching files
+/*_files/
+
+### Hugo ###
+# Generated files by hugo
+/public/
+/resources/_gen/
+
+# Executable may be added to repository
+hugo.exe
+hugo.darwin
+hugo.linux
+
+### R ###
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+.RDataTmp
+
+# User-specific files
+.Ruserdata
+
+# Example code in package build process
+*-Ex.R
+
+# Output files from R CMD build
+/*.tar.gz
+
+# Output files from R CMD check
+/*.Rcheck/
+
+# RStudio files
+.Rproj.user/
+
+# produced vignettes
+vignettes/*.html
+vignettes/*.pdf
+
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
+
+# knitr and R markdown default cache directories
+*_cache/
+/cache/
+
+# Temporary files created by R markdown
+*.utf8.md
+*.knit.md
+
+### R.Bookdown Stack ###
+# R package: bookdown caching files
+
+# End of https://www.gitignore.io/api/r,hugo,bookdown

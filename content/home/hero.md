@@ -1,53 +1,61 @@
 +++
 # Hero widget.
-widget = "hero"
-active = false
-date = 2017-10-15T00:00:00
+widget = "hero"  # See https://sourcethemes.com/academic/docs/page-builder/
+headless = true  # This file represents a page section.
+active = true  # Activate this widget? true/false
+weight = 10  # Order that this section will appear.
 
-title = "Academic"
+title = "A lame disclosure"
 
-# Order that this section will appear in.
-weight = 3
+# Hero image (optional). Enter filename of an image in the `static/img/` folder.
+hero_media = "forgetfulness.jpg"
 
-# Overlay a color or image (optional).
-#   Deactivate an option by commenting out the line, prefixing it with `#`.
-[header]
-  overlay_color = "#229"  # An HTML color value. #666
-  overlay_img = "headers/lich_king_aerial.jpg"  # Image path relative to your `static/img/` folder.
-  overlay_filter = 0.5  # Darken the image. Value in range 0-1.
+[design.background]
+  # Apply a background color, gradient, or image.
+  #   Uncomment (by removing `#`) an option to apply it.
+  #   Choose a light or dark text color by setting `text_color_light`.
+  #   Any HTML color name or Hex value is valid.
 
-# Call to action button (optional).
-#   Activate the button by specifying a URL and button label below.
-#   Deactivate by commenting out parameters, prefixing lines with `#`.
-#[cta]
-#  url = "./post/getting-started/"
-#  label = '<i class="fa fa-download"></i> Install Now'
+  # Background color.
+  # color = "navy"
+  
+  # Background gradient.
+  gradient_start = "#4bb4e3"
+  gradient_end = "#2b94c3"
+  
+  # Background image.
+  # comment image settings below to use gradient background
+  image = "headers/lich_king_aerial.jpg"  # Name of image in `static/img/`.
+  image_darken = 0.6  # Darken the image? Range 0-1 where 0 is transparent and 1 is opaque.
+  image_size = "cover"  #  Options are `cover` (default), `contain`, or `actual` size.
+  image_position = "center"  # Options include `left`, `center` (default), or `right`.
+  # image_parallax = true  # Use a fun parallax-like fixed background effect? true/false
+  
+  # Text color (true=light or false=dark).
+  text_color_light = true
+
+# Call to action links (optional).
+#   Display link(s) by specifying a URL and label below. Icon is optional for `[cta]`.
+#   Remove a link/note by deleting a cta/note block.
+[cta]
+  url = "https://rookie.rbind.io/#posts"
+  label = "Check out posts"
+  icon_pack = "fas"
+  icon = "spinner"
+  
+# [cta_alt]
+#   url = "https://rookie.rbind.io/"
+#   label = "Reload my site"
+
+# # Note. An optional note to show underneath the links.
+# [cta_note]
+#   label = '<a class="js-github-release" href="https://sourcethemes.com/academic/updates" data-repo="gcushen/hugo-academic">Latest release<!-- V --></a>'
+
+# ddnote: below how markdown contents can be commented out!
 +++
 
-About academic theme
+**You are always welcomed to tamper with my feelings**
 
-<br>
-<small><a id="academic-release" href="https://sourcethemes.com/academic/updates">Latest release</a></small>
-<br><br>
-<iframe style="display: inline-block;" # src="https://ghbtns.com/github-btn.html?user=gcushen&amp;repo=hugo-academic&amp;type=star&amp;count=true&amp;size=large" scrolling="0" width="160px" height="30px" frameborder="0"></iframe>
-<iframe style="display: inline-block;" src="https://ghbtns.com/github-btn.html?user=gcushen&amp;repo=hugo-academic&amp;type=fork&amp;count=true&amp;size=large" scrolling="0" width="158px" height="30px" frameborder="0"></iframe>
+[//]: # (Build **Anything** with Widgets)
 
-<script type="text/javascript">
-  (function defer() {
-    if (window.jQuery) {
-      jQuery(document).ready(function(){
-        GetLatestReleaseInfo();
-      });
-    } else {
-      setTimeout(function() { defer() }, 50);
-    }
-  })();  
-   function GetLatestReleaseInfo() {
-     $.getJSON('https://api.github.com/repos/gcushen/hugo-academic/tags').done(function (json) {
-       let release = json[0];
-       // let downloadURL = release.zipball_url;
-       $('#academic-release').text('Latest release ' + release.name);  
-     });    
- }  
-
-</script>
+[//]: # (<span style="text-shadow: none;"><a class="github-button" href="https://github.com/gcushen/hugo-academic" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star this on GitHub">Star</a><script async defer src="https://buttons.github.io/buttons.js"></script></span>)

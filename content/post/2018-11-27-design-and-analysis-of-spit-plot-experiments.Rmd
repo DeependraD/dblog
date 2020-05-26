@@ -29,7 +29,7 @@ library(gplots)
 library(agricolae)
 library(car)
 library(lattice)
-library(plantbreeding)
+library(plantbreeding) # requires "reshape" as dependency
 require(agridat)
 require(desplot)
 # install.packages("multcompView")

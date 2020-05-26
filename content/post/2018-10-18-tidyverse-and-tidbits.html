@@ -17,6 +17,7 @@ header:
   image: ''
 ---
 
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 <script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
 
 <div id="TOC">
@@ -112,7 +113,7 @@ transmute(starwars, height / mass)</code></pre>
 ##  8          3.03
 ##  9          2.18
 ## 10          2.36
-## # ... with 77 more rows</code></pre>
+## # … with 77 more rows</code></pre>
 <pre class="r"><code># # unlike below where data objects could not be directly refered to
 # height / mass
 # starwars$height / starwars$mass</code></pre>
@@ -183,7 +184,7 @@ df</code></pre>
 ##         .Call(C_df, x, df1, df2, log)
 ##     else .Call(C_dnf, x, df1, df2, ncp, log)
 ## }
-## &lt;bytecode: 0x0000000017db8c60&gt;
+## &lt;bytecode: 0x942df38&gt;
 ## &lt;environment: namespace:stats&gt;</code></pre>
 <pre class="r"><code># this results in error due to an attempt to bind list elements of unequal length as columns
 # df &lt;- data.frame(x = 1:3, y = list(3:9, 1:3, 1:3))</code></pre>
@@ -748,9 +749,10 @@ df.preprocessed1 &lt;- dplyr::as.tbl(params) %&gt;%
                                 function(param_a, param_b, ...){
                                   rep(5, param_a) * param_b
                                 })) %&gt;% 
-  tidyr::unnest()
-
-# rowwise operation will also enable the same
+  tidyr::unnest()</code></pre>
+<pre><code>## Warning: `cols` is now required.
+## Please use `cols = c(test_var)`</code></pre>
+<pre class="r"><code># rowwise operation will also enable the same
 my_fun &lt;- function(param_a, param_b){
   rep(5, param_a) * param_b
 }
@@ -759,6 +761,8 @@ dplyr::as.tbl(params) %&gt;%
   rowwise() %&gt;% 
   dplyr::mutate(test_var = list(my_fun(param_a, param_b))) %&gt;% 
   tidyr::unnest()</code></pre>
+<pre><code>## Warning: `cols` is now required.
+## Please use `cols = c(test_var)`</code></pre>
 <pre><code>## # A tibble: 144 x 5
 ##    param_a param_b param_c param_d test_var
 ##      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
@@ -772,7 +776,7 @@ dplyr::as.tbl(params) %&gt;%
 ##  8       6       3      50       1       15
 ##  9       6       3      50       1       15
 ## 10       6       3      50       1       15
-## # ... with 134 more rows</code></pre>
+## # … with 134 more rows</code></pre>
 <pre class="r"><code># of all pmap solution could be the most flexible option
 dplyr::as.tbl(params) %&gt;%
   dplyr::mutate(test_var = purrr::pmap(list(x = param_a
@@ -794,7 +798,7 @@ dplyr::as.tbl(params) %&gt;%
 ##  8       4       9      50       1 &lt;dbl [4]&gt;
 ##  9       6       9      50       1 &lt;dbl [6]&gt;
 ## 10       2       3     100       1 &lt;dbl [2]&gt;
-## # ... with 26 more rows</code></pre>
+## # … with 26 more rows</code></pre>
 </div>
 <div id="apply-a-function-to-certain-columns-only-by-rows" class="section level1">
 <h1>Apply a function to certain columns only, by rows</h1>
@@ -814,7 +818,7 @@ dplyr::as.tbl(params) %&gt;%
 ##  8     0     4     2                6
 ##  9     0     4     2                6
 ## 10     0     4     4                8
-## # ... with 22 more rows</code></pre>
+## # … with 22 more rows</code></pre>
 </div>
 <div id="do-any-arbitrary-operation" class="section level1">
 <h1>Do any arbitrary operation</h1>
@@ -857,7 +861,7 @@ dplyr::as.tbl(params) %&gt;%
 ##  8          5           3.4          1.5         0.2 setosa   4.99
 ##  9          4.4         2.9          1.4         0.2 setosa   4.64
 ## 10          4.9         3.1          1.5         0.1 setosa   4.78
-## # ... with 140 more rows</code></pre>
+## # … with 140 more rows</code></pre>
 <pre class="r"><code># # same thing could be done through explicit function call with do
 # iris %&gt;%
 #   group_by(Species) %&gt;%
@@ -963,8 +967,7 @@ extract_vars(mtcars, &quot;drat&quot;)</code></pre>
 </div>
 <div id="modeling-exploration-summary-extraction-and-visualization-examples-using-dplyr-verbs." class="section level1">
 <h1>Modeling, exploration, summary extraction and visualization examples using dplyr verbs.</h1>
-<pre class="r"><code>library(gapminder)
-gap &lt;- gapminder %&gt;%
+<pre class="r"><code>gap &lt;- gapminder %&gt;%
   filter(continent == &quot;Asia&quot;) %&gt;%
   mutate(yr1952 = year - 1952)
 
@@ -1001,19 +1004,20 @@ gap_nested$data[[3]]</code></pre>
   mutate(fit = map(data, ~ lm(lifeExp ~ yr1952, data = .x)))
 gap_fitted</code></pre>
 <pre><code>## # A tibble: 33 x 3
-##    country          data              fit     
-##    &lt;fct&gt;            &lt;list&gt;            &lt;list&gt;  
-##  1 Afghanistan      &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
-##  2 Bahrain          &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
-##  3 Bangladesh       &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
-##  4 Cambodia         &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
-##  5 China            &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
-##  6 Hong Kong, China &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
-##  7 India            &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
-##  8 Indonesia        &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
-##  9 Iran             &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
-## 10 Iraq             &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;
-## # ... with 23 more rows</code></pre>
+## # Groups:   country [142]
+##    country          data              fit   
+##    &lt;fct&gt;            &lt;list&gt;            &lt;list&gt;
+##  1 Afghanistan      &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  2 Bahrain          &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  3 Bangladesh       &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  4 Cambodia         &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  5 China            &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  6 Hong Kong, China &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  7 India            &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  8 Indonesia        &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  9 Iran             &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+## 10 Iraq             &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+## # … with 23 more rows</code></pre>
 <pre class="r"><code>gap_fitted &lt;- gap_fitted %&gt;%
   mutate(
     intercept = map_dbl(fit, ~ coef(.x)[[&quot;(Intercept)&quot;]]),
@@ -1023,14 +1027,21 @@ gap_fitted</code></pre>
 
 gap_fitted %&gt;% 
   top_n(n = 5, wt = r_squared) # whoa! Nepal is 4th</code></pre>
-<pre><code>## # A tibble: 5 x 6
-##   country   data              fit      intercept slope r_squared
-##   &lt;fct&gt;     &lt;list&gt;            &lt;list&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-## 1 Indonesia &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;      36.9 0.635     0.997
-## 2 Iran      &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;      45.0 0.497     0.995
-## 3 Israel    &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;      66.3 0.267     0.995
-## 4 Nepal     &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;      34.4 0.529     0.992
-## 5 Pakistan  &lt;tibble [12 x 6]&gt; &lt;S3: lm&gt;      43.7 0.406     0.997</code></pre>
+<pre><code>## # A tibble: 33 x 6
+## # Groups:   country [142]
+##    country          data              fit    intercept slope r_squared
+##    &lt;fct&gt;            &lt;list&gt;            &lt;list&gt;     &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+##  1 Afghanistan      &lt;tibble [12 × 6]&gt; &lt;lm&gt;        29.9 0.275     0.948
+##  2 Bahrain          &lt;tibble [12 × 6]&gt; &lt;lm&gt;        52.7 0.468     0.967
+##  3 Bangladesh       &lt;tibble [12 × 6]&gt; &lt;lm&gt;        36.1 0.498     0.989
+##  4 Cambodia         &lt;tibble [12 × 6]&gt; &lt;lm&gt;        37.0 0.396     0.639
+##  5 China            &lt;tibble [12 × 6]&gt; &lt;lm&gt;        47.2 0.531     0.871
+##  6 Hong Kong, China &lt;tibble [12 × 6]&gt; &lt;lm&gt;        63.4 0.366     0.972
+##  7 India            &lt;tibble [12 × 6]&gt; &lt;lm&gt;        39.3 0.505     0.968
+##  8 Indonesia        &lt;tibble [12 × 6]&gt; &lt;lm&gt;        36.9 0.635     0.997
+##  9 Iran             &lt;tibble [12 × 6]&gt; &lt;lm&gt;        45.0 0.497     0.995
+## 10 Iraq             &lt;tibble [12 × 6]&gt; &lt;lm&gt;        50.1 0.235     0.546
+## # … with 23 more rows</code></pre>
 <pre class="r"><code>ggplot(gap_fitted, aes(x = intercept, y = country)) +
   geom_point()</code></pre>
 <p><img src="/post/2018-10-18-tidyverse-and-tidbits_files/figure-html/modeling-and-visualization-3.png" width="672" /></p>
@@ -1042,8 +1053,10 @@ gap_fitted %&gt;%
 
 # construct a dataframe
 d &lt;- data_frame(n = c(5, 1, 3))</code></pre>
-<pre><code>## Warning: `data_frame()` is deprecated, use `tibble()`.
-## This warning is displayed once per session.</code></pre>
+<pre><code>## Warning: `data_frame()` is deprecated as of tibble 1.1.0.
+## Please use `tibble()` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
 <pre class="r"><code>e &lt;- d %&gt;% group_by(n) %&gt;% 
   do(data_frame(y = rnorm(.$n), dat = list(data.frame(a = 1)))) 
 
@@ -1068,84 +1081,84 @@ e %&gt;% rowwise() %&gt;% do(data_frame(sum = .$y + .$n))</code></pre>
 mutate(e, sum = purrr::map2_dbl(y, n, `+`))</code></pre>
 <pre><code>## # A tibble: 9 x 4
 ## # Groups:   n [3]
-##       n      y dat                    sum
-##   &lt;dbl&gt;  &lt;dbl&gt; &lt;list&gt;               &lt;dbl&gt;
-## 1     1 -0.626 &lt;data.frame [1 x 1]&gt; 0.374
-## 2     3  0.184 &lt;data.frame [1 x 1]&gt; 3.18 
-## 3     3 -0.836 &lt;data.frame [1 x 1]&gt; 2.16 
-## 4     3  1.60  &lt;data.frame [1 x 1]&gt; 4.60 
-## 5     5  0.330 &lt;data.frame [1 x 1]&gt; 5.33 
-## 6     5 -0.820 &lt;data.frame [1 x 1]&gt; 4.18 
-## 7     5  0.487 &lt;data.frame [1 x 1]&gt; 5.49 
-## 8     5  0.738 &lt;data.frame [1 x 1]&gt; 5.74 
-## 9     5  0.576 &lt;data.frame [1 x 1]&gt; 5.58</code></pre>
+##       n      y dat                sum
+##   &lt;dbl&gt;  &lt;dbl&gt; &lt;list&gt;           &lt;dbl&gt;
+## 1     1 -0.626 &lt;df[,1] [1 × 1]&gt; 0.374
+## 2     3  0.184 &lt;df[,1] [1 × 1]&gt; 3.18 
+## 3     3 -0.836 &lt;df[,1] [1 × 1]&gt; 2.16 
+## 4     3  1.60  &lt;df[,1] [1 × 1]&gt; 4.60 
+## 5     5  0.330 &lt;df[,1] [1 × 1]&gt; 5.33 
+## 6     5 -0.820 &lt;df[,1] [1 × 1]&gt; 4.18 
+## 7     5  0.487 &lt;df[,1] [1 × 1]&gt; 5.49 
+## 8     5  0.738 &lt;df[,1] [1 × 1]&gt; 5.74 
+## 9     5  0.576 &lt;df[,1] [1 × 1]&gt; 5.58</code></pre>
 <pre class="r"><code># # .f should be able to work with a list or a data frame. As it
 # happens, sum() handles data frame so the following works:
 mtcars %&gt;% purrrlyr::by_row(sum)</code></pre>
 <pre><code>## # A tibble: 32 x 12
-##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out  
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;
-##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl ~
-##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl ~
-##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl ~
-##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl ~
-##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl ~
-##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl ~
-##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl ~
-##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl ~
-##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl ~
-## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl ~
-## # ... with 22 more rows</code></pre>
+##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out     
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;   
+##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl [1]&gt;
+##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl [1]&gt;
+##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl [1]&gt;
+##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl [1]&gt;
+##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl [1]&gt;
+##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl [1]&gt;
+##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl [1]&gt;
+##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl [1]&gt;
+##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl [1]&gt;
+## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl [1]&gt;
+## # … with 22 more rows</code></pre>
 <pre class="r"><code># # Other functions such as mean() may need to be adjusted with one
 # # of the lift_xy() helpers:
 mtcars %&gt;% purrrlyr::by_row(purrr::lift_vl(mean))</code></pre>
 <pre><code>## # A tibble: 32 x 12
-##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out  
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;
-##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl ~
-##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl ~
-##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl ~
-##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl ~
-##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl ~
-##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl ~
-##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl ~
-##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl ~
-##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl ~
-## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl ~
-## # ... with 22 more rows</code></pre>
+##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out     
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;   
+##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl [1]&gt;
+##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl [1]&gt;
+##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl [1]&gt;
+##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl [1]&gt;
+##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl [1]&gt;
+##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl [1]&gt;
+##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl [1]&gt;
+##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl [1]&gt;
+##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl [1]&gt;
+## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl [1]&gt;
+## # … with 22 more rows</code></pre>
 <pre class="r"><code># To run a function with invoke_rows(), make sure it is variadic (that
 # it accepts dots) or that .f&#39;s signature is compatible with the
 # column names
 mtcars %&gt;% purrrlyr::invoke_rows(.f = sum)</code></pre>
 <pre><code>## # A tibble: 32 x 12
-##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out  
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;
-##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl ~
-##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl ~
-##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl ~
-##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl ~
-##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl ~
-##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl ~
-##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl ~
-##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl ~
-##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl ~
-## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl ~
-## # ... with 22 more rows</code></pre>
+##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out     
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;   
+##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl [1]&gt;
+##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl [1]&gt;
+##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl [1]&gt;
+##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl [1]&gt;
+##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl [1]&gt;
+##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl [1]&gt;
+##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl [1]&gt;
+##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl [1]&gt;
+##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl [1]&gt;
+## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl [1]&gt;
+## # … with 22 more rows</code></pre>
 <pre class="r"><code>mtcars %&gt;% purrrlyr::invoke_rows(.f = purrr::lift_vd(mean))</code></pre>
 <pre><code>## # A tibble: 32 x 12
-##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out  
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;
-##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl ~
-##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl ~
-##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl ~
-##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl ~
-##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl ~
-##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl ~
-##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl ~
-##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl ~
-##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl ~
-## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl ~
-## # ... with 22 more rows</code></pre>
+##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out     
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;   
+##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl [1]&gt;
+##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl [1]&gt;
+##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl [1]&gt;
+##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl [1]&gt;
+##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl [1]&gt;
+##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl [1]&gt;
+##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl [1]&gt;
+##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl [1]&gt;
+##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl [1]&gt;
+## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl [1]&gt;
+## # … with 22 more rows</code></pre>
 <pre class="r"><code># # invoke_rows() with cols collation is equivalent to plyr::mdply()
 p &lt;- expand.grid(mean = 1:5, sd = seq(0, 1, length = 10))
 p %&gt;% purrrlyr::invoke_rows(.f = rnorm, n = 5, .collate = &quot;cols&quot;)</code></pre>
@@ -1162,7 +1175,7 @@ p %&gt;% purrrlyr::invoke_rows(.f = rnorm, n = 5, .collate = &quot;cols&quot;)</
 ##  8     3 0.111 3.07   3.10  3.09 3.01  2.78 
 ##  9     4 0.111 4.07   3.99  3.98 3.84  3.95 
 ## 10     5 0.111 5.05   5.15  4.99 5.04  4.99 
-## # ... with 40 more rows</code></pre>
+## # … with 40 more rows</code></pre>
 <pre class="r"><code># p %&gt;% plyr::mdply(rnorm, n = 5) %&gt;% dplyr::tbl_df()
 
 # # To integrate the result as part of the data frame, use rows or
@@ -1181,7 +1194,7 @@ mtcars[1:2] %&gt;% purrrlyr::by_row(function(x) 1:5)</code></pre>
 ##  8  24.4     4 &lt;int [5]&gt;
 ##  9  22.8     4 &lt;int [5]&gt;
 ## 10  19.2     6 &lt;int [5]&gt;
-## # ... with 22 more rows</code></pre>
+## # … with 22 more rows</code></pre>
 <pre class="r"><code>mtcars[1:2] %&gt;% purrrlyr::by_row(function(x) 1:5, .collate = &quot;rows&quot;)</code></pre>
 <pre><code>## # A tibble: 160 x 4
 ##      mpg   cyl  .row  .out
@@ -1196,7 +1209,7 @@ mtcars[1:2] %&gt;% purrrlyr::by_row(function(x) 1:5)</code></pre>
 ##  8    21     6     2     3
 ##  9    21     6     2     4
 ## 10    21     6     2     5
-## # ... with 150 more rows</code></pre>
+## # … with 150 more rows</code></pre>
 <pre class="r"><code>mtcars[1:2] %&gt;% purrrlyr::by_row(function(x) 1:5, .collate = &quot;cols&quot;)</code></pre>
 <pre><code>## # A tibble: 32 x 7
 ##      mpg   cyl .out1 .out2 .out3 .out4 .out5
@@ -1211,7 +1224,7 @@ mtcars[1:2] %&gt;% purrrlyr::by_row(function(x) 1:5)</code></pre>
 ##  8  24.4     4     1     2     3     4     5
 ##  9  22.8     4     1     2     3     4     5
 ## 10  19.2     6     1     2     3     4     5
-## # ... with 22 more rows</code></pre>
+## # … with 22 more rows</code></pre>
 <pre class="r"><code># # getting custom summary functions with purrr and dplyr verbs
 mtcars %&gt;% 
   group_by(cyl) %&gt;% 
@@ -1219,20 +1232,21 @@ mtcars %&gt;%
   mutate(model = purrr::map(data, ~lm(qsec ~ hp, .)),
          coef  = purrr::map_dbl(model, ~coef(.)[2])) %&gt;% 
   tidyr::unnest(data)</code></pre>
-<pre><code>## # A tibble: 32 x 12
-##      cyl    coef   mpg  disp    hp  drat    wt  qsec    vs    am  gear
-##    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1     6 -0.0442  21    160    110  3.9   2.62  16.5     0     1     4
-##  2     6 -0.0442  21    160    110  3.9   2.88  17.0     0     1     4
-##  3     6 -0.0442  21.4  258    110  3.08  3.22  19.4     1     0     3
-##  4     6 -0.0442  18.1  225    105  2.76  3.46  20.2     1     0     3
-##  5     6 -0.0442  19.2  168.   123  3.92  3.44  18.3     1     0     4
-##  6     6 -0.0442  17.8  168.   123  3.92  3.44  18.9     1     0     4
-##  7     6 -0.0442  19.7  145    175  3.62  2.77  15.5     0     1     5
-##  8     4 -0.0143  22.8  108     93  3.85  2.32  18.6     1     1     4
-##  9     4 -0.0143  24.4  147.    62  3.69  3.19  20       1     0     4
-## 10     4 -0.0143  22.8  141.    95  3.92  3.15  22.9     1     0     4
-## # ... with 22 more rows, and 1 more variable: carb &lt;dbl&gt;</code></pre>
+<pre><code>## # A tibble: 32 x 13
+## # Groups:   cyl [3]
+##      cyl   mpg  disp    hp  drat    wt  qsec    vs    am  gear  carb model
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lis&gt;
+##  1     6  21    160    110  3.9   2.62  16.5     0     1     4     4 &lt;lm&gt; 
+##  2     6  21    160    110  3.9   2.88  17.0     0     1     4     4 &lt;lm&gt; 
+##  3     6  21.4  258    110  3.08  3.22  19.4     1     0     3     1 &lt;lm&gt; 
+##  4     6  18.1  225    105  2.76  3.46  20.2     1     0     3     1 &lt;lm&gt; 
+##  5     6  19.2  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;lm&gt; 
+##  6     6  17.8  168.   123  3.92  3.44  18.9     1     0     4     4 &lt;lm&gt; 
+##  7     6  19.7  145    175  3.62  2.77  15.5     0     1     5     6 &lt;lm&gt; 
+##  8     4  22.8  108     93  3.85  2.32  18.6     1     1     4     1 &lt;lm&gt; 
+##  9     4  24.4  147.    62  3.69  3.19  20       1     0     4     2 &lt;lm&gt; 
+## 10     4  22.8  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;lm&gt; 
+## # … with 22 more rows, and 1 more variable: coef &lt;dbl&gt;</code></pre>
 <pre class="r"><code># # run a regression after group_by operation
 # # and save results to dataframe
 group_by(mtcars, gear) %&gt;% do(res = residuals(lm(mpg~carb, .)))</code></pre>
@@ -1269,7 +1283,7 @@ mtcars %&gt;%
 ##  8 -1.34  
 ##  9 -1.49  
 ## 10 -0.627 
-## # ... with 22 more rows</code></pre>
+## # … with 22 more rows</code></pre>
 <pre class="r"><code># # Custom data modeling
 # # using dplyr do() calls
 fertility &lt;- read_csv(&quot;./data/fertility.csv&quot;)</code></pre>
@@ -1285,19 +1299,19 @@ fertility %&gt;%
   do(data.frame(.,pred = predict(mgcv::gam(fertility ~ s(AGE), data=.))))</code></pre>
 <pre><code>## # A tibble: 60 x 4
 ## # Groups:   Year [2]
-##      AGE  Year fertility     pred
-##    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-##  1    15  1930      5.17   -0.828
-##  2    16  1930     14.2    16.2  
-##  3    17  1930     27.7    33.4  
-##  4    18  1930     44.6    51.1  
-##  5    19  1930     59.1    69.2  
-##  6    20  1930     89.7    87.3  
-##  7    21  1930    105.    104.   
-##  8    22  1930    120.    120.   
-##  9    23  1930    137.    132.   
-## 10    24  1930    149.    141.   
-## # ... with 50 more rows</code></pre>
+##      AGE  Year fertility    pred
+##    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+##  1    15  1930      5.17  -0.828
+##  2    16  1930     14.2   16.2  
+##  3    17  1930     27.7   33.4  
+##  4    18  1930     44.6   51.1  
+##  5    19  1930     59.1   69.2  
+##  6    20  1930     89.7   87.3  
+##  7    21  1930    105.   104.   
+##  8    22  1930    120.   120.   
+##  9    23  1930    137.   132.   
+## 10    24  1930    149.   141.   
+## # … with 50 more rows</code></pre>
 <pre class="r"><code># # same but different approach
 do.call(rbind,
         lapply(split(fertility, fertility$Year), function(df) {
@@ -1305,19 +1319,19 @@ do.call(rbind,
           df
         }))</code></pre>
 <pre><code>## # A tibble: 60 x 4
-##      AGE  Year fertility     pred
-##  * &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-##  1    15  1930      5.17   -0.828
-##  2    16  1930     14.2    16.2  
-##  3    17  1930     27.7    33.4  
-##  4    18  1930     44.6    51.1  
-##  5    19  1930     59.1    69.2  
-##  6    20  1930     89.7    87.3  
-##  7    21  1930    105.    104.   
-##  8    22  1930    120.    120.   
-##  9    23  1930    137.    132.   
-## 10    24  1930    149.    141.   
-## # ... with 50 more rows</code></pre>
+##      AGE  Year fertility    pred
+##  * &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+##  1    15  1930      5.17  -0.828
+##  2    16  1930     14.2   16.2  
+##  3    17  1930     27.7   33.4  
+##  4    18  1930     44.6   51.1  
+##  5    19  1930     59.1   69.2  
+##  6    20  1930     89.7   87.3  
+##  7    21  1930    105.   104.   
+##  8    22  1930    120.   120.   
+##  9    23  1930    137.   132.   
+## 10    24  1930    149.   141.   
+## # … with 50 more rows</code></pre>
 <pre class="r"><code># # same using data.table library
 fertility %&gt;%
   data.table::data.table() %&gt;%
@@ -1325,19 +1339,19 @@ fertility %&gt;%
   mutate(pred = predict(mgcv::gam(fertility ~ s(AGE))))</code></pre>
 <pre><code>## # A tibble: 60 x 4
 ## # Groups:   Year [2]
-##      AGE  Year fertility     pred
-##    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-##  1    15  1930      5.17   -0.828
-##  2    16  1930     14.2    16.2  
-##  3    17  1930     27.7    33.4  
-##  4    18  1930     44.6    51.1  
-##  5    19  1930     59.1    69.2  
-##  6    20  1930     89.7    87.3  
-##  7    21  1930    105.    104.   
-##  8    22  1930    120.    120.   
-##  9    23  1930    137.    132.   
-## 10    24  1930    149.    141.   
-## # ... with 50 more rows</code></pre>
+##      AGE  Year fertility    pred
+##    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+##  1    15  1930      5.17  -0.828
+##  2    16  1930     14.2   16.2  
+##  3    17  1930     27.7   33.4  
+##  4    18  1930     44.6   51.1  
+##  5    19  1930     59.1   69.2  
+##  6    20  1930     89.7   87.3  
+##  7    21  1930    105.   104.   
+##  8    22  1930    120.   120.   
+##  9    23  1930    137.   132.   
+## 10    24  1930    149.   141.   
+## # … with 50 more rows</code></pre>
 <pre class="r"><code># # this fails at last line
 # fertility %&gt;%
 #   group_by(Year) %&gt;%
@@ -1356,31 +1370,34 @@ by_cyl &lt;- mtcars %&gt;%
 
 pars &lt;- by_cyl %&gt;% tidyr::unnest(pars)
 pars</code></pre>
-<pre><code>## # A tibble: 6 x 6
-##     cyl term        estimate std.error statistic  p.value
-##   &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1     6 (Intercept)  29.6      1.23        24.1  3.58e-21
-## 2     6 disp         -0.0412   0.00471     -8.75 9.38e-10
-## 3     4 (Intercept)  29.6      1.23        24.1  3.58e-21
-## 4     4 disp         -0.0412   0.00471     -8.75 9.38e-10
-## 5     8 (Intercept)  29.6      1.23        24.1  3.58e-21
-## 6     8 disp         -0.0412   0.00471     -8.75 9.38e-10</code></pre>
+<pre><code>## # A tibble: 6 x 9
+## # Groups:   cyl [3]
+##     cyl data       mod   term    estimate std.error statistic  p.value pred     
+##   &lt;dbl&gt; &lt;list&gt;     &lt;lis&gt; &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;list&gt;   
+## 1     6 &lt;tibble [… &lt;lm&gt;  (Inter…  29.6      1.23        24.1  3.58e-21 &lt;tibble …
+## 2     6 &lt;tibble [… &lt;lm&gt;  disp     -0.0412   0.00471     -8.75 9.38e-10 &lt;tibble …
+## 3     4 &lt;tibble [… &lt;lm&gt;  (Inter…  29.6      1.23        24.1  3.58e-21 &lt;tibble …
+## 4     4 &lt;tibble [… &lt;lm&gt;  disp     -0.0412   0.00471     -8.75 9.38e-10 &lt;tibble …
+## 5     8 &lt;tibble [… &lt;lm&gt;  (Inter…  29.6      1.23        24.1  3.58e-21 &lt;tibble …
+## 6     8 &lt;tibble [… &lt;lm&gt;  disp     -0.0412   0.00471     -8.75 9.38e-10 &lt;tibble …</code></pre>
 <pre class="r"><code>prediction &lt;- by_cyl %&gt;% tidyr::unnest(pred)
 prediction</code></pre>
-<pre><code>## # A tibble: 96 x 11
-##      cyl .rownames   mpg  disp .fitted .se.fit .resid   .hat .sigma .cooksd
-##    &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
-##  1     6 Mazda RX4  21    160     23.0   0.664 -2.01  0.0418   3.29 8.65e-3
-##  2     6 Mazda RX~  21    160     23.0   0.664 -2.01  0.0418   3.29 8.65e-3
-##  3     6 Datsun 7~  22.8  108     25.1   0.815 -2.35  0.0629   3.28 1.87e-2
-##  4     6 Hornet 4~  21.4  258     19.0   0.589  2.43  0.0328   3.27 9.83e-3
-##  5     6 Hornet S~  18.7  360     14.8   0.838  3.94  0.0663   3.22 5.58e-2
-##  6     6 Valiant    18.1  225     20.3   0.575 -2.23  0.0313   3.28 7.82e-3
-##  7     6 Duster 3~  14.3  360     14.8   0.838 -0.462 0.0663   3.31 7.70e-4
-##  8     6 Merc 240D  24.4  147.    23.6   0.698  0.846 0.0461   3.30 1.72e-3
-##  9     6 Merc 230   22.8  141.    23.8   0.714 -0.997 0.0482   3.30 2.50e-3
-## 10     6 Merc 280   19.2  168.    22.7   0.647 -3.49  0.0396   3.24 2.48e-2
-## # ... with 86 more rows, and 1 more variable: .std.resid &lt;dbl&gt;</code></pre>
+<pre><code>## # A tibble: 96 x 14
+## # Groups:   cyl [3]
+##      cyl data  mod   pars  .rownames   mpg  disp .fitted .se.fit .resid   .hat
+##    &lt;dbl&gt; &lt;lis&gt; &lt;lis&gt; &lt;lis&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1     6 &lt;tib… &lt;lm&gt;  &lt;tib… Mazda RX4  21    160     23.0   0.664 -2.01  0.0418
+##  2     6 &lt;tib… &lt;lm&gt;  &lt;tib… Mazda RX…  21    160     23.0   0.664 -2.01  0.0418
+##  3     6 &lt;tib… &lt;lm&gt;  &lt;tib… Datsun 7…  22.8  108     25.1   0.815 -2.35  0.0629
+##  4     6 &lt;tib… &lt;lm&gt;  &lt;tib… Hornet 4…  21.4  258     19.0   0.589  2.43  0.0328
+##  5     6 &lt;tib… &lt;lm&gt;  &lt;tib… Hornet S…  18.7  360     14.8   0.838  3.94  0.0663
+##  6     6 &lt;tib… &lt;lm&gt;  &lt;tib… Valiant    18.1  225     20.3   0.575 -2.23  0.0313
+##  7     6 &lt;tib… &lt;lm&gt;  &lt;tib… Duster 3…  14.3  360     14.8   0.838 -0.462 0.0663
+##  8     6 &lt;tib… &lt;lm&gt;  &lt;tib… Merc 240D  24.4  147.    23.6   0.698  0.846 0.0461
+##  9     6 &lt;tib… &lt;lm&gt;  &lt;tib… Merc 230   22.8  141.    23.8   0.714 -0.997 0.0482
+## 10     6 &lt;tib… &lt;lm&gt;  &lt;tib… Merc 280   19.2  168.    22.7   0.647 -3.49  0.0396
+## # … with 86 more rows, and 3 more variables: .sigma &lt;dbl&gt;, .cooksd &lt;dbl&gt;,
+## #   .std.resid &lt;dbl&gt;</code></pre>
 </div>
 <div id="workarounds-on-unequal-length-lists" class="section level1">
 <h1>Workarounds on unequal length lists</h1>
@@ -1464,15 +1481,18 @@ lapply(hareramshyam, `length&lt;-`,
 </div>
 <div id="quick-saving-dataframe-as-imagevector" class="section level1">
 <h1>Quick saving dataframe as image/vector</h1>
-<pre class="r"><code>library(gridExtra)
-df &lt;- augd[augd %&gt;% str_detect(&quot;age$&quot;) %&gt;% # augd is a character vector
+<pre class="r"><code>df &lt;- augd[augd %&gt;% str_detect(&quot;age$&quot;) %&gt;% # augd is a character vector
              which()] %&gt;% 
   tibble() %&gt;% 
   split(f = as.factor(rep(1:4))) %&gt;% 
   bind_cols() %&gt;% 
   magrittr::set_colnames(paste0(&quot;shitlist&quot;, 1:4))
 
-png(&quot;./shitlist.png&quot;, height = 22*nrow(df), width = 100*ncol(df))
+# png(&quot;./shitlist.png&quot;, height = 22*nrow(df), width = 100*ncol(df))
+# grid.table(df)
+# dev.off()</code></pre>
+<p>The dataframe can be quickly saved as image by:</p>
+<pre><code>png(&quot;./shitlist.png&quot;, height = 22*nrow(df), width = 100*ncol(df))
 grid.table(df)
 dev.off()</code></pre>
 </div>

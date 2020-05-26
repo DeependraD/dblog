@@ -15,11 +15,14 @@ header:
   image: ''
 ---
 
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
 
 
 <div id="functional-approach-to-creating-and-combing-multiple-plots" class="section level1">
 <h1>Functional approach to creating and combing multiple plots</h1>
-<p>This approach highlights features of <code>gridExtra</code> package that allows combining multiple grob plots using function calls. We explicitly use lapply/split or similar class of <code>purrr</code> functions to really scale the graphics.</p>
+<p>This approach highlights features of <code>gridExtra</code> package that allows combining multiple grob plots using function calls.
+We explicitly use lapply/split or similar class of <code>purrr</code> functions to really scale the graphics.</p>
 <p>We load a Hybrid maize trial dataset, with fieldbook generated using <code>agricolae::design.rcbd()</code>. The dataset looks as shown in Table <a href="#tab:rcbd-maize-fieldbook">1</a>, after type conversion and cleaning.</p>
 <table class="table table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">

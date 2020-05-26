@@ -16,6 +16,9 @@ header:
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+require(lubridate)
+theme_set(theme_bw())
+
 knitr::opts_chunk$set(tidy = TRUE, cache = TRUE, 
                       echo = FALSE, 
                       tidy.opts = list(width.cutoff=50), 
@@ -36,9 +39,6 @@ To convert preeti font to unicode text:
 https://github.com/globalpolicy/PreetiToUnicode
 
 ```{r development-chron}
-library(tidyverse)
-require(lubridate)
-theme_set(theme_bw())
 
 ag_dev_chron <- readr::read_csv("./data/agriculture_development_chronology.csv", col_names = T)
 # ag_dev_chron$Particular %>% enc2utf8()

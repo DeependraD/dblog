@@ -11,6 +11,7 @@ header:
   image: ''
 ---
 
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="compose-a-slideshow" class="section level1">
@@ -22,7 +23,7 @@ header:
 <pre><code>cd images\</code></pre>
 <p>In <code>r</code> interface</p>
 <pre><code>setwd(&quot;./images/&quot;)</code></pre>
-<p>Now before stitching images together, we need to specify the order in which that will be done. File name plays a role in that. For the sake of easiness, we ignore a situation where filename alphabets specify the order. Let’s assume that, ordering is specified by numerics; i.e. 1, 2, 3, … n.</p>
+<p>Now before stitching images together, we need to specify the order in which that will be done. File name plays a role in that. For the sake of easiness, we ignore a situation where filename alphabets specify the order. Let’s assume that, ordering is specified by numerics; i.e. 1, 2, 3, … n. </p>
 <p>Talking about an actual case scenario, most modern digital cameras produce well named image files, like IMG_01.*, or IMG_002*. An <code>r</code> code to list all the files in the current directory is shown below.</p>
 <pre><code>filenames &lt;- list.files(&quot;.&quot;, &quot;.JPG&quot;)</code></pre>
 <p>The command saves the list of filenames in the ascending order of alphanumerics that appear in the filename prefix. This is important step in order to also ensure that original filename can be recovered after tampering with the names. Filenames might come in all sorts of peculiar name formats – some even devoid of any. Nevertheless, it is always desirable that the original filenames are renamed to correctly represent an ordered file presentation.</p>

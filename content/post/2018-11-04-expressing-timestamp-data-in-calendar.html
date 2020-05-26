@@ -15,6 +15,7 @@ header:
   image: ''
 ---
 
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <p>Unlike composing a text memos and keeping tracks of those, calendar graphics is a highly effective visual aid to taking notes and summarizing them. Well, we all have used calendar, one way or the other, in our lifetimes.</p>
@@ -81,10 +82,7 @@ walk(month_calendar, print)
 </div>
 <div id="numeric-value-mapping-in-calendar-graphics" class="section level2">
 <h2>Numeric value mapping in calendar graphics</h2>
-<pre class="r"><code>require(forcats)
-require(tibble)
-
-mydate &lt;- seq(as.Date(&quot;2017-02-01&quot;), as.Date(&quot;2017-07-22&quot;), by=&quot;1 day&quot;)
+<pre class="r"><code>mydate &lt;- seq(as.Date(&quot;2017-02-01&quot;), as.Date(&quot;2017-07-22&quot;), by=&quot;1 day&quot;)
 myfills &lt;- rnorm(length(mydate))
 
 ggcal &lt;- function(dates, fills) {

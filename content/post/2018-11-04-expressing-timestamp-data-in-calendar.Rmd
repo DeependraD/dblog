@@ -18,6 +18,9 @@ header:
 ```{r setup, include=FALSE}
 library(tidyverse)
 require(lubridate)
+require(forcats)
+require(tibble)
+
 knitr::opts_chunk$set(tidy = TRUE, cache = TRUE, 
                       echo = TRUE, 
                       tidy.opts = list(width.cutoff=50), 
@@ -107,8 +110,6 @@ Note that calendar weekdays start at monday, but this might be misleading in som
 ## Numeric value mapping in calendar graphics
 
 ```{r calendar-numeric}
-require(forcats)
-require(tibble)
 
 mydate <- seq(as.Date("2017-02-01"), as.Date("2017-07-22"), by="1 day")
 myfills <- rnorm(length(mydate))

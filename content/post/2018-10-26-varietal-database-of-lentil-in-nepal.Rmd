@@ -32,7 +32,7 @@ Several inconsistencies exists even among higly praised documents, mainly for th
 As for this post, the database will to be updated as the information comes along to reflect the latest details. Following is a list of released and registered varieties of lentil:
 
 ```{r varieties-list}
-lentil_vars <- read_csv("https://raw.githubusercontent.com/DeependraD/publicdata/master/lentil_varieties.csv")
+lentil_vars <- read_csv("https://raw.githubusercontent.com/DeependraD/publicdata/master/crop_varieties/lentil_varieties.csv")
 
 lentil_vars %>%
   knitr::kable(caption = "Released and registered varieties of lentil in Nepal", format = "html") %>% 

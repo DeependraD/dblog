@@ -27,6 +27,7 @@ options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
 library(tidyverse)
 require(lavaan)
 library(gridExtra)
+require(ggdag)
 ```
 
 # Background
@@ -42,7 +43,6 @@ Endogenous variable: Variables that are solely dependent variables, or are both 
 The Figure \@ref(fig:exogenous-endogenous), two exogenous variables (Exogenous1 and Exogenous2) are modeled as being correlated as depicted by the double-headed arrow. Both of these variables have direct and indirect (through Endogenous2) effects on Endogenous1 (the two dependent or 'endogenous' variables/factors). In most real-world models, the endogenous variables may also be affected by variables and factors stemming from outside the model (external effects including measurement error). These effects are depicted by the "Influencer a" and "Influencer b" (error) terms in the model.
 
 ```{r exogenous-endogenous, fig.cap="Variable types and modeling of relationship among them", echo=FALSE}
-require(ggdag)
 networka <- dagify(Endogenous1 ~ Endogenous2 + Exogenous1 + Exogenous2 + b,
                    Endogenous2 ~ Exogenous1 + Exogenous2 + a,
                    Exogenous1 ~ Exogenous2,

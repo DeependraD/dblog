@@ -29,7 +29,7 @@ This is really a brash article meant to convey exactly what title hints at. Much
 The list of all rice landraces, disclosed and recognized so far, include those enlisted in the Table \@ref(tab:riceland).
 
 ```{r riceland}
-rice_landraces <- read_csv("./data/rice_landraces_past_reflection.csv", comment = "#")
+rice_landraces <- read_csv("./data/rice_cultivar_past_reflection.csv", comment = "#")
 rice_landraces %>%
   knitr::kable(caption = "Rice landraces of Nepal", format = "html") %>% 
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12) %>%

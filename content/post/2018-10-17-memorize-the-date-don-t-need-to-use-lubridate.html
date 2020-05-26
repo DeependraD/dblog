@@ -10,6 +10,7 @@ header:
   image: 'forgetfulness.jpg'
 ---
 
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="my-sufferance" class="section level1">
@@ -21,17 +22,28 @@ header:
 <p>I’m getting into the details of using base R’s <code>date()</code> and date related functions. At this time, It’s might seem relevent to have some understanding of “POSIXlt” and “POSIXct” object classes. But most often these never interfere unless you have a good – not expecting perfect – conscience of how you recorded your dates and what you eventually intent to achieve from it. Anyway, for a quick reference, here I’ve quoted the R’s documentation on <code>?DateTimeClasses</code>:</p>
 <blockquote>
 <p>There are two basic classes of date/times. Class “POSIXct” represents the (signed) number of seconds since the beginning of 1970 (in the UTC time zone) as a numeric vector. Class “POSIXlt” is a named list of vectors representing</p>
-<p>sec; 0-61: seconds.</p>
-<p>min; 0-59: minutes.</p>
-<p>hour; 0-23: hours.</p>
-<p>mday; 1-31: day of the month</p>
-<p>mon; 0-11: months after the first of the year.</p>
-<p>year; years since 1900.</p>
-<p>wday; 0-6 day of the week, starting on Sunday.</p>
-<p>yday; 0-365: day of the year.</p>
-<p>isdst; Daylight Saving Time flag. Positive if in force, zero if not, negative if unknown.</p>
-<p>zone; (Optional.) The abbreviation for the time zone in force at that time: “” if unknown (but “” might also be used for UTC).</p>
-<p>gmtoff; (Optional.) The offset in seconds from GMT: positive values are East of the meridian. Usually NA if unknown, but 0 could mean unknown.</p>
+<p>sec;
+0-61: seconds.</p>
+<p>min;
+0-59: minutes.</p>
+<p>hour;
+0-23: hours.</p>
+<p>mday;
+1-31: day of the month</p>
+<p>mon;
+0-11: months after the first of the year.</p>
+<p>year;
+years since 1900.</p>
+<p>wday;
+0-6 day of the week, starting on Sunday.</p>
+<p>yday;
+0-365: day of the year.</p>
+<p>isdst;
+Daylight Saving Time flag. Positive if in force, zero if not, negative if unknown.</p>
+<p>zone;
+(Optional.) The abbreviation for the time zone in force at that time: "" if unknown (but "" might also be used for UTC).</p>
+<p>gmtoff;
+(Optional.) The offset in seconds from GMT: positive values are East of the meridian. Usually NA if unknown, but 0 could mean unknown.</p>
 <p>(The last two components are not present for times in UTC and are platform-dependent: they are supported on platforms based on BSD or glibc (including Linux and macOS) and those using the tzcode implementation shipped with R (including Windows). But they are not necessarily set.). Note that the internal list structure is somewhat hidden, as many methods (including length(x), print() and str) apply to the abstract date-time vector, as for “POSIXct”. As from R 3.5.0, one can extract and replace single components via [ indexing with two indices (see the examples). The classes correspond to the POSIX/C99 constructs of ‘calendar time’ (the time_t data type) and ‘local time’ (or broken-down time, the struct tm data type), from which they also inherit their names. The components of “POSIXlt” are integer vectors, except sec and zone.</p>
 <p>“POSIXct” is more convenient for including in data frames, and “POSIXlt” is closer to human-readable forms. A virtual class “POSIXt” exists from which both of the classes inherit: it is used to allow operations such as subtraction to mix the two classes.</p>
 <p>Components wday and yday of “POSIXlt” are for information, and are not used in the conversion to calendar time. However, isdst is needed to distinguish times at the end of DST: typically 1am to 2am occurs twice, first in DST and then in standard time. At all other times isdst can be deduced from the first six values, but the behaviour if it is set incorrectly is platform-dependent.</p>
@@ -49,7 +61,7 @@ header:
 <li><code>strftime()</code> outputs to character class.</li>
 <li>Simply, One is “to” and one is “from”.</li>
 </ul>
-<p>Suppose you have today’s date and current time: Wednesday, Oct 17, 2018, 9:00 AM. Let’s start with formatting this character to represent date time using <code>strptime()</code>. BTW, you can call <code>date()</code> to display current datetime, and as of now in my system, it prints Mon Jan 14 12:12:19 2019.</p>
+<p>Suppose you have today’s date and current time: Wednesday, Oct 17, 2018, 9:00 AM. Let’s start with formatting this character to represent date time using <code>strptime()</code>. BTW, you can call <code>date()</code> to display current datetime, and as of now in my system, it prints Mon May 25 22:50:52 2020.</p>
 <pre><code>##        Wednesday, Oct 17, 2018 Wed, October 17, 2018, 9:00 AM 
 ##                    &quot;character&quot;                    &quot;character&quot;</code></pre>
 <pre><code>## [1] &quot;2018-10-17 +0545&quot;</code></pre>
@@ -73,7 +85,7 @@ header:
 <p>Duration displays as the number of seconds in a time span. Units larger than weeks are not used due to their variablity.</p>
 </blockquote>
 <p>An example use case of duration is to express age of a person or likewise, till the current date. Beware, the time format display of a system is locale dependent.</p>
-<pre><code>## [1] &quot;821750400s (~26.04 years)&quot;</code></pre>
-<pre><code>## [1] 26.1</code></pre>
+<pre><code>## [1] &quot;864691200s (~27.4 years)&quot;</code></pre>
+<pre><code>## [1] 27.4</code></pre>
 </div>
 </div>

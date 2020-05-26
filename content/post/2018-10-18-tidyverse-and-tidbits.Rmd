@@ -21,6 +21,8 @@ header:
 knitr::opts_chunk$set(echo = TRUE)
 library("rlang")
 library("tidyverse")
+library(gapminder)
+library(gridExtra)
 ```
 
 # Ideas surrounding tidy evaluation
@@ -311,7 +313,6 @@ tibble(
 # Modeling, exploration, summary extraction and visualization examples using dplyr verbs.
 
 ```{r modeling-and-visualization}
-library(gapminder)
 gap <- gapminder %>%
   filter(continent == "Asia") %>%
   mutate(yr1952 = year - 1952)
@@ -502,7 +503,6 @@ lapply(hareramshyam, `length<-`,
 # Quick saving dataframe as image/vector
 
 ```{r eval = FALSE}
-library(gridExtra)
 df <- augd[augd %>% str_detect("age$") %>% # augd is a character vector
              which()] %>% 
   tibble() %>% 
@@ -510,8 +510,13 @@ df <- augd[augd %>% str_detect("age$") %>% # augd is a character vector
   bind_cols() %>% 
   magrittr::set_colnames(paste0("shitlist", 1:4))
 
-png("./shitlist.png", height = 22*nrow(df), width = 100*ncol(df))
-grid.table(df)
-dev.off()
+# png("./shitlist.png", height = 22*nrow(df), width = 100*ncol(df))
+# grid.table(df)
+# dev.off()
 ```
 
+The dataframe can be quickly saved as image by:
+
+    png("./shitlist.png", height = 22*nrow(df), width = 100*ncol(df))
+    grid.table(df)
+    dev.off()
