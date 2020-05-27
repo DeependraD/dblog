@@ -1,0 +1,1 @@
+blogdown::build_dir("static") # this single line only is equivalent to blogdown::serve_site() workflow
