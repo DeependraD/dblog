@@ -16,8 +16,3 @@ weight: 1
 ---
 
 There is basically no single important stuff that can be used to described `R` language as a whole. Therefore here are some of its basic properties, as a computing language, not just a statistical package.
-
-## Flexibility
-## Manuoverability
-## Robustness
-## Combinability

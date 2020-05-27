@@ -1,12 +1,12 @@
 ---
 date: "2019-05-05T00:00:00+01:00"
 draft: false
-linktitle: Tips 1-5
+linktitle: Few diagrams and charts
 menu:
   latex:
-    parent: Example Topic
+    parent: Drawing with $\latex$ # multiple files can have a same parent BTW to better organize contents
     weight: 1
-title: Plotting with \LaTeX
+title: Few diagrams and charts with tikz and pstricks
 toc: true
 type: docs
 weight: 1
