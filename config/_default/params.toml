@@ -166,6 +166,7 @@ abstract_length = 135
 #   E.g. To load `/assets/js/custom.js`, set `plugins_js = ["custom"]`.
 plugins_js  = []
 # plugins_js  = ["custom"] # deependrad has manually copied over disqusloader.min, highlight.pack and math-code to assets/js/
+plugin_css = ['custom']
 
 # Avatars.
 # An avatar is an image that appears next to a user's name.
