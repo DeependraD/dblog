@@ -3,10 +3,10 @@
 #     desired widget in your `content/home/` folder.
 #   The weight parameter defines the order that the links will appear in.
 
-[[main]]
-  name = "Declaration"
-  url = "#hero"
-  weight = 10
+# [[main]]
+#  name = "Declaration"
+#  url = "#hero"
+#  weight = 10
 
 [[main]]
   name = "Posts"
@@ -19,8 +19,14 @@
   weight = 30
 
 [[main]]
+  name = "My academia"
+  url = "academicgallery/"
+  weight = 50
+
+[[main]]
   name = "Publications"
-  url = "#featured"
+#  url = "#featured" # this is disabled by deependrad
+  url = "publication/"
   weight = 40
 
 [[main]]
