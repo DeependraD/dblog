@@ -11,9 +11,9 @@ linktitle: Blogdown tricks
 #   - R
 #   - blogging
 # active: yes
-# advanced:
-#   css_class: ''
-#   css_style: ''
+advanced:
+  css_class: ''
+  css_style: 'dd-created'
 # design:
 #   background: {}
 #   columns: '1'
@@ -48,11 +48,23 @@ if (file.exists("~/.Rprofile")) {
 options(blogdown.new_bundle = TRUE)
 ```
 
+<div class="wrapper">
+<div>
+
 The first bit is relevant only if you require loading of both project and user `.Rprofile` files. Only the second bit is required for bundling the pages.
 
 Furthermore, `option(blogdown.title_case = TRUE`) could be added to the `.Rprofile` to clean the post Titles.
 
 Another option: `option(blogdown.yaml.empty = TRUE)` seems to me elusive. I guess It has to do with conversion of yaml to toml ? Or it could mean that default empty directories `archetype/` and `layouts/` will populate the root on begining a new site ?
+</div>
+
+<div>
+
+Any option could be here, but it is a plain demonstration of wrapper div.
+
+</div>
+
+</div>
 
 ## Hugo archetypes
 
