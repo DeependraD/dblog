@@ -62,3 +62,7 @@ echo -e "Source Themes Academic v$version\n"
   fi
 ```
 
+## Notes
+
+- Post: Time series analysis of cointegrated economic variables
+  - Trim `weather_nepal/` data to make the files smaller

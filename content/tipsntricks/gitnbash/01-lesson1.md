@@ -10,31 +10,109 @@ title: Example Page 1
 toc: true
 type: docs
 weight: 1
+tags: ['command', 'gnu']
 ---
 
-In this tutorial, I'll share my top 10 tips for getting started with Academic:
+There is probably a lot to look out in this open world for better, but that can be a good venture for a lifetime. Why not I embark on it now.
+## Find
 
-## Tip 1
+More than anything, I certainly have to make a disclosure pre-emptively that this section is heavily borrowed. Specifically, at the moment I find example post in https://alvinalexander.com/unix/edu/examples/find.shtml very helpful. Here I copy a bunch of commands that gradually progress from basic to more advanced in structure and tease out a variety of problems while searching though file system to locate a particular file and perform some action in it. 
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere tellus ac convallis placerat. Proin tincidunt magna sed ex sollicitudin condimentum. Sed ac faucibus dolor, scelerisque sollicitudin nisi. Cras purus urna, suscipit quis sapien eu, pulvinar tempor diam. Quisque risus orci, mollis id ante sit amet, gravida egestas nisl. Sed ac tempus magna. Proin in dui enim. Donec condimentum, sem id dapibus fringilla, tellus enim condimentum arcu, nec volutpat est felis vel metus. Vestibulum sit amet erat at nulla eleifend gravida.
+```
+basic 'find file' commands
+--------------------------
+find / -name foo.txt -type f -print             # full command
+find / -name foo.txt -type f                    # -print isn't necessary
+find / -name foo.txt                            # don't have to specify "type==file"
+find . -name foo.txt                            # search under the current dir
+find . -name "foo.*"                            # wildcard
+find . -name "*.txt"                            # wildcard
+find /users/al -name Cookbook -type d           # search '/users/al' dir
 
-Nullam vel molestie justo. Curabitur vitae efficitur leo. In hac habitasse platea dictumst. Sed pulvinar mauris dui, eget varius purus congue ac. Nulla euismod, lorem vel elementum dapibus, nunc justo porta mi, sed tempus est est vel tellus. Nam et enim eleifend, laoreet sem sit amet, elementum sem. Morbi ut leo congue, maximus velit ut, finibus arcu. In et libero cursus, rutrum risus non, molestie leo. Nullam congue quam et volutpat malesuada. Sed risus tortor, pulvinar et dictum nec, sodales non mi. Phasellus lacinia commodo laoreet. Nam mollis, erat in feugiat consectetur, purus eros egestas tellus, in auctor urna odio at nibh. Mauris imperdiet nisi ac magna convallis, at rhoncus ligula cursus.
+search multiple dirs
+--------------------
+find /opt /usr /var -name foo.scala -type f     # search multiple dirs
 
-Cras aliquam rhoncus ipsum, in hendrerit nunc mattis vitae. Duis vitae efficitur metus, ac tempus leo. Cras nec fringilla lacus. Quisque sit amet risus at ipsum pharetra commodo. Sed aliquam mauris at consequat eleifend. Praesent porta, augue sed viverra bibendum, neque ante euismod ante, in vehicula justo lorem ac eros. Suspendisse augue libero, venenatis eget tincidunt ut, malesuada at lorem. Donec vitae bibendum arcu. Aenean maximus nulla non pretium iaculis. Quisque imperdiet, nulla in pulvinar aliquet, velit quam ultrices quam, sit amet fringilla leo sem vel nunc. Mauris in lacinia lacus.
+case-insensitive searching
+--------------------------
+find . -iname foo                               # find foo, Foo, FOo, FOO, etc.
+find . -iname foo -type d                       # same thing, but only dirs
+find . -iname foo -type f                       # same thing, but only files
 
-Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.
+find files with different extensions
+------------------------------------
+find . -type f \( -name "*.c" -o -name "*.sh" \)                       # *.c and *.sh files
+find . -type f \( -name "*cache" -o -name "*xml" -o -name "*html" \)   # three patterns
 
-Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.
+find files that don't match a pattern (-not)
+--------------------------------------------
+find . -type f -not -name "*.html"                                # find all files not ending in ".html"
 
+find files by text in the file (find + grep)
+--------------------------------------------
+find . -type f -name "*.java" -exec grep -l StringBuffer {} \;    # find StringBuffer in all *.java files
+find . -type f -name "*.java" -exec grep -il string {} \;         # ignore case with -i option
+find . -type f -name "*.gz" -exec zgrep 'GET /foo' {} \;          # search for a string in gzip'd files
 
-## Tip 2
+5 lines before, 10 lines after grep matches
+-------------------------------------------
+find . -type f -name "*.scala" -exec grep -B5 -A10 'null' {} \;
+     (see https://alvinalexander.com/linux-unix/find-grep-print-lines-before-after-search-term)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere tellus ac convallis placerat. Proin tincidunt magna sed ex sollicitudin condimentum. Sed ac faucibus dolor, scelerisque sollicitudin nisi. Cras purus urna, suscipit quis sapien eu, pulvinar tempor diam. Quisque risus orci, mollis id ante sit amet, gravida egestas nisl. Sed ac tempus magna. Proin in dui enim. Donec condimentum, sem id dapibus fringilla, tellus enim condimentum arcu, nec volutpat est felis vel metus. Vestibulum sit amet erat at nulla eleifend gravida.
+find files and act on them (find + exec)
+----------------------------------------
+find /usr/local -name "*.html" -type f -exec chmod 644 {} \;      # change html files to mode 644
+find htdocs cgi-bin -name "*.cgi" -type f -exec chmod 755 {} \;   # change cgi files to mode 755
+find . -name "*.pl" -exec ls -ld {} \;                            # run ls command on files found
 
-Nullam vel molestie justo. Curabitur vitae efficitur leo. In hac habitasse platea dictumst. Sed pulvinar mauris dui, eget varius purus congue ac. Nulla euismod, lorem vel elementum dapibus, nunc justo porta mi, sed tempus est est vel tellus. Nam et enim eleifend, laoreet sem sit amet, elementum sem. Morbi ut leo congue, maximus velit ut, finibus arcu. In et libero cursus, rutrum risus non, molestie leo. Nullam congue quam et volutpat malesuada. Sed risus tortor, pulvinar et dictum nec, sodales non mi. Phasellus lacinia commodo laoreet. Nam mollis, erat in feugiat consectetur, purus eros egestas tellus, in auctor urna odio at nibh. Mauris imperdiet nisi ac magna convallis, at rhoncus ligula cursus.
+find and copy
+-------------
+find . -type f -name "*.mp3" -exec cp {} /tmp/MusicFiles \;       # cp *.mp3 files to /tmp/MusicFiles
 
-Cras aliquam rhoncus ipsum, in hendrerit nunc mattis vitae. Duis vitae efficitur metus, ac tempus leo. Cras nec fringilla lacus. Quisque sit amet risus at ipsum pharetra commodo. Sed aliquam mauris at consequat eleifend. Praesent porta, augue sed viverra bibendum, neque ante euismod ante, in vehicula justo lorem ac eros. Suspendisse augue libero, venenatis eget tincidunt ut, malesuada at lorem. Donec vitae bibendum arcu. Aenean maximus nulla non pretium iaculis. Quisque imperdiet, nulla in pulvinar aliquet, velit quam ultrices quam, sit amet fringilla leo sem vel nunc. Mauris in lacinia lacus.
+copy one file to many dirs
+--------------------------
+find dir1 dir2 dir3 dir4 -type d -exec cp header.shtml {} \;      # copy the file header.shtml to those dirs
 
-Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.
+find and delete
+---------------
+find . -type f -name "Foo*" -exec rm {} \;                        # remove all "Foo*" files under current dir
+find . -type d -name CVS -exec rm -r {} \;                        # remove all subdirectories named "CVS" under current dir
 
-Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.
+find files by modification time
+-------------------------------
+find . -mtime 1               # 24 hours
+find . -mtime -7              # last 7 days
+find . -mtime -7 -type f      # just files
+find . -mtime -7 -type d      # just dirs
+
+find files by modification time using a temp file
+-------------------------------------------------
+touch 09301330 poop           # 1) create a temp file with a specific timestamp
+find . -mnewer poop           # 2) returns a list of new files
+rm poop                       # 3) rm the temp file
+
+find with time: this works on mac os x
+--------------------------------------
+find / -newerct '1 minute ago' -print
+
+find and tar
+------------
+find . -type f -name "*.java" | xargs tar cvf myfile.tar
+find . -type f -name "*.java" | xargs tar rvf myfile.tar
+     (see https://alvinalexander.com/blog/post/linux-unix/using-find-xargs-tar-create-huge-archive-cygwin-linux-unix
+     for more information)
+
+find, tar, and xargs
+--------------------
+find . -name -type f '*.mp3' -mtime -180 -print0 | xargs -0 tar rvf music.tar
+     (-print0 helps handle spaces in filenames)
+     (see https://alvinalexander.com/mac-os-x/mac-backup-filename-directories-spaces-find-tar-xargs)
+
+find and pax (instead of xargs and tar)
+---------------------------------------
+find . -type f -name "*html" | xargs tar cvf jw-htmlfiles.tar -
+find . -type f -name "*html" | pax -w -f jw-htmlfiles.tar
+     (see https://alvinalexander.com/blog/post/linux-unix/using-pax-instead-of-tar)
+```
+
+Besides the abovementioned link and references, man pages of gnu commands are excellent and complete literature to go through. For example, online man pages of `find` command is hosted in https://www.man7.org/linux/man-pages/man1/find.1.html#EXAMPLES.

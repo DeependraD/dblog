@@ -1,0 +1,56 @@
+---
+title: 'Array operation: Outer product'
+author: Deependra Dhakal
+date: '2020-07-31'
+slug: array-operation-outer-product
+categories:
+  - R
+tags: []
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-07-31T22:06:20+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+Incidentally, I ran into outer product function `outer` today. It is extremely powerful function, in that it computes all combinations of product of two objects. One simplest and obvious demonstration is the multiplication table of numbers. :smile:
+
+We can show multiplication table of numbers 1 through 12 each multiplied 1 through 10.
+
+```{r}
+
+outer(1:10, 1:12, "*")
+```
+
+Another immediate use can be seen in design and combinatorics. For instance,
+
+```{r}
+# outer product sum and subtraction function
+outer(1:5, 1:10, "+")
+outer(1:5, 1:10, "-")
+```
+
+Interestingly, outer subtraction of same two numeric vector gives a symmetric matrix with negative elements in upper with respect to lower.
+
+```{r}
+outer(1:5, 1:5, "-")
+table(outer(1:5, 1:5, "-"))
+```
+
+In genetics, outer product is useful finding genotype combinations from multiple loci. For two loci, combination of genotypes is obtained as:
+
+```{r}
+outer(c("AA", "Aa", "aa"), c("BB", "Bb", "bb"), paste0)
+```
+
+Likewise for gamete formation, we can see that when there are 5 alleles in a diploid organism, possible genotype combinations are:
+
+```{r}
+outer(LETTERS[1:5], LETTERS[1:5], paste0)
+```
+

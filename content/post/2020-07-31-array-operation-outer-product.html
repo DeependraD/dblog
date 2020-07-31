@@ -1,0 +1,79 @@
+---
+title: 'Array operation: Outer product'
+author: Deependra Dhakal
+date: '2020-07-31'
+slug: array-operation-outer-product
+categories:
+  - R
+tags: []
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-07-31T22:06:20+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>Incidentally, I ran into outer product function <code>outer</code> today. It is extremely powerful function, in that it computes all combinations of product of two objects. One simplest and obvious demonstration is the multiplication table of numbers. :smile:</p>
+<p>We can show multiplication table of numbers 1 through 12 each multiplied 1 through 10.</p>
+<pre class="r"><code>outer(1:10, 1:12, &quot;*&quot;)</code></pre>
+<pre><code>##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
+##  [1,]    1    2    3    4    5    6    7    8    9    10    11    12
+##  [2,]    2    4    6    8   10   12   14   16   18    20    22    24
+##  [3,]    3    6    9   12   15   18   21   24   27    30    33    36
+##  [4,]    4    8   12   16   20   24   28   32   36    40    44    48
+##  [5,]    5   10   15   20   25   30   35   40   45    50    55    60
+##  [6,]    6   12   18   24   30   36   42   48   54    60    66    72
+##  [7,]    7   14   21   28   35   42   49   56   63    70    77    84
+##  [8,]    8   16   24   32   40   48   56   64   72    80    88    96
+##  [9,]    9   18   27   36   45   54   63   72   81    90    99   108
+## [10,]   10   20   30   40   50   60   70   80   90   100   110   120</code></pre>
+<p>Another immediate use can be seen in design and combinatorics. For instance,</p>
+<pre class="r"><code># outer product sum and subtraction function
+outer(1:5, 1:10, &quot;+&quot;)</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+## [1,]    2    3    4    5    6    7    8    9   10    11
+## [2,]    3    4    5    6    7    8    9   10   11    12
+## [3,]    4    5    6    7    8    9   10   11   12    13
+## [4,]    5    6    7    8    9   10   11   12   13    14
+## [5,]    6    7    8    9   10   11   12   13   14    15</code></pre>
+<pre class="r"><code>outer(1:5, 1:10, &quot;-&quot;)</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+## [1,]    0   -1   -2   -3   -4   -5   -6   -7   -8    -9
+## [2,]    1    0   -1   -2   -3   -4   -5   -6   -7    -8
+## [3,]    2    1    0   -1   -2   -3   -4   -5   -6    -7
+## [4,]    3    2    1    0   -1   -2   -3   -4   -5    -6
+## [5,]    4    3    2    1    0   -1   -2   -3   -4    -5</code></pre>
+<p>Interestingly, outer subtraction of same two numeric vector gives a symmetric matrix with negative elements in upper with respect to lower.</p>
+<pre class="r"><code>outer(1:5, 1:5, &quot;-&quot;)</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    0   -1   -2   -3   -4
+## [2,]    1    0   -1   -2   -3
+## [3,]    2    1    0   -1   -2
+## [4,]    3    2    1    0   -1
+## [5,]    4    3    2    1    0</code></pre>
+<pre class="r"><code>table(outer(1:5, 1:5, &quot;-&quot;))</code></pre>
+<pre><code>## 
+## -4 -3 -2 -1  0  1  2  3  4 
+##  1  2  3  4  5  4  3  2  1</code></pre>
+<p>In genetics, outer product is useful finding genotype combinations from multiple loci. For two loci, combination of genotypes is obtained as:</p>
+<pre class="r"><code>outer(c(&quot;AA&quot;, &quot;Aa&quot;, &quot;aa&quot;), c(&quot;BB&quot;, &quot;Bb&quot;, &quot;bb&quot;), paste0)</code></pre>
+<pre><code>##      [,1]   [,2]   [,3]  
+## [1,] &quot;AABB&quot; &quot;AABb&quot; &quot;AAbb&quot;
+## [2,] &quot;AaBB&quot; &quot;AaBb&quot; &quot;Aabb&quot;
+## [3,] &quot;aaBB&quot; &quot;aaBb&quot; &quot;aabb&quot;</code></pre>
+<p>Likewise for gamete formation, we can see that when there are 5 alleles in a diploid organism, possible genotype combinations are:</p>
+<pre class="r"><code>outer(LETTERS[1:5], LETTERS[1:5], paste0)</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5]
+## [1,] &quot;AA&quot; &quot;AB&quot; &quot;AC&quot; &quot;AD&quot; &quot;AE&quot;
+## [2,] &quot;BA&quot; &quot;BB&quot; &quot;BC&quot; &quot;BD&quot; &quot;BE&quot;
+## [3,] &quot;CA&quot; &quot;CB&quot; &quot;CC&quot; &quot;CD&quot; &quot;CE&quot;
+## [4,] &quot;DA&quot; &quot;DB&quot; &quot;DC&quot; &quot;DD&quot; &quot;DE&quot;
+## [5,] &quot;EA&quot; &quot;EB&quot; &quot;EC&quot; &quot;ED&quot; &quot;EE&quot;</code></pre>
