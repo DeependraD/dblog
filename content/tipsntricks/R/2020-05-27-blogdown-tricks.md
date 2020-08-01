@@ -29,7 +29,7 @@ toc: true
 type: docs
 ---
 
-I just discoverd pretty cool features of hugo that supposedly improves blogging -- with blogdown too. Unfortunately, every cool stuff does not always settles things down. In particular I have following headings to talk about:
+There are some pretty well versed tricks out there in the twitter sphere that prompted me to initiate this section about enlisting some of those. I just discoverd pretty cool features of hugo that supposedly improves blogging -- with blogdown too. Unfortunately, every cool stuff does not always settles things down. In particular I have following headings to talk about:
 
 ## Page bundles in hugo
 
@@ -69,3 +69,63 @@ Any option could be here, but it is a plain demonstration of wrapper div.
 ## Hugo archetypes
 
 Also study a simple and quite understandable blog by Alison on Hugo archetypes: https://alison.rbind.io/post/2019-02-19-hugo-archetypes/
+
+## Page source links
+
+Each post or page can be linked to source document using partial template update, as done here in https://benjamin-wolfe.netlify.app/post/2020-07-31-hugo-academic-source-links/. The blog discusses details on adding the features for .Rmd files. Thankfully, docs type '.md' files come readily with the `Edit this page` feature, implemented through /config/_default/params.toml. The parameter `edit_page` should, however, be adjusted to link to proper `content_dir`, otherwise you'll be redirected to a broken source link.
+
+## Inserting toc 
+
+A docs type page can have toc in its body at any location with following shortcode: \{\{% toc %\}\}.
+
+It seems tough to stop hugo parser from running most of the commands such as "toc" above without escaping the double curly braces. Comments are good for hiding it overall, but blockquote/alert do not work if you intend to stop parsing.
+
+## How to make pretty note boxes ?
+
+My first and foremost encounter was this tweet:
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">I just figured out how to include note boxes in {bookdown} documents thanks to this great tutorial from <a href="https://twitter.com/dcossyle?ref_src=twsrc%5Etfw">@dcossyle</a> <a href="https://t.co/yp2Y8YY8Yx">https://t.co/yp2Y8YY8Yx</a> 💯<a href="https://twitter.com/hashtag/Rstats?src=hash&amp;ref_src=twsrc%5Etfw">#Rstats</a> <a href="https://t.co/F9gopM37Ez">pic.twitter.com/F9gopM37Ez</a></p>&mdash; Dan Quintana (@dsquintana) <a href="https://twitter.com/dsquintana/status/1263562355218284544?ref_src=twsrc%5Etfw">May 21, 2020</a></blockquote>
+
+This feature of adding of custom > div tips (`div tips`) is satisfying for blogdown and html based bookdown projects. Its limitation of being able only to work as expected in `.Rmd` files and not in `.Rmarkdown`, `.md` and not even in xaringan.
+
+There is a simple implementation of the css based trick in a recent post [Long way on return](url link to the post).
+
+Here's another tweet that goes without context, but is beautiful.
+
+{{< tweet 1266175471705886720 >}}
+
+## What is a blogdown page ? -- Case with hugo-academic
+
+This came totally as a surprise to me that one must set the output format as `blogdown::html_page` with css option for a blogdown website to render properly. The css file should reside on `static/css/` folder and images should ideally be under `static/img/`. But path reference to the style sheets may be in the format as: `/css/some_style_sheet.css`. Furthermore, the images in stylesheets should define relative path of the image file from the stylesheet location.
+
+## Online icon generator service
+
+1. http://aiconica.net/ 
+
+## File paths in webstyling
+
+https://css-tricks.com/quick-reminder-about-file-paths/
+
+## Alert shortcode
+
+{{% alert note %}}
+A Markdown aside is useful for displaying notices, hints, or definitions to your readers.
+{{% /alert %}}
+
+{{% alert warning %}}
+Here's some important information...
+{{% /alert %}}
+
+## Create a custom widget
+
+1. Involves creation of layouts
+2. Writing hugo partial templates
+
+Best resource out there is:
+
+1. On creating widget: https://sourcethemes.com/academic/docs/page-builder/#develop-a-new-widget
+2. On template making: https://gohugo.io/templates/introduction/
+
+### Webgallery: my custom widget creation project
+
+1. The webgallery.html widget displays the section content in large blue font.

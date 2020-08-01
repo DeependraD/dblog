@@ -6,7 +6,7 @@ draft: false
 linktitle: Know your flag
 menu:
   readresort:
-    parent: Stumbled reads
+    parent: Reader's list
     weight: 1
 toc: true
 type: docs

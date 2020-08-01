@@ -6,7 +6,7 @@ draft: false
 linktitle: Setting up stage
 menu:
   generaltips:
-    parent: General Tips
+    parent: General Computing Tips
     weight: 1
 toc: true
 type: docs
@@ -63,3 +63,4 @@ type: docs
 For basic publication (all formats including latex and html)
 
 - [Pandoc's github repo with templates](https://github.com/jgm/pandoc-templates)
+- Always check for default (latex) template in case if errors arise in new compiling with new versions of pandoc or TeX.

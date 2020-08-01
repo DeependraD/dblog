@@ -13,6 +13,7 @@ title: Overview
 toc: true
 type: docs
 weight: 1
+source_extension: ".md" 
 ---
 
 There is basically no single important stuff that can be used to described `R` language as a whole. Therefore here are some of its basic properties, as a computing language, not just a statistical package.

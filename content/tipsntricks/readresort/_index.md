@@ -7,7 +7,7 @@ menu:
   readresort:
     name: Reader's list
     weight: 1
-summary: A curated list of blog websites and links to take time off.
+summary: A curated list of blog websites and works beautifully curated by others. This is to make one feel like getting a vacation.
 title: "Reader's list"
 toc: true
 type: docs
