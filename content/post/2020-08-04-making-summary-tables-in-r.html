@@ -1,0 +1,335 @@
+---
+title: Making Summary Tables in R
+author: Deependra Dhakal
+date: '2020-08-04'
+slug: making-summary-tables-in-r
+output:
+  blogdown::html_page:
+    toc: yes
+categories:
+  - tidyverse
+  - R
+tags:
+  - R
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-08-04T06:38:33+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#background">Background</a></li>
+<li><a href="#general-purpose-tables">General purpose tables</a></li>
+<li><a href="#summary-tables">Summary tables</a>
+<ul>
+<li><a href="#rtables-package">rtables package</a></li>
+<li><a href="#qwraps2-package">qwraps2 package</a></li>
+<li><a href="#gtsummary-package">gtsummary package</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>Table output of R is one of the richest and satisfying to use feature. Rmarkdown format provides loads of package support to create, format, and present tables beautifully. This is on one aspect extremely useful while on the other end it could very well be daunting as to choose between various package options to use while formating your table. I have a bunch of suggestions and enlistments here to help get off that dilemma.</p>
+<p>Once in a while someone writes a blog post and addressess these issues. This is true for this topic too. <a href="https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/" class="uri">https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/</a> has wonderfully curated list of several such options. My intnet too is to supplement the information included in the post.</p>
+</div>
+<div id="general-purpose-tables" class="section level2">
+<h2>General purpose tables</h2>
+<p>Here goes the list of packages:</p>
+<ol style="list-style-type: decimal">
+<li>Table output (or in general, dataframe printing) is a more general idea for Rmarkdown documents. It can be set with a print option set in the YAML header.</li>
+</ol>
+<pre><code>title: Some good amount of table
+output:
+  html_document:
+    df_print: paged </code></pre>
+<p>The df_print option can take other values such as default, kable and tibble. More on this at <a href="https://bookdown.org/yihui/rmarkdown/html-document.html#data-frame-printing" class="uri">https://bookdown.org/yihui/rmarkdown/html-document.html#data-frame-printing</a>.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>gt package</li>
+<li>kable + kableExtra.</li>
+</ol>
+<p>Here are a bunch of appealing examples that surely entice you into using this combination of packages.</p>
+<pre><code>vignette(package = &quot;kableExtra&quot;, topic = &quot;awesome_table_in_pdf&quot;)</code></pre>
+<p>Sharla Gelfand also has whole repository maintained for sharing examples on use of kableExtra. Check that out at: <a href="https://github.com/sharlagelfand/kableExtra-cookbook" class="uri">https://github.com/sharlagelfand/kableExtra-cookbook</a></p>
+<p>Additionally, I have forked the repo and tried to contribute some of my own hacks (not exactly my own, but learnt elsewhere on the internet) to the bookdown project.</p>
+<ol start="4" style="list-style-type: decimal">
+<li><a href="https://renkun-ken.github.io/formattable/">formattable</a></li>
+<li>DT. More at: <a href="https://rstudio.github.io/DT/" class="uri">https://rstudio.github.io/DT/</a></li>
+<li>reactable. A demonstration of use at: <a href="https://projects.fivethirtyeight.com/2019-womens-world-cup-predictions/" class="uri">https://projects.fivethirtyeight.com/2019-womens-world-cup-predictions/</a></li>
+<li>flextable: <a href="https://davidgohel.github.io/flextable/index.html" class="uri">https://davidgohel.github.io/flextable/index.html</a></li>
+<li>huxtable. <a href="https://hughjonesd.github.io/huxtable/" class="uri">https://hughjonesd.github.io/huxtable/</a></li>
+<li>rhandsontable. This extremely helpful package in case if you have dirty data and data representation. This lets you manually edit the data like working in a spreadsheet software. More on: <a href="https://jrowen.github.io/rhandsontable/" class="uri">https://jrowen.github.io/rhandsontable/</a></li>
+<li>pixiedust. <a href="https://github.com/nutterb/pixiedust" class="uri">https://github.com/nutterb/pixiedust</a></li>
+</ol>
+</div>
+<div id="summary-tables" class="section level2">
+<h2>Summary tables</h2>
+<div id="rtables-package" class="section level3">
+<h3>rtables package</h3>
+<p>For the time of creating this post, the package rtable was available only as github project of G. Becker. In particular, specific branch was used to compile a package. However, as he mentions <a href="https://www.youtube.com/watch?v=CBQzZ8ZhXLA">here</a>, the project has a long history of being released as open-source well after being using as proprietary for some time.</p>
+<p>We start by installing and loading essential libraries.</p>
+<p>Throughout, <code>williams.trees</code> dataset from the agridat package will be used. Apart from already existing factors and numeric variables, an additional factor is generated from random process because pre-existing <code>gen</code> (genotype information) variable is nested in structure. Nested variable means that summary for that is available only for specific grouping and not for overall use.</p>
+<p>Using <code>rtable::split_cols_by</code>, we split the analysis variable into multiple columns formed by a grouping variable.</p>
+<pre><code>##             Chanthaburi              HuaiBong               Ratchaburi               SaiThong                Sakaerat                 SiSaKet       
+##          D       C       B       D       C       B       D       C       B       D       C       B       D       C       B       D       C       B  
+## ----------------------------------------------------------------------------------------------------------------------------------------------------
+## mean   227.7   306.6   247.9   201.5   179.5   227.8   445.5   464.5   474.2   655.9   699.1   576.7   285.5   318.6   397.3   421.1   439.5   537.4</code></pre>
+<p>Row splitting can also be done as shown.</p>
+<pre><code>##           Chanthaburi    HuaiBong    Ratchaburi    SaiThong     Sakaerat     SiSaKet  
+## --------------------------------------------------------------------------------------
+## D          15 (50%)     11 (40.7%)   11 (32.4%)   16 (48.5%)   11 (33.3%)   9 (25.7%) 
+##   mean      227.67        201.55       445.45       655.94       285.45       421.11  
+##   sd        107.19        91.81        141.97       277.59       142.17       177.37  
+##   range       315          322          455          957          512          561    
+##   max         391          397          673          1073         575          658    
+##   min         76            75          218          116           63           97    
+## C          5 (16.7%)     10 (37%)    11 (32.4%)   7 (21.2%)    10 (30.3%)   12 (34.3%)
+##   mean       306.6        179.5        464.55       699.14       318.6        439.5   
+##   sd         195.3        95.81        142.08       320.74       136.36       177.74  
+##   range       489          249          508          820          458          515    
+##   max         569          345          764          1083         632          735    
+##   min         80            96          256          263          174          220    
+## B         10 (33.3%)    6 (22.2%)    12 (35.3%)   10 (30.3%)   12 (36.4%)    14 (40%) 
+##   mean       247.9        227.83       474.17       576.7        397.33       537.43  
+##   sd         142.2        89.87        154.73       214.48       190.91       209.85  
+##   range       471          225          555          580          568          681    
+##   max         555          327          764          899          658          839    
+##   min         84           102          209          319           90          158</code></pre>
+<p>In the previous table we used custom function for summarizing. However, we can use pre-existing helper functions of R like the <code>summary</code> function.</p>
+<pre><code>##             Chanthaburi    HuaiBong    Ratchaburi    SaiThong     Sakaerat     SiSaKet  
+##               (N=30)        (N=27)       (N=34)       (N=33)       (N=33)       (N=35)  
+## ----------------------------------------------------------------------------------------
+## D            15 (50%)     11 (40.7%)   11 (32.4%)   16 (48.5%)   11 (33.3%)   9 (25.7%) 
+##   Min.          76            75          218          116           63           97    
+##   1st Qu.      154.5        145.5        358.5        464.75        207          353    
+##   Median        186          189          436         718.5         235          414    
+##   Mean        227.67        201.55       445.45       655.94       285.45       421.11  
+##   3rd Qu.      325.5         227          538          884          362          521    
+##   Max.          391          397          673          1073         575          658    
+## C            5 (16.7%)     10 (37%)    11 (32.4%)   7 (21.2%)    10 (30.3%)   12 (34.3%)
+##   Min.          80            96          256          263          174          220    
+##   1st Qu.       163         114.5         377          476          256         316.25  
+##   Median        306          138          439          802          278          358    
+##   Mean         306.6        179.5        464.55       699.14       318.6        439.5   
+##   3rd Qu.       415         227.75       559.5         897         358.75        619    
+##   Max.          569          345          764          1083         632          735    
+## B           10 (33.3%)    6 (22.2%)    12 (35.3%)   10 (30.3%)   12 (36.4%)    14 (40%) 
+##   Min.          84           102          209          319           90          158    
+##   1st Qu.      141.5        161.25       422.75       420.75       205.75       404.25  
+##   Median       217.5        254.5        481.5         493          458          568    
+##   Mean         247.9        227.83       474.17       576.7        397.33       537.43  
+##   3rd Qu.     323.25        287.75        540          753         529.75       677.75  
+##   Max.          555          327          764          899          658          839</code></pre>
+<p>In earlier functions, we used variable as data parameter. But dataset entirely can also be provided as a data parameter if summary involves multiple variables.</p>
+<pre><code>##                                Chanthaburi    HuaiBong    Ratchaburi    SaiThong      Sakaerat     SiSaKet  
+##                                  (N=30)        (N=27)       (N=34)       (N=33)        (N=33)       (N=35)  
+## ------------------------------------------------------------------------------------------------------------
+## D                               15 (50%)     11 (40.7%)   11 (32.4%)   16 (48.5%)    11 (33.3%)   9 (25.7%) 
+##   Total genotypes                  15            11           11           16            11           9     
+##   Unique genotypes                  3            5            5             5            4            4     
+##   Genotypes with &gt; 1 records    12 (40%)     6 (22.22%)   6 (17.65%)   11 (33.33%)   7 (21.21%)   5 (14.29%)
+## C                               5 (16.7%)     10 (37%)    11 (32.4%)    7 (21.2%)    10 (30.3%)   12 (34.3%)
+##   Total genotypes                   5            10           11            7            10           12    
+##   Unique genotypes                  3            4            4             4            5            5     
+##   Genotypes with &gt; 1 records    2 (6.67%)    6 (22.22%)   7 (20.59%)    3 (9.09%)    5 (15.15%)    7 (20%)  
+## B                              10 (33.3%)    6 (22.2%)    12 (35.3%)   10 (30.3%)    12 (36.4%)    14 (40%) 
+##   Total genotypes                  10            6            12           10            12           14    
+##   Unique genotypes                  4            3            4             4            5            5     
+##   Genotypes with &gt; 1 records     6 (20%)     3 (11.11%)   8 (23.53%)   6 (18.18%)    7 (21.21%)   9 (25.71%)</code></pre>
+<p>Also, insted of letting automatic counting from the given analysis variable, we could manually supply the column aggregate summary by initially populating the columns counts. This is done using <code>tapply</code> or <code>map</code> functions.</p>
+<pre><code>##                                Chanthaburi    HuaiBong    Ratchaburi    SaiThong      Sakaerat     SiSaKet  
+##                                  (N=30)        (N=27)       (N=34)       (N=33)        (N=33)       (N=35)  
+## ------------------------------------------------------------------------------------------------------------
+## D                               15 (50%)     11 (40.7%)   11 (32.4%)   16 (48.5%)    11 (33.3%)   9 (25.7%) 
+##   Total genotypes                  15            11           11           16            11           9     
+##   Unique genotypes                  3            5            5             5            4            4     
+##   Genotypes with &gt; 1 records    12 (40%)     6 (22.22%)   6 (17.65%)   11 (33.33%)   7 (21.21%)   5 (14.29%)
+## C                               5 (16.7%)     10 (37%)    11 (32.4%)    7 (21.2%)    10 (30.3%)   12 (34.3%)
+##   Total genotypes                   5            10           11            7            10           12    
+##   Unique genotypes                  3            4            4             4            5            5     
+##   Genotypes with &gt; 1 records    2 (6.67%)    6 (22.22%)   7 (20.59%)    3 (9.09%)    5 (15.15%)    7 (20%)  
+## B                              10 (33.3%)    6 (22.2%)    12 (35.3%)   10 (30.3%)    12 (36.4%)    14 (40%) 
+##   Total genotypes                  10            6            12           10            12           14    
+##   Unique genotypes                  4            3            4             4            5            5     
+##   Genotypes with &gt; 1 records     6 (20%)     3 (11.11%)   8 (23.53%)   6 (18.18%)    7 (21.21%)   9 (25.71%)</code></pre>
+<p>Here are some of the handy utility functions that can be used on the go.</p>
+</div>
+<div id="qwraps2-package" class="section level3">
+<h3>qwraps2 package</h3>
+<p>For constructing simple whole sample or subsample summary tables, qwarps package have simple interface. It provides a richly showcased <a href="https://cran.r-project.org/web/packages/qwraps2/vignettes/summary-statistics.html">vignette</a> using mtcars dataset.</p>
+<p>It requires markup language to be set early on in code chunk to render proper format.</p>
+<table>
+<colgroup>
+<col width="14%" />
+<col width="14%" />
+<col width="20%" />
+<col width="21%" />
+<col width="21%" />
+<col width="8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">mtcars2 (N = 32)</th>
+<th align="left">cyl_factor: 6 cylinders (N = 7)</th>
+<th align="left">cyl_factor: 4 cylinders (N = 11)</th>
+<th align="left">cyl_factor: 8 cylinders (N = 14)</th>
+<th align="left">P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>Miles Per Gallon</strong></td>
+<td align="left">  </td>
+<td align="left">  </td>
+<td align="left">  </td>
+<td align="left">  </td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   min</td>
+<td align="left">10.4</td>
+<td align="left">17.8</td>
+<td align="left">21.4</td>
+<td align="left">10.4</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">   max</td>
+<td align="left">33.9</td>
+<td align="left">21.4</td>
+<td align="left">33.9</td>
+<td align="left">19.2</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">   mean (sd)</td>
+<td align="left">20.09 ± 6.03</td>
+<td align="left">19.74 ± 1.45</td>
+<td align="left">26.66 ± 4.51</td>
+<td align="left">15.10 ± 2.56</td>
+<td align="left"><em>P</em> &lt; 0.0001</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Displacement</strong></td>
+<td align="left">  </td>
+<td align="left">  </td>
+<td align="left">  </td>
+<td align="left">  </td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   min</td>
+<td align="left">71.1</td>
+<td align="left">145.0</td>
+<td align="left">71.1</td>
+<td align="left">275.8</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">   median</td>
+<td align="left">196.3</td>
+<td align="left">167.6</td>
+<td align="left">108.0</td>
+<td align="left">350.5</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">   max</td>
+<td align="left">472</td>
+<td align="left">258.0</td>
+<td align="left">146.7</td>
+<td align="left">472.0</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">   mean (sd)</td>
+<td align="left">230.72 ± 123.94</td>
+<td align="left">183.31 ± 41.56</td>
+<td align="left">105.14 ± 26.87</td>
+<td align="left">353.10 ± 67.77</td>
+<td align="left"><em>P</em> &lt; 0.0001</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Weight (1000 lbs)</strong></td>
+<td align="left">  </td>
+<td align="left">  </td>
+<td align="left">  </td>
+<td align="left">  </td>
+<td align="left">  </td>
+</tr>
+<tr class="odd">
+<td align="left">   min</td>
+<td align="left">1.513</td>
+<td align="left">2.620</td>
+<td align="left">1.513</td>
+<td align="left">3.170</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">   max</td>
+<td align="left">5.424</td>
+<td align="left">3.460</td>
+<td align="left">3.190</td>
+<td align="left">5.424</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">   mean (sd)</td>
+<td align="left">3.22 ± 0.98</td>
+<td align="left">3.12 ± 0.36</td>
+<td align="left">2.29 ± 0.57</td>
+<td align="left">4.00 ± 0.76</td>
+<td align="left"><em>P</em> &lt; 0.0001</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Forward Gears</strong></td>
+<td align="left">  </td>
+<td align="left">  </td>
+<td align="left">  </td>
+<td align="left">  </td>
+<td align="left"><em>P</em> &lt; 0.0001</td>
+</tr>
+<tr class="odd">
+<td align="left">   Three</td>
+<td align="left">15 (47)</td>
+<td align="left">2 (29)</td>
+<td align="left">1 (9)</td>
+<td align="left">12 (86)</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">   Four</td>
+<td align="left">12 (38)</td>
+<td align="left">4 (57)</td>
+<td align="left">8 (73)</td>
+<td align="left">0 (0)</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">   Five</td>
+<td align="left">5 (16)</td>
+<td align="left">1 (14)</td>
+<td align="left">2 (18)</td>
+<td align="left">2 (14)</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<p>Alternatively, row group name can be used for informing p-value. This is exemplified in the vignette for package.</p>
+</div>
+<div id="gtsummary-package" class="section level3">
+<h3>gtsummary package</h3>
+<p>This package is a recent development but has a lot more preview ready examples as vignette. It is richer and more easily extensible in feature because it draws upon the <code>gt</code> package. Check vignettes out at cran repo for the package: <a href="https://cran.r-project.org/web/packages/gtsummary/index.html" class="uri">https://cran.r-project.org/web/packages/gtsummary/index.html</a>.</p>
+</div>
+</div>
