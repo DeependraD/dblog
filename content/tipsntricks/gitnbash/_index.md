@@ -1,7 +1,7 @@
 ---
-date: "2020-04-09T00:00:00Z"
+date: "2020-04-09"
 draft: false
-lastmod: "2020-04-09T00:00:00Z"
+lastmod: "2020-04-09"
 linktitle: Git and Bash
 menu:
   gitnbash:
@@ -14,7 +14,4 @@ type: docs
 weight: 1
 ---
 
-There is no single recipie as such so here I include most useful resources to learning the shell and git:
-
-1. Link one
-2. Link two
+There is no single recipie as such so here I include most useful resources to learning the shell and git.

@@ -1,0 +1,215 @@
+---
+title: 'Tidytuesday: Claremont Run, X-men Characters'
+author: Deependra Dhakal
+date: '2020-08-04'
+slug: tidytuesday-tour-de-france
+categories:
+  - tidyverse
+  - R
+tags:
+  - R
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-08-04T11:13:48+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="x-men-characters" class="section level2">
+<h2>X men characters</h2>
+<div id="data-dictionary-explore" class="section level3">
+<h3>Data dictionary explore</h3>
+<table>
+<caption><span id="tab:unnamed-chunk-2">Table 1: </span>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">Piped data</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">308</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">9</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">8</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">series</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">8</td>
+<td align="right">20</td>
+<td align="right">0</td>
+<td align="right">7</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">title</td>
+<td align="right">81</td>
+<td align="right">0.74</td>
+<td align="right">4</td>
+<td align="right">237</td>
+<td align="right">0</td>
+<td align="right">225</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">writer</td>
+<td align="right">2</td>
+<td align="right">0.99</td>
+<td align="right">10</td>
+<td align="right">29</td>
+<td align="right">0</td>
+<td align="right">15</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">artist</td>
+<td align="right">266</td>
+<td align="right">0.14</td>
+<td align="right">8</td>
+<td align="right">12</td>
+<td align="right">0</td>
+<td align="right">4</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">cover_artist</td>
+<td align="right">56</td>
+<td align="right">0.82</td>
+<td align="right">8</td>
+<td align="right">54</td>
+<td align="right">0</td>
+<td align="right">46</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">pass_bechdel</td>
+<td align="right">1</td>
+<td align="right">1.00</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">page_number</td>
+<td align="right">221</td>
+<td align="right">0.28</td>
+<td align="right">1</td>
+<td align="right">5</td>
+<td align="right">0</td>
+<td align="right">22</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">notes</td>
+<td align="right">300</td>
+<td align="right">0.03</td>
+<td align="right">17</td>
+<td align="right">63</td>
+<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">issue</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">118.45</td>
+<td align="right">91.13</td>
+<td align="right">1</td>
+<td align="right">38</td>
+<td align="right">105</td>
+<td align="right">184.25</td>
+<td align="right">294</td>
+<td align="left">▇▅▃▂▅</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="exploratory-visualization" class="section level2">
+<h2>Exploratory visualization</h2>
+<p>Source: <a href="https://jmablog.com/post/which-x-men-character-had-it-worst/" class="uri">https://jmablog.com/post/which-x-men-character-had-it-worst/</a></p>
+<p><img src="/post/2020-08-04-tidytuesday-x-men-characters_files/figure-html/unnamed-chunk-3-1.png" width="1152" /></p>
+</div>
+<div id="tidybayes-modeling" class="section level2">
+<h2>Tidybayes modeling</h2>
+<p><a href="https://joshuacook.netlify.app/post/uncanny-x-men-bayesian-analysis/" class="uri">https://joshuacook.netlify.app/post/uncanny-x-men-bayesian-analysis/</a></p>
+</div>
+<div id="bechdel-testing" class="section level2">
+<h2>Bechdel testing</h2>
+<p><a href="https://juliasilge.com/blog/uncanny-xmen/" class="uri">https://juliasilge.com/blog/uncanny-xmen/</a></p>
+</div>

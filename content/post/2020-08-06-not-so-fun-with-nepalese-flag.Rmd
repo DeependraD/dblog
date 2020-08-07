@@ -1,0 +1,63 @@
+---
+title: Not so fun with Nepalese flag
+author: Deependra Dhakal
+date: '2020-08-06'
+slug: not-so-fun-with-nepalese-flag
+categories:
+  - R
+  - flag
+  - graphics
+tags: []
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-08-06T14:58:48+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+```{r setup, include=FALSE, echo=FALSE, eval=TRUE}
+require(tidyverse)
+require(magrittr)
+knitr::opts_chunk$set(fig.width=8, fig.height=6, 
+                      echo=FALSE, warning=FALSE, message=FALSE)
+theme_set(theme_light())
+```
+
+# Anatomy of flag
+
+The anatomy of flag is well described in [tipsntricks/readresort section](https://rookie.rbind.io/tipsntricks/readresort/2020-05-29-know-your-flag/) but the quirks of constructing it are not. I will be updating attending to complete the graphics as soon as I learn more.
+
+So far, only this ugly shape is what I have here to show;
+
+```{r}
+# # reference document
+# https://0xc.de/flags/nepal/
+
+# assumptions
+points <- tribble(
+  ~"point", ~"x", ~"y", ~"group1", ~"group2",
+  "A", 0, 0, "AB", 1, 
+  "B", 3, 0, "AB", 1, 
+  "C", 0, 4, "CD", 1, 
+  "D", 0, 3, "CD", 1, 
+  "E", (3-3/sqrt(2)), 3/sqrt(2), "EF", 1,
+  "F", 0, 3/sqrt(2), "EF", 1,
+  "C", 0, 4, "GC", 1,
+  "G", 3, 3/sqrt(2), "GC", 1,
+  "H", 3/4, 0, "HI", 1,
+  "I", 3/4, 3+3/4/sqrt(2), "HI", 1
+)
+
+ggplot(points) +
+  expand_limits(x = 0, y = 0) +
+  geom_line(aes(x = x, y = y, group = group1)) +
+  geom_line(aes(x = x, y = y, group = group2)) +
+  geom_text(aes(x = x, y = y, label = point), check_overlap = T, nudge_x = -0.20)
+
+```
+

@@ -7,7 +7,7 @@ menu:
   plbgen-lectures:
     name: Genetics and Plant Breeding
     weight: 1
-summary: 
+summary: Undergraduate lecture series in Genetics and Plant Breeding courses
 title: "Genetics and Plant Breeding in Undergraduate course in Agriculture"
 toc: true
 type: docs

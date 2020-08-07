@@ -13,3 +13,7 @@ type: docs
 ---
 
 ## Background
+
+## Course outline
+
+## References

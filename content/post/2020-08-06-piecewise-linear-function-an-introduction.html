@@ -1,0 +1,56 @@
+---
+title: 'Piecewise Linear Function: An Introduction'
+author: Deependra Dhakal
+date: '2020-08-06'
+slug: piecewise-linear-function-an-introduction
+categories:
+  - R
+tags:
+  - tidyverse
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-08-06T15:50:31+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="definition-and-meaning" class="section level2">
+<h2>Definition and meaning</h2>
+<p><a href="https://en.wikipedia.org/wiki/Piecewise_linear_function">Wikipedia</a> defines a piecewise linear function as:</p>
+<blockquote>
+<p>“a function defined on a (possibly unbounded) interval of real numbers, such that there is a collection of intervals on each of which the function is an affine function”</p>
+</blockquote>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<pre class="r"><code># piecewise linear functions using if statements
+
+# piecewise linear function defined using if for cases.
+pw.function &lt;- function(t) {
+  if(t &lt; 0.5) {
+    0.7 * t/0.5
+  } else {
+    0.7 + 0.3*(t-0.5)/0.5
+  }
+}
+
+pw.function &lt;- Vectorize(pw.function)
+
+tibble(t = seq(0.05:0.99, by = 0.05)) %&gt;% 
+  mutate(pfun_out = pw.function(t)) %&gt;%
+  ggplot() +
+  geom_line(aes(x = t, y = pfun_out), group = &quot;combined_grp&quot;)</code></pre>
+<p><img src="/post/2020-08-06-piecewise-linear-function-an-introduction_files/figure-html/piecewise-simple-1.png" width="768" /></p>
+</div>
+<div id="application" class="section level2">
+<h2>Application</h2>
+<p>In segmentation and curve fitting. For a larger discourse refer to <a href="https://cran.r-project.org/package=segmented">segmented</a> package in cran.</p>
+</div>
