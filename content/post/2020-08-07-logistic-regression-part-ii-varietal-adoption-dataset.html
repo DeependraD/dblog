@@ -1,0 +1,693 @@
+---
+title: 'Logistic Regression: Part II - Varietal adoption dataset'
+author: Deependra Dhakal
+date: '2020-08-07'
+slug: logistic-regression-part-ii-varietal-adoption-dataset
+categories:
+  - R
+  - tidyverse
+tags:
+  - R
+  - tidyverse
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-08-07T12:27:48+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+math: yes
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="binary-classifier-using-categorical-predictor" class="section level2">
+<h2>Binary classifier using categorical predictor</h2>
+<p>Let’s say we have two variable – survey response of farmer to willingness to adopt improved rice variety (in YES/NO) and them having been trained earlier about agricultural input management (in trained/untrained).</p>
+<p>Read in the data and notice the summary.</p>
+<pre class="r"><code>rice_data &lt;- readxl::read_xlsx(here::here(&quot;content&quot;, &quot;post&quot;, &quot;data&quot;, &quot;rice_variety_adoption.xlsx&quot;)) %&gt;% 
+  mutate_if(.predicate = is.character, as.factor)
+
+rice_variety_adoption &lt;- readxl::read_xlsx(here::here(&quot;content&quot;, &quot;post&quot;, &quot;data&quot;, &quot;rice_variety_adoption.xlsx&quot;)) %&gt;%
+  select(improved_variety_adoption, training) %&gt;% 
+  # convert data to suitable factor type for analysis.
+  mutate_if(is.character, as.factor)
+
+head(rice_variety_adoption) # now we have data</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   improved_variety_adoption training
+##   &lt;fct&gt;                     &lt;fct&gt;   
+## 1 No                        No      
+## 2 Yes                       No      
+## 3 No                        No      
+## 4 Yes                       No      
+## 5 Yes                       No      
+## 6 No                        No</code></pre>
+<p>As a basic descriptive, contruct one way and two way cross tabulation summary, showing count of each categories. This is because logistic regression uses count data, much like in a non-parametric model.</p>
+<pre class="r"><code># count the data in a one way and two way tabulation
+rice_variety_adoption %&gt;% # fortunately there are no rare class (i.e. some class have exceptionally low frequencies)
+  count(improved_variety_adoption)</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   improved_variety_adoption     n
+##   &lt;fct&gt;                     &lt;int&gt;
+## 1 No                           18
+## 2 Yes                          42</code></pre>
+<pre class="r"><code>rice_variety_adoption %&gt;% # fortunately there are no rare class (i.e. some class have exceptionally low frequencies)
+  count(training)</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   training     n
+##   &lt;fct&gt;    &lt;int&gt;
+## 1 No          43
+## 2 Yes         17</code></pre>
+<pre class="r"><code># # two way cross tabs
+# rice_variety_adoption %&gt;% 
+#   count(improved_variety_adoption, training) %&gt;% 
+#   tidyr::pivot_wider(id_cols = improved_variety_adoption:training, 
+#                      names_from = training, values_from = n)
+
+# two way cross tabs (confusion matrix) using yardstick
+yardstick::conf_mat(table(rice_variety_adoption)) # class: conf_mat</code></pre>
+<pre><code>##                          training
+## improved_variety_adoption No Yes
+##                       No  17   1
+##                       Yes 26  16</code></pre>
+<p>The data representation quickly shows that most of the non adopters have not received training 17, compared to non-adopters that have received training 1. Similarly, the odds that a farmer will be a non adopter if he is trained versus untrained is: 1/17(too low); while the odds that a farmer will be an adopter if he is trained versus untrained is: 16/26 (relatively high).</p>
+<p>To statistically verify, we formuate a generalized linear model that uses training to predict adoption of improved variety.</p>
+<pre class="r"><code>rice_glm &lt;- glm(improved_variety_adoption ~ training, data = rice_variety_adoption, family = &quot;binomial&quot;)
+rice_glm %&gt;% summary()</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = improved_variety_adoption ~ training, family = &quot;binomial&quot;, 
+##     data = rice_variety_adoption)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.3804  -1.3623   0.3482   1.0031   1.0031  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)   0.4249     0.3119   1.362   0.1731  
+## trainingYes   2.3477     1.0769   2.180   0.0293 *
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 73.304  on 59  degrees of freedom
+## Residual deviance: 65.319  on 58  degrees of freedom
+## AIC: 69.319
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<p>The intercept is the log(odds) an untrained farmer will adopt the technolgy. This is because the “No” is the first factor in training variable. The odds is not significant; meaning that odds that an untrained farmer will adopt technology is not different from zero. This can be directly derived as: <code>26/17</code> = 1.5294118</p>
+<p>The coefficient on training variable is significant and positive. This means that receiving training increases the odds of a farmer being an adopter significantly. Numerically, odds of being an adopter farmer are, on a log scale, 1.619 greater if the famerhas received a training. This can be directly derived as: <code>log((17/1) / (26/16))</code> = 10.4615385</p>
+<p>Now, we can calculate the overall “Pseudo R-squared” and its p-value. For logistic regression,</p>
+<pre class="r"><code>## NOTE: Since we are doing logistic regression...
+## Null devaince = 2*(0 - LogLikelihood(null model))
+##               = -2*LogLikihood(null model)
+## Residual deviacne = 2*(0 - LogLikelihood(proposed model))
+##                   = -2*LogLikelihood(proposed model)
+ll.null &lt;- rice_glm$null.deviance/-2
+ll.proposed &lt;- rice_glm$deviance/-2
+
+## McFadden&#39;s Pseudo R^2 = [ LL(Null) - LL(Proposed) ] / LL(Null)
+(ll.null - ll.proposed) / ll.null</code></pre>
+<pre><code>## [1] 0.1089217</code></pre>
+<p>Likewise based on <span class="math inline">\(\chi^2\)</span> values, we can arrive at p-values.</p>
+<pre class="r"><code>## chi-square value = 2*(LL(Proposed) - LL(Null))
+## p-value = 1 - pchisq(chi-square value, df = 2-1)
+1 - pchisq(2*(ll.proposed - ll.null), df=1)</code></pre>
+<pre><code>## [1] 0.004718303</code></pre>
+<pre class="r"><code>1 - pchisq((rice_glm$null.deviance - rice_glm$deviance), df=1)</code></pre>
+<pre><code>## [1] 0.004718303</code></pre>
+<p>I is also informative to see in terms of what this logistic regression predicts, given that a farmer is either trained or untrained (and no other data about them).</p>
+<pre class="r"><code>rice_predicted &lt;- tibble(
+  probability_of_adoption=rice_glm$fitted.values,
+  training=rice_variety_adoption$training)
+
+## We can plot the data...
+ggplot(data=rice_predicted, aes(x=training, y=probability_of_adoption)) +
+  geom_point(aes(color=training), size=5) +
+  xlab(&quot;Training&quot;) +
+  ylab(&quot;Predicted probability of a farmer being an adopter&quot;) +
+  theme_bw()</code></pre>
+<p><img src="/post/2020-08-07-logistic-regression-part-ii-varietal-adoption-dataset_files/figure-html/rice-prediction-1.png" width="480" /></p>
+<p>Since there are only two probabilities of adopting/non-adopting (one for trained and one for untrained), we can use a table to summarize the predicted probabilities.</p>
+<pre class="r"><code>xtabs(~ probability_of_adoption + training, data=rice_predicted)</code></pre>
+<pre><code>##                        training
+## probability_of_adoption No Yes
+##       0.604651162790698 43   0
+##       0.941176470569947  0  17</code></pre>
+<p>In a similar way multiple variables can be used as regressors to predict probability of farmer being an adopter of improved variety</p>
+</div>
+<div id="continuous-predictor" class="section level2">
+<h2>Continuous predictor</h2>
+<pre class="r"><code>rice_variety_adoption &lt;- glm(improved_variety_adoption ~ farm_size, data = rice_data, family = binomial())
+
+# also note that continuous response variables may infact be resulting form composite distributions
+
+rice_data %&gt;% 
+  ggplot() +
+  geom_boxplot(aes(improved_variety_adoption, farm_size, fill = improved_variety_adoption), alpha = 0.6) +
+  geom_violin(aes(improved_variety_adoption, farm_size, fill = improved_variety_adoption), alpha = 0.6) +
+  scale_fill_discrete(guide = FALSE)</code></pre>
+<p><img src="/post/2020-08-07-logistic-regression-part-ii-varietal-adoption-dataset_files/figure-html/example-classification-1.png" width="480" /></p>
+<pre class="r"><code># break down globulin data into based on arbitrary value of 32
+# check if the distribution is normal ?
+rice_data %&gt;% 
+  ggplot() +
+  geom_density_ridges(aes(x = farm_size, y = training, fill = improved_variety_adoption), 
+              position = &quot;identity&quot;, 
+              alpha = 0.6, scale = 1.1, rel_min_height = 0.05) + # `rel_min_height` is minimum height of density below which is ignored in display
+  scale_fill_discrete(guide = FALSE)</code></pre>
+<p><img src="/post/2020-08-07-logistic-regression-part-ii-varietal-adoption-dataset_files/figure-html/example-classification-2.png" width="480" /></p>
+<p>There is likely a presence of two peaks in the category receiving training.</p>
+<pre class="r"><code>rice_freq_tab_char &lt;- rice_data %&gt;% 
+  select_if(.predicate = function(x)is.character(x)|is.factor(x))
+
+rice_freq_tab_char &lt;- rice_freq_tab_char %&gt;% 
+  pivot_longer(household_head_gender:last_col(), names_to = &#39;categorical_vars&#39;, values_to = &quot;var_value&quot;) %&gt;% 
+  group_by(categorical_vars, var_value) %&gt;% 
+  count(sort = F) %&gt;% 
+  ungroup()</code></pre>
+<p>Pie charts of all categorical variables.</p>
+<pre class="r"><code>rice_freq_tab_split &lt;- rice_freq_tab_char %&gt;%
+  group_split(categorical_vars) %&gt;%
+  set_names(map(., ~unique(.x$categorical_vars)))
+
+fpie &lt;- map2(.x = rice_freq_tab_split,
+             .y = names(rice_freq_tab_split),
+             .f = ~ ggplot(.x,
+                           aes(x=&quot;&quot;, y=n, fill=var_value)) +
+               geom_bar(stat=&quot;identity&quot;, width=1) +
+               # Convert to pie (polar coordinates) and add labels
+               coord_polar(&quot;y&quot;, start=0) +
+               ggrepel::geom_text_repel(aes(label = scales::percent(round(n/sum(n), 2))),
+                         position = position_stack(vjust = 0.5), size = 4) +
+               # Add color scale (hex colors)
+               # scale_fill_manual(values=c(&quot;#55DDE0&quot;, &quot;#33658A&quot;, &quot;#2F4858&quot;,
+               #                            &quot;#F6AE2D&quot;, &quot;#F26419&quot;)) +
+               # use fill_viridis_d() for discrete values
+               scale_fill_viridis_d(na.value = &quot;grey50&quot;) +
+               # faceting will add label to individual plot at least
+               # facet_wrap(~`Socio-economic variables`) +
+               # Remove labels and add title
+               labs(x = NULL, y = NULL,
+                    fill = NULL,
+                    title = str_to_sentence(str_replace_all(.y, &quot;_&quot;, &quot; &quot;))) +
+               # Tidy up the theme
+               theme_classic() +
+               theme(axis.line = element_blank(),
+                     axis.text = element_blank(),
+                     axis.ticks = element_blank(),
+                     plot.title = element_text(hjust = 0.5, color = &quot;#666666&quot;))
+)
+
+fpie</code></pre>
+<pre><code>## $age_group</code></pre>
+<p><img src="/post/2020-08-07-logistic-regression-part-ii-varietal-adoption-dataset_files/figure-html/frequency-pie-1.png" width="384" /></p>
+<pre><code>## 
+## $education</code></pre>
+<p><img src="/post/2020-08-07-logistic-regression-part-ii-varietal-adoption-dataset_files/figure-html/frequency-pie-2.png" width="384" /></p>
+<pre><code>## 
+## $household_head_gender</code></pre>
+<p><img src="/post/2020-08-07-logistic-regression-part-ii-varietal-adoption-dataset_files/figure-html/frequency-pie-3.png" width="384" /></p>
+<pre><code>## 
+## $improved_variety_adoption</code></pre>
+<p><img src="/post/2020-08-07-logistic-regression-part-ii-varietal-adoption-dataset_files/figure-html/frequency-pie-4.png" width="384" /></p>
+<pre><code>## 
+## $land_size</code></pre>
+<p><img src="/post/2020-08-07-logistic-regression-part-ii-varietal-adoption-dataset_files/figure-html/frequency-pie-5.png" width="384" /></p>
+<pre><code>## 
+## $other_income_source</code></pre>
+<p><img src="/post/2020-08-07-logistic-regression-part-ii-varietal-adoption-dataset_files/figure-html/frequency-pie-6.png" width="384" /></p>
+<pre><code>## 
+## $training</code></pre>
+<p><img src="/post/2020-08-07-logistic-regression-part-ii-varietal-adoption-dataset_files/figure-html/frequency-pie-7.png" width="384" /></p>
+<pre class="r"><code># # arrange pie plots in grid
+# # grid.arrange(grobs = fpie, ncol = 3,
+# #              top = &quot;Percentage of response category for socio-economic variables in household samples&quot;) ## display plot
+# ggsave(filename = &quot;./socio_economic_pie.png&quot;,
+#        arrangeGrob(grobs = fpie, ncol = 3,
+#                    top = &quot;Percentage of response category for categorical variables from surveyed households&quot;),
+#        width = 18, height = 18, device = &quot;png&quot;, dpi = 300) ## save plot</code></pre>
+<p>Aggregating grouped variables for regression modeling.</p>
+<pre class="r"><code># rice_data %&gt;% skimr::skim()
+
+rice_data_na_deselected &lt;- rice_data %&gt;% 
+  select(-shared_landsize, -irrigated_land_size) %&gt;% # shared_landsize and irrigated_land_size both are continuous and have only 0.37, 0.67 complete
+  mutate_if(is.character, as.factor)
+
+# collapse factors
+rice_data_na_deselected &lt;- rice_data_na_deselected %&gt;%
+  mutate(other_income_source = fct_collapse(fct_explicit_na(other_income_source, na_level = &quot;No&quot;), 
+                                            Yes = c(&quot;Business&quot;, &quot;Livestock&quot;, &quot;Off-farm job&quot;, &quot;Remittance&quot;), 
+                                            No = c(&quot;No other source&quot;))) %&gt;% 
+  mutate(age_group = fct_collapse(age_group, &quot;20-39&quot; = c(&quot;20-29&quot;, &quot;30-39&quot;), &quot;&gt;=40&quot; = c(&quot;40-49&quot;, &quot;50-59&quot;, &quot;above 60&quot;))) %&gt;%
+  mutate(land_size = fct_collapse(land_size, &quot;5-15 kattha&quot; = c(&quot;5-15 kattha&quot;, &quot;5-15 Kattha&quot;))) %&gt;% 
+  mutate(education = fct_collapse(education, 
+                                  &quot;Primary or informal&quot; = c(&quot;primary education&quot;, &quot;Non-formal education only&quot;), 
+                                  &quot;Upto 10th&quot; = c(&quot;up to SLC&quot;), 
+                                  &quot;Intermediate or higher&quot; = c(&quot;Intermediate/+2 level&quot;, &quot;Bachelors&quot;)))
+
+rice_data_na_deselected %&gt;% skimr::skim()</code></pre>
+<table>
+<caption><span id="tab:rice-glm-model">Table 1: </span>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">Piped data</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">60</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">factor</td>
+<td align="left">7</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="left">ordered</th>
+<th align="right">n_unique</th>
+<th align="left">top_counts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">household_head_gender</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
+<td align="right">2</td>
+<td align="left">Mal: 37, Fem: 23</td>
+</tr>
+<tr class="even">
+<td align="left">age_group</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
+<td align="right">2</td>
+<td align="left">&gt;=4: 43, 20-: 17</td>
+</tr>
+<tr class="odd">
+<td align="left">education</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
+<td align="right">3</td>
+<td align="left">Pri: 34, Int: 13, Upt: 13</td>
+</tr>
+<tr class="even">
+<td align="left">land_size</td>
+<td align="right">2</td>
+<td align="right">0.97</td>
+<td align="left">FALSE</td>
+<td align="right">4</td>
+<td align="left">5-1: 18, abo: 14, 15-: 13, les: 13</td>
+</tr>
+<tr class="odd">
+<td align="left">other_income_source</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
+<td align="right">2</td>
+<td align="left">Yes: 40, No: 20</td>
+</tr>
+<tr class="even">
+<td align="left">improved_variety_adoption</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
+<td align="right">2</td>
+<td align="left">Yes: 42, No: 18</td>
+</tr>
+<tr class="odd">
+<td align="left">training</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
+<td align="right">2</td>
+<td align="left">No: 43, Yes: 17</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">id</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">30.50</td>
+<td align="right">17.46</td>
+<td align="right">1</td>
+<td align="right">15.75</td>
+<td align="right">30.5</td>
+<td align="right">45.25</td>
+<td align="right">60</td>
+<td align="left">▇▇▇▇▇</td>
+</tr>
+<tr class="even">
+<td align="left">family_size</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">6.07</td>
+<td align="right">2.11</td>
+<td align="right">3</td>
+<td align="right">4.00</td>
+<td align="right">6.0</td>
+<td align="right">7.00</td>
+<td align="right">12</td>
+<td align="left">▇▇▇▂▁</td>
+</tr>
+<tr class="odd">
+<td align="left">farm_size</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">22.72</td>
+<td align="right">21.46</td>
+<td align="right">1</td>
+<td align="right">6.00</td>
+<td align="right">13.5</td>
+<td align="right">38.88</td>
+<td align="right">85</td>
+<td align="left">▇▂▂▁▁</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="glm-fit" class="section level2">
+<h2>GLM fit</h2>
+<pre class="r"><code>rice_glm_fit &lt;- glm(formula = improved_variety_adoption ~ 
+                      household_head_gender +
+                      age_group +
+                      education +
+                      land_size +
+                      other_income_source +
+                      improved_variety_adoption +
+                      training +
+                      family_size +
+                      farm_size, 
+                    data = rice_data_na_deselected, family = &quot;binomial&quot;)
+rice_glm_fit %&gt;% 
+  summary()</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = improved_variety_adoption ~ household_head_gender + 
+##     age_group + education + land_size + other_income_source + 
+##     improved_variety_adoption + training + family_size + farm_size, 
+##     family = &quot;binomial&quot;, data = rice_data_na_deselected)
+## 
+## Deviance Residuals: 
+##      Min        1Q    Median        3Q       Max  
+## -1.59547  -0.44483   0.00019   0.40119   1.66599  
+## 
+## Coefficients:
+##                                Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)                  -2.495e+00  4.214e+00  -0.592   0.5537  
+## household_head_genderMale    -1.991e+00  1.008e+00  -1.975   0.0483 *
+## age_group&gt;=40                 2.515e-01  1.170e+00   0.215   0.8298  
+## educationPrimary or informal -5.974e-01  1.405e+00  -0.425   0.6706  
+## educationUpto 10th           -1.282e-03  1.677e+00  -0.001   0.9994  
+## land_size5-15 kattha          1.639e+00  2.385e+00   0.687   0.4919  
+## land_sizeabove 30 kattha      1.352e+01  2.266e+03   0.006   0.9952  
+## land_sizeless than 5 kattha   2.581e+00  3.530e+00   0.731   0.4648  
+## other_income_sourceNo         1.021e+00  9.204e-01   1.109   0.2674  
+## trainingYes                   2.795e+00  1.319e+00   2.119   0.0341 *
+## family_size                  -6.287e-02  2.171e-01  -0.290   0.7722  
+## farm_size                     2.172e-01  1.630e-01   1.333   0.1827  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 70.169  on 57  degrees of freedom
+## Residual deviance: 38.626  on 46  degrees of freedom
+##   (2 observations deleted due to missingness)
+## AIC: 62.626
+## 
+## Number of Fisher Scoring iterations: 18</code></pre>
+<pre class="r"><code># write summary table
+rice_glm_fit %&gt;% 
+  broom::tidy() %&gt;% 
+  mutate_if(is.numeric, list(~round(., 3)))</code></pre>
+<pre><code>## # A tibble: 12 x 5
+##    term                         estimate std.error statistic p.value
+##    &lt;chr&gt;                           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+##  1 (Intercept)                    -2.50      4.21     -0.592   0.554
+##  2 household_head_genderMale      -1.99      1.01     -1.98    0.048
+##  3 age_group&gt;=40                   0.251     1.17      0.215   0.83 
+##  4 educationPrimary or informal   -0.597     1.40     -0.425   0.671
+##  5 educationUpto 10th             -0.001     1.68     -0.001   0.999
+##  6 land_size5-15 kattha            1.64      2.38      0.687   0.492
+##  7 land_sizeabove 30 kattha       13.5    2266.        0.006   0.995
+##  8 land_sizeless than 5 kattha     2.58      3.53      0.731   0.465
+##  9 other_income_sourceNo           1.02      0.92      1.11    0.267
+## 10 trainingYes                     2.80      1.32      2.12    0.034
+## 11 family_size                    -0.063     0.217    -0.290   0.772
+## 12 farm_size                       0.217     0.163     1.33    0.183</code></pre>
+</div>
+<div id="glmer-fit" class="section level2">
+<h2>GLMER fit</h2>
+<pre class="r"><code>rice_glmer_fit &lt;- lme4::glmer(formula = improved_variety_adoption ~ 
+                      (1| household_head_gender) +
+                      (1| age_group) +
+                      (1| education) +
+                      land_size +
+                      other_income_source +
+                      improved_variety_adoption +
+                      training +
+                      family_size +
+                      farm_size, 
+                    data = rice_data_na_deselected, family = &quot;binomial&quot;)
+rice_glmer_fit %&gt;% 
+  summary()</code></pre>
+<pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
+##   Approximation) [glmerMod]
+##  Family: binomial  ( logit )
+## Formula: improved_variety_adoption ~ (1 | household_head_gender) + (1 |  
+##     age_group) + (1 | education) + land_size + other_income_source +  
+##     improved_variety_adoption + training + family_size + farm_size
+##    Data: rice_data_na_deselected
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##     65.0     87.7    -21.5     43.0       47 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -1.9107 -0.4716  0.0000  0.3361  1.9230 
+## 
+## Random effects:
+##  Groups                Name        Variance  Std.Dev. 
+##  education             (Intercept) 2.619e-10 1.618e-05
+##  age_group             (Intercept) 2.062e-10 1.436e-05
+##  household_head_gender (Intercept) 4.083e-01 6.390e-01
+## Number of obs: 58, groups:  
+## education, 3; age_group, 2; household_head_gender, 2
+## 
+## Fixed effects:
+##                               Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)                 -2.218e+00  3.495e+00  -0.634   0.5258  
+## land_size5-15 kattha         6.388e-01  1.954e+00   0.327   0.7438  
+## land_sizeabove 30 kattha     2.459e+01  6.041e+05   0.000   1.0000  
+## land_sizeless than 5 kattha  1.066e+00  2.778e+00   0.384   0.7011  
+## other_income_sourceNo        9.792e-01  8.544e-01   1.146   0.2518  
+## trainingYes                  2.699e+00  1.235e+00   2.186   0.0288 *
+## family_size                 -5.805e-02  1.976e-01  -0.294   0.7690  
+## farm_size                    1.542e-01  1.265e-01   1.218   0.2231  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##             (Intr) l_5-1k ln_30k ln_t5k oth__N trnngY fmly_s
+## lnd_sz5-15k -0.882                                          
+## lnd_szbv30k  0.000  0.000                                   
+## lnd_szlst5k -0.905  0.920  0.000                            
+## othr_ncm_sN -0.115  0.043  0.000  0.000                     
+## trainingYes -0.165  0.037  0.000  0.047  0.233              
+## family_size -0.524  0.232  0.000  0.241 -0.090  0.126       
+## farm_size   -0.879  0.838  0.000  0.908  0.113  0.112  0.176
+## convergence code: 0
+## boundary (singular) fit: see ?isSingular</code></pre>
+<pre class="r"><code>rice_glmer_fit %&gt;% # this is hightly significant
+  emmeans::emmeans(&quot;training&quot;)</code></pre>
+<pre><code>##  training emmean     SE  df asymp.LCL asymp.UCL
+##  No         19.8 151026 Inf   -295986    296025
+##  Yes        19.8 151026 Inf   -295986    296025
+## 
+## Results are averaged over the levels of: land_size, other_income_source, improved_variety_adoption 
+## Results are given on the logit (not the response) scale. 
+## Confidence level used: 0.95</code></pre>
+</div>
+<div id="contingency-chi2-for-test-of-independence-between-proportion-of-improved-variety-adopters-categories-and-other-categorial-variables." class="section level2">
+<h2>Contingency <span class="math inline">\(\chi^2\)</span> for test of independence between proportion of improved variety adopters categories and other categorial variables.</h2>
+<p>For example,</p>
+<p><span class="math inline">\(H_0\)</span> = The proportion of farm households who adopt improved varieties is independent of the gender of household.</p>
+<pre class="r"><code>rice_factors &lt;- names(which((rice_data_na_deselected %&gt;% map_chr(class)) == &quot;factor&quot;))
+
+all_factor_combination &lt;- crossing(Group1 = rice_factors, Group2 = rice_factors) %&gt;% 
+  filter(Group1 &lt; Group2)
+
+# # contingeny table chi-square calculation
+# # the degrees of freedom equal (number of columns in contingency table minus one) x (number of rows in contingency table minus one) not counting the totals for rows or columns.
+
+# # for all unique combinations
+# all_factor_combination %&gt;% 
+#   mutate(chi_test = map2(Group1, Group2, 
+#                          ~chisq.test(rice_data_na_deselected[, .x, drop = TRUE], 
+#                                      rice_data_na_deselected[, .y, drop = TRUE]))) %&gt;% 
+#   mutate(chi_stat = map_dbl(chi_test, ~.x$statistic), 
+#          chi_pval = map_dbl(chi_test, ~.x$p.value), 
+#          chi_method = map_chr(chi_test, ~.x$method), 
+#          chi_df = map_dbl(chi_test, ~.x$parameter)) %&gt;% 
+#   select(-chi_test) %&gt;% 
+#   mutate_if(is.numeric, function(x)round(x, 3))
+#   # write_csv(&quot;./outputs/rice_chi_square_test_for_independence.csv&quot;, &quot;&quot;)
+
+# # for improved_variety_adoption only
+crossing(Group1 = rice_factors, Group2 = rice_factors) %&gt;% 
+  filter(Group1 == &quot;improved_variety_adoption&quot;, Group2 != &quot;improved_variety_adoption&quot;) %&gt;% 
+  mutate(chi_test = map2(Group1, Group2,
+                         ~chisq.test(rice_data_na_deselected[, .x, drop = TRUE],
+                                     rice_data_na_deselected[, .y, drop = TRUE]))) %&gt;%
+  mutate(chi_stat = map_dbl(chi_test, ~.x$statistic),
+         chi_pval = map_dbl(chi_test, ~.x$p.value),
+         chi_method = map_chr(chi_test, ~.x$method),
+         chi_df = map_dbl(chi_test, ~.x$parameter)) %&gt;%
+  select(-chi_test) %&gt;%
+  mutate_if(is.numeric, function(x)round(x, 3))</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   Group1        Group2      chi_stat chi_pval chi_method                  chi_df
+##   &lt;chr&gt;         &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;                        &lt;dbl&gt;
+## 1 improved_var… age_group      0        1     Pearson&#39;s Chi-squared test…      1
+## 2 improved_var… education      2.72     0.257 Pearson&#39;s Chi-squared test       2
+## 3 improved_var… household_…    0.658    0.417 Pearson&#39;s Chi-squared test…      1
+## 4 improved_var… land_size     12.8      0.005 Pearson&#39;s Chi-squared test       3
+## 5 improved_var… other_inco…    0        1     Pearson&#39;s Chi-squared test       1
+## 6 improved_var… training       5.07     0.024 Pearson&#39;s Chi-squared test…      1</code></pre>
+</div>
+<div id="pie-chart" class="section level2">
+<h2>Pie chart</h2>
+<pre class="r"><code># # store column names
+hd_df_colnames &lt;- rice_data %&gt;%
+  colnames() %&gt;%
+  enframe() %&gt;%
+  .[[&quot;value&quot;]]
+
+# # initialize empty list
+counted_list &lt;- list()
+
+# # fill up the list with one way tablulation of count
+for (var in names(which(map_lgl(rice_data, ~class(.x) %in% c(&quot;character&quot;, &quot;factor&quot;))))) {
+  counted_list[[var]] &lt;- rice_data %&gt;% count(.data[[var]])
+}
+
+# # use list to construct pie charts
+# # to best filter out any useless plots manually observe long and very wide count tables and omit those
+counted_gg_list &lt;- counted_list %&gt;%
+  enframe(name = &quot;variable&quot;, value = &quot;count_data&quot;) %&gt;%
+  mutate(variable = str_to_title(str_replace_all(variable, &quot;_&quot;, &quot; &quot;))) %&gt;% 
+  mutate(plot_count_var = map2(count_data %&gt;%
+                                 map(~.x %&gt;% na.omit()),
+                               variable,
+                               ~ ggplot(data = .x,
+                                        aes_string(x = &quot;colnames(.x)[1]&quot;,
+                                                   y = colnames(.x)[2],
+                                                   fill = colnames(.x)[1])) +
+                                 geom_bar(stat = &quot;identity&quot;, color = &quot;white&quot;,
+                                          width = 1, size = 1) +
+                                 coord_polar(theta = &quot;y&quot;, start = 0) +
+                                 # scale_fill_discrete(guide = FALSE) +
+                                 # guides(fill = guide_legend(title = .y,
+                                 #                            title.position = &quot;top&quot;)) +
+                                 labs(x = &quot;&quot;, y = &quot;&quot;, title = .y) +
+                                 theme_classic() +
+                                 ggrepel::geom_text_repel(aes(label = scales::percent(round(n/sum(n),3))),
+                                                          position = position_stack(vjust = 0.5))+
+                                 theme(axis.line = element_blank(),
+                                       axis.text = element_blank(),
+                                       axis.ticks = element_blank(),
+                                       axis.text.x = element_blank(),
+                                       plot.title = element_text(hjust = 0.5, color = &quot;#666666&quot;),
+                                       legend.text = element_text(size = 8),
+                                       legend.title = element_blank())
+  )) %&gt;%
+  .[[&quot;plot_count_var&quot;]]
+
+# # save the pies in two files
+# ggsave(filename = &quot;./outputs/socio_economic_extended_pie1.png&quot;,
+#        arrangeGrob(grobs = counted_gg_list, ncol = 4,
+#                    top = &quot;Percentage of response category for categorical variables from surveyed households&quot;),
+#        width = 12, height = 12, units = &quot;in&quot;, device = &quot;png&quot;, dpi = 280) ## save plot</code></pre>
+</div>
+<div id="binary-classifier-using-logistic-regression" class="section level2">
+<h2>Binary classifier using logistic regression</h2>
+<p>In classification problems, the goal is to predict the class membership based on predictors. Often there are two classes and one of the most popular methods for binary classification is logistic regression. The 1958 paper by D. R. Cox is likely to have set the stage for modern regression based approaches in binary output.</p>
+<p>The logistic regression, alike several variation in Generalized Linear Model family, is a class of binary regression model whereby the regressand (response variable) is related to predictors via a link function of the corresponding exponential family and by the magnitude of the variance of each measurement is allowed to be a function of its predicted value.</p>
+<p>Suppose that <span class="math inline">\(y_1 \in \{0, 1\}\)</span> is a binary class indicator. The conditional response is modeled as <span class="math inline">\(y | x \sim \text{Bernouli}(g_{\beta}(x))\)</span>, where</p>
+<p><span class="math display">\[g_{\beta}(x) = \frac{1}{1 + \exp^{-x^T \beta}}\]</span></p>
+<p>is the logistic function, and maximize the log-likelihood function, yielding the optimization problem</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\underset{\beta}{\mbox{maximize}} &amp; \sum_{i = 1}^m \{
+y_i \log(g_{\beta}(x_i)) + (1-y_i)\log(1-g_{\beta}(x_i)) \}.
+\end{array}
+\]</span></p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<ol style="list-style-type: decimal">
+<li>YouTube video by CodeEmporium</li>
+<li>Break the source code of glm.fit()</li>
+</ol>
+</div>

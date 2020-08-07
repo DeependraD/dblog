@@ -1,0 +1,291 @@
+---
+title: 'Logistic Regression: Part I - Fundamentals'
+author: Deependra Dhakal
+date: '2020-08-07'
+slug: logistic-regression-part-i-fundamentals
+categories:
+  - R
+  - tidyverse
+  - statistics
+tags:
+  - R
+  - tidyverse
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-08-07T12:19:44+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+math: yes
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="likelihood-theory" class="section level2">
+<h2>Likelihood theory</h2>
+<p>Probit models were the first of those being used to analyze non-normal data using non-linear models. In an early example of probit regression, Bliss(1934) describes an experiment in which nicotine is applied to aphids and the proportion killed is recorded. As an appendix to a paper Bliss wrote a year later (Bliss, 1935), Fisher (1935) outlines the use of maximum likelihood to obtain estimates of the probit model.</p>
+<p>However it was years before maximum likelihood estimation for probit models caught on. Finney (1952), in an appendix entitled “Mathematical basis of the probit method” gives some of the rationale for maximum likelihood and motivates a computational method that he spends six pages describing in a different appendix.</p>
+<p>More specifically, if we let <span class="math inline">\(p_i\)</span> denote the probability of a success for the <span class="math inline">\(i\)</span>th observation, the probit model is given by</p>
+<p><span class="math display">\[
+\begin{align}
+y_i &amp;\sim \text{independent bernoulli} (p_i) \\
+p_i &amp;= \Phi(x^\prime_i \beta),
+\end{align}
+(\#eq: bernoulli-vector)
+\]</span></p>
+<p>Where <span class="math inline">\(x^\prime_i\)</span> denotes the <span class="math inline">\(i\)</span>the row of a matrix of predictors and <span class="math inline">\(\Phi(.)\)</span> is the standard normal CDF. Considering the scale functions applied elementwise to the vectors, we can rewrite (5.1) as</p>
+<p><span class="math display">\[
+\begin{align}
+\mathbf{y} &amp;\sim \text{independent bernoulli}(\mathbf{p}) \\
+\mathbf{p} &amp;= \mathbf{\Phi(X\beta)}
+\end{align}
+(\#eq: bernoulli-matrix)
+\]</span></p>
+<p>or equivalently,</p>
+<p><span class="math display">\[
+\mathbf{\Phi^{-1}(p)} = \mathbf{X \beta},
+\]</span></p>
+<p>Where X is the model matrix. The use of the inverse standard normal CDF, known as the probit, to transform the mean of y to the linear predictor is attractive on two counts. First, it expands the range of <span class="math inline">\(\mathbf{p}\)</span> from [0,1] to the whole real line, making it more reasonable to assume a model of the form <span class="math inline">\(\mathbf{X \beta}\)</span>. Second, in many problems, the sigmoidal form of <span class="math inline">\(\mathbf{p}\)</span> as a function of the covariates is often observed in practice.</p>
+<p>Finney (1952) suggested calculating an estimate of <span class="math inline">\(\beta\)</span> via an iteratively weighted least squares algorithm. He recommened using working probits which he defined (ignoring the shift of five units historically used to keep all the calculations positive) as</p>
+<p><span class="math display" id="eq:working-probits">\[
+t_i = x^{\prime}_i \beta + \frac{y_i - \mathbf{\Phi}( x^{\prime}_i \beta)}{\phi(x^{\prime}_i \beta)}
+\tag{1}
+\]</span></p>
+<p>Where <span class="math inline">\(\phi(.)\)</span> is the standard normal probability density function (pdf). The working probits for a current value of <span class="math inline">\(\beta\)</span> were regressed on the predictors using weights given by <span class="math inline">\({\large \frac{[\phi(p_i)]^2}{\mathbf{\Phi} (pi)[1-\mathbf{\Phi}(p_i)]}}\)</span> in order to get the new values of <span class="math inline">\(\beta\)</span>. This algorithm was iterated untill convergence (or at least until the “person” got tired of performing the calculations).</p>
+<p>Nelder and Wedderburn (1972) recognized that the working probits could be generalized in a straightforward way to unify an entire collection of maximum likelihood problems. This generalized linear model (GLM) could handle probit or logistic regression, Poisson regression, log-linear models for contingency tables, variance component estimation from ANOVA mean squares and many other problems in the same way.</p>
+<p>They replaced the <span class="math inline">\(\mathbf{\Phi}^{-1}\)</span> with a general link function, <span class="math inline">\(g(.)\)</span>, which transforms (or links) the mean of <span class="math inline">\(y_i\)</span> to the linear predictor. With <span class="math inline">\(g_\mu(\mu)\)</span> representing <span class="math inline">\({\large \frac{\delta g(\mu)}{\delta \mu}}\)</span>, they then defined a workign variate via</p>
+<p><span class="math display" id="eq:working-variate">\[
+\begin{aligned}
+t_i &amp;= g(\mu_i) + g_{\mu}(\mu_i)(y_i - \mu_i) \\
+    &amp;= x^{\prime}_i \beta + g_{\mu}(\mu_i)(y_i - \mu_i)
+\end{aligned}
+\tag{2}
+\]</span></p>
+<p>Since the second term of the right-hand side of eq:working-variate has expectation zero it can be regarded as an error term so that <span class="math inline">\(t_i\)</span> follows a linear model, albeit with unequal variances which depend on the unknown <span class="math inline">\(\beta\)</span>. This suggests using eq:working-variate just like eq:working-probits: regress <span class="math inline">\(t\)</span> on <span class="math inline">\(\mathbf{X}\)</span> using a weighted linear regression and iterate until the estimates of <span class="math inline">\(\beta\)</span> stabilize.</p>
+<p>More important, it made possible a style of thinking which freed the data analyst from necessarily looking for a transformation which simultaneously achieved linearity in the predictors and normality of the distribution (as in Box and Cox, 1962).</p>
+<p>What advantages does this have ? First, it unifies what appear to be very different methodologies, which helps us to understand, use and (for those of us in the business) teach the techniques. Second, since the right-hand side of the model equation is a linear model after applying the link, many of the standard ways of thinking about linear models carry over to GLMs.</p>
+</div>
+<div id="exponential-function-and-its-distribution" class="section level2">
+<h2>Exponential function and its distribution</h2>
+<p><img src="/post/2020-08-07-logistic-regression-part-i-fundamentals_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>The goal of maximum likelihood is therefore, given a set of measurements, finding optimum value of <span class="math inline">\(\lambda\)</span>.</p>
+<p>So assume that a person collects a lot of data about how much time passed between views of this video.</p>
+<ul>
+<li><span class="math inline">\(x_1\)</span> = The amount of time that passed between the 1st and 2nd views.</li>
+<li><span class="math inline">\(x_2\)</span> = The amount of time that passed between the 2nd and 3rd views.</li>
+<li><span class="math inline">\(x_3\)</span> = The amount of time that passed between the 3rd and 4th views.</li>
+</ul>
+<p>Thus, <span class="math inline">\(x_1, x_2, x_3, \ldots, x_n\)</span> are n measurement of view intervals.</p>
+<p>For now, let’s assume that we already have a good value of <span class="math inline">\(\lambda\)</span>.</p>
+<p>Now, what is the likelihood of <span class="math inline">\(\lambda\)</span> given our first measurement, <span class="math inline">\(x_1\)</span> ?</p>
+<p>The likelihood is given by <span class="math inline">\(L(\lambda | x_1)=\lambda \exp^{- \lambda x_1}\)</span>.</p>
+<p>Similarly, the likelihood of <span class="math inline">\(\lambda\)</span> given our second measurement, <span class="math inline">\(x_2\)</span> is given by <span class="math inline">\(L(\lambda | x_2) = \lambda \exp^{- \lambda x_2}\)</span>, and so on. It is the value of y (in y-axis) obtained by plugging in the value of <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> in the function.</p>
+<p>So now, what is the likelihood of <span class="math inline">\(\lambda\)</span> given both <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> ? We know individual likelihood functions as we present above. The combined likelihood function can be represented multiplication of two likelihood functions,</p>
+<p><span class="math display">\[
+\begin{align}
+L(\lambda | x_1 \text{ and } x_2) &amp;= L(\lambda | x_1) L(\lambda | x_2) \\
+                                  &amp;= \lambda \exp^{-\lambda x_1}.\lambda \exp^{-\lambda x_2} \\
+                                  &amp;= \lambda^2[\exp^{-\lambda x_1}. \exp^{-\lambda x_2}] \\
+                                  &amp;= \lambda^2[\exp^{-\lambda(x_1 + x_2)}]
+\end{align}
+\]</span></p>
+<p>The the last equation is the likelihood of <span class="math inline">\(\lambda\)</span> given <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>.</p>
+<p>What is the likelihood of <span class="math inline">\(\lambda\)</span> given all of the data, <span class="math inline">\(x_1, x_2, x_3, \ldots, x_n\)</span> ?</p>
+<p>It is combined likelihood of observing all data values.</p>
+<p><span class="math display">\[
+\begin{align}
+L(\lambda | x_1, x_2, x_3, \ldots, x_n) &amp;= L(\lambda | x_1) L(\lambda | x_2) L(\lambda | x_3) \ldots L(\lambda | x_n) \\
+                                        &amp;= \lambda e^{-\lambda x_1}.\lambda e^{-\lambda x_2}.\lambda e^{-\lambda x_3} \\
+                                        &amp;= \lambda^n[e^{-\lambda x_1}e^{-\lambda x_2}\ldots e^{-\lambda x_3}] \\
+                                        &amp;= \lambda^n[e^{-\lambda(x_1 + x_2 + x_3 + \ldots + x_n)}]
+\end{align}
+(\#eq: likelihood-fun)
+\]</span></p>
+<p>Now an issue could be, what if we don’t have a good value of <span class="math inline">\(\lambda\)</span> ? One solution is we could try different values for <span class="math inline">\(\lambda\)</span> to find a good one. To find the maximum likelihood,</p>
+<ol style="list-style-type: decimal">
+<li>Take the derivative of likelihood-fun</li>
+<li>Solve for <span class="math inline">\(\lambda\)</span> when the derivative is set to be equal to 0.</li>
+</ol>
+<p>Now let us again consider the values of <span class="math inline">\(x_i\)</span> (the time interval between two successive viewership of channes, in our previous example).</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.5</td>
+</tr>
+<tr class="even">
+<td align="right">1.6</td>
+</tr>
+<tr class="odd">
+<td align="right">1.7</td>
+</tr>
+<tr class="even">
+<td align="right">1.8</td>
+</tr>
+<tr class="odd">
+<td align="right">1.9</td>
+</tr>
+<tr class="even">
+<td align="right">2.0</td>
+</tr>
+<tr class="odd">
+<td align="right">2.1</td>
+</tr>
+<tr class="even">
+<td align="right">2.2</td>
+</tr>
+<tr class="odd">
+<td align="right">2.3</td>
+</tr>
+<tr class="even">
+<td align="right">2.4</td>
+</tr>
+<tr class="odd">
+<td align="right">2.5</td>
+</tr>
+<tr class="even">
+<td align="right">2.6</td>
+</tr>
+<tr class="odd">
+<td align="right">2.7</td>
+</tr>
+<tr class="even">
+<td align="right">2.8</td>
+</tr>
+<tr class="odd">
+<td align="right">2.9</td>
+</tr>
+<tr class="even">
+<td align="right">3.0</td>
+</tr>
+<tr class="odd">
+<td align="right">3.1</td>
+</tr>
+<tr class="even">
+<td align="right">3.2</td>
+</tr>
+<tr class="odd">
+<td align="right">3.3</td>
+</tr>
+<tr class="even">
+<td align="right">3.4</td>
+</tr>
+<tr class="odd">
+<td align="right">3.5</td>
+</tr>
+<tr class="even">
+<td align="right">3.6</td>
+</tr>
+<tr class="odd">
+<td align="right">3.7</td>
+</tr>
+<tr class="even">
+<td align="right">3.8</td>
+</tr>
+<tr class="odd">
+<td align="right">3.9</td>
+</tr>
+<tr class="even">
+<td align="right">4.0</td>
+</tr>
+<tr class="odd">
+<td align="right">4.1</td>
+</tr>
+<tr class="even">
+<td align="right">4.2</td>
+</tr>
+<tr class="odd">
+<td align="right">4.3</td>
+</tr>
+<tr class="even">
+<td align="right">4.4</td>
+</tr>
+<tr class="odd">
+<td align="right">4.5</td>
+</tr>
+<tr class="even">
+<td align="right">4.6</td>
+</tr>
+<tr class="odd">
+<td align="right">4.7</td>
+</tr>
+<tr class="even">
+<td align="right">4.8</td>
+</tr>
+<tr class="odd">
+<td align="right">4.9</td>
+</tr>
+<tr class="even">
+<td align="right">5.0</td>
+</tr>
+</tbody>
+</table>
+<p>Now the relationship between likelihood values using different sets of <span class="math inline">\(\lambda\)</span> can be seen as:</p>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<p><img src="/post/2020-08-07-logistic-regression-part-i-fundamentals_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Noticeably, this function is ugly because of too small or too large estimated values. This function initially rises, but finally starts to slow down. This can be seen at the point when likelihood value starts to decrease – point of inflection. This point can also be obtained by setting the slope of likelihood function (derivative) to 0.</p>
+<p>But before that we may take the log of the combined likelihood function. This is because the derivative of a function and the derivative of the log of a function equal 0 at the same place. So, for the purpose of finding where the derivative equals 0, the original function and its log are interchangeable. Thus we have the log of likelihood function is:</p>
+<p>log likelihood function can be plotted against lambda looks,</p>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<p><img src="/post/2020-08-07-logistic-regression-part-i-fundamentals_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>When we can specify the log form, multiplicative terms of initial function – <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(\exp\)</span> can now be added as shown in derivative of log likelihood function with respect to <span class="math inline">\(\lambda\)</span>,</p>
+<p><span class="math display">\[
+\begin{align}
+\frac{\delta}{\delta \lambda} L(\lambda | x_1, x_2, x_3, \ldots, x_n) &amp;= \frac{\delta}{\delta \lambda} \log (\lambda^n[\exp^{-\lambda(x_1 + x_2 + x_3 + \ldots + x_n)}]) \\
+                              &amp;= \frac{\delta}{\delta \lambda} \log (\lambda^n) + \log[\exp^{-\lambda(x_1 + x_2 + x_3 + \ldots + x_n)}]) \\
+                              &amp;= \frac{\delta}{\delta \lambda} n\log (\lambda) -\lambda(x_1 + x_2 + x_3 + \ldots + x_n)
+\end{align}
+\]</span></p>
+<p>Finally taking the derivative, and setting the value to 0, we get:</p>
+<p><span class="math display">\[
+0 = n \frac{1}{\lambda}-(x_1 + x_2 + x_3 + \ldots + x_n)
+\]</span></p>
+<p>Solving for <span class="math inline">\(\lambda\)</span> give,</p>
+<p><span class="math display">\[
+\lambda = \frac{n}{(x_1 + x_2 + x_3 + \ldots + x_n)}
+\]</span></p>
+<p>Now, whenever we collect a lot of data about how much time takes place between events, we just plug those values into this equation and we’ll get the maximum likelihood estimate for <span class="math inline">\(\lambda\)</span> and then we can fit an exponential distribution to our data.</p>
+<p>Hence, we can see that, for example, if 2 seconds passed between 1st and 2nd times a video was watched <span class="math inline">\((x_1 = 2)\)</span>, 2.5 seconds passed between 2nd and 3rd times the video was watched <span class="math inline">\((x_2 = 2.5)\)</span> and 1.5 seconds passed between 3rd and 4th time the video was watched <span class="math inline">\((x_3 = 1.5)\)</span>, we can have the maximum likelihood estimate,</p>
+<p><span class="math display">\[
+\lambda = \frac{3}{2 + 2.5 + 1.5} = 0.5
+\]</span></p>
+<p>Thus, given the data, the maximum likelihood estimate for <span class="math inline">\(\lambda\)</span> is 0.5. Graphically,</p>
+<p><img src="/post/2020-08-07-logistic-regression-part-i-fundamentals_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre><code>## geom_path: Each group consists of only one observation. Do you need to adjust
+## the group aesthetic?</code></pre>
+<p><img src="/post/2020-08-07-logistic-regression-part-i-fundamentals_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="inverse-function-and-its-distribution" class="section level2">
+<h2>Inverse function and its distribution</h2>
+<p><img src="/post/2020-08-07-logistic-regression-part-i-fundamentals_files/figure-html/inverse-function-1.png" width="672" /></p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<div id="interpretation" class="section level3">
+<h3>Interpretation</h3>
+<ol style="list-style-type: decimal">
+<li><a href="https://www.youtube.com/watch?v=JC56jS2gVUE">Deviance Residuals</a></li>
+<li><a href="https://www.youtube.com/watch?v=8nm0G-1uJzA">StatQuest: Odds Ratios and Log(Odds Ratios), Clearly Explained!!!</a></li>
+<li><a href="https://www.youtube.com/watch?v=vN5cNN2-HWE">Logistic Regression Details Pt1: Coefficients</a></li>
+<li><a href="https://www.youtube.com/watch?v=BfKanl1aSG0">Logistic Regression Details Pt 2: Maximum Likelihood</a></li>
+<li><a href="https://www.youtube.com/watch?v=xxFYro8QuXA">Logistic Regression Details Pt 3: R-squared and p-value</a></li>
+<li><a href="https://www.youtube.com/watch?v=C4N3_XJJ-jU">Logistic Regression in R, Clearly Explained!!!!</a></li>
+</ol>
+</div>
+<div id="examples" class="section level3">
+<h3>Examples</h3>
+<ol style="list-style-type: decimal">
+<li>A Handbook of Statistical Analyses Using R <a href="https://cran.r-project.org/web/packages/HSAUR/vignettes/Ch_logistic_regression_glm.pdf">pdf</a></li>
+<li>Heart disease dataset and analysis <a href="https://raw.githubusercontent.com/StatQuest/logistic_regression_demo/master/logistic_regression_demo.R">script</a> <a href="http://archive.ics.uci.edu/ml/datasets/Heart+Disease">Dataset</a></li>
+</ol>
+</div>
+</div>

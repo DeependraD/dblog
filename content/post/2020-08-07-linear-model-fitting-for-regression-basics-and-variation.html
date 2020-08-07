@@ -1,0 +1,103 @@
+---
+title: 'Linear model fitting for regression: Basics and Variation'
+author: Deependra Dhakal
+date: '2020-08-07'
+slug: linear-model-fitting-for-regression-basics-and-variation
+categories: []
+tags: ['R', 'tidyverse']
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-08-07T10:32:04+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+math: yes
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="linear-model-simple-forms-fitting" class="section level2">
+<h2>Linear model (simple forms) fitting</h2>
+<p>I use mtcars dataset to construct some basic regression models and fit those.</p>
+<pre class="r"><code># convert available data to use in fitting
+mtcars_reg_df &lt;- mtcars %&gt;% 
+  rownames_to_column(&quot;carnames&quot;) %&gt;% 
+  as_tibble() %&gt;% 
+  mutate_at(c(&quot;gear&quot;, &quot;am&quot;, &quot;vs&quot;, &quot;cyl&quot;), as.factor)</code></pre>
+<p>We will be comparing difference between cylinder means for mpg.</p>
+<pre class="r"><code># # intercept only lm tidiying and visualization
+mpg_model1 &lt;- mtcars_reg_df %&gt;%
+  group_by(cyl) %&gt;%
+  nest() %&gt;%
+  group_by(cyl) %&gt;%
+  mutate(mpg_model = map(data, ~lm(`mpg` ~ 1, .x))) %&gt;%
+  mutate(
+    # rsqrd = map_dbl(mpg_model, ~summary(.x)[[&#39;r.squared&#39;]]), # this is &#39;0&#39; of intercept only model
+    intercept_pvalue = map_dbl(mpg_model, ~summary(.x)[[&#39;coefficients&#39;]][1, 4]),
+    intercept_se = map_dbl(mpg_model, ~summary(.x)[[&#39;coefficients&#39;]][1, 2]),
+    intercept_coef = map_dbl(mpg_model, ~summary(.x)[[&#39;coefficients&#39;]][1, 1])
+  ) %&gt;%
+  select(cyl, mpg_model, contains(&quot;intercept&quot;), data)</code></pre>
+<p>Intercept-only models (each group fitted a different one) are plotted to reflect variation in estimated parameters. Two methods can be used to obtain same result. In the first, standard error obtained from model summary can be directly used; in the other SE can be manually computed.</p>
+<pre class="r"><code># # method 1
+mpg_model1 %&gt;%
+  select(-data, -contains(&quot;model&quot;)) %&gt;%
+  ggplot(aes(x = cyl, y = intercept_coef)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = intercept_coef-intercept_se, ymax = intercept_coef+intercept_se)) +
+  labs(x = &quot;Number of cylinders&quot;,
+       y = &quot;MPG&quot;,
+       title = &quot;Mean MPG differs among cars with different cylinder numbers&quot;) +
+  theme(text = element_text(size = 12), axis.text.x = element_text(angle = 30))</code></pre>
+<p><img src="/post/2020-08-07-linear-model-fitting-for-regression-basics-and-variation_files/figure-html/intercept-only-model-viz-1.png" width="576" /></p>
+<pre class="r"><code># # method 2
+# same as method 1
+mtcars_reg_df %&gt;%
+  group_by(cyl) %&gt;%
+  summarise_at(&quot;mpg&quot;, list(~mean(.), ~sd(.), ~n(),
+                           q95 = ~quantile(., 0.95),
+                           q75 = ~quantile(., 0.75),
+                           q25 = ~quantile(., 0.25),
+                           q5 = ~quantile(., 0.05))) %&gt;%
+  mutate(`se` = `sd`/sqrt(`n`)) %&gt;%
+  mutate(`left95` = `mean` - 2 * `se`,
+         `right95` = `mean` + 2 * `se`) %&gt;%
+  ggplot(aes(x = `cyl`, y = `mean`)) +
+  geom_point() +
+  # # plot only errorbars with
+  # geom_errorbar(aes(ymin = `left95`, ymax = `right95`)) +
+  # or plot several quantiles with
+  geom_crossbar(aes(ymin = `q5`, ymax = `q95`),
+                fill = &quot;aquamarine1&quot;,  color = &quot;aquamarine1&quot;, width = 0.2) +
+  geom_crossbar(aes(ymin = `q25`, ymax = `q75`),
+                fill = &quot;aquamarine4&quot;,  color = &quot;aquamarine4&quot;, width = 0.2) +
+  geom_crossbar(aes(ymin = `left95`, ymax = `right95`),
+                fill = &quot;black&quot;, color = &quot;black&quot;, width = 0.2) +
+  labs(x = &quot;Number of cylinders&quot;,
+       y = &quot;MPG&quot;,
+       title = &quot;Mean MPG differs among cars with different cylinder numbers&quot;) +
+  theme(text = element_text(size = 12), axis.text.x = element_text(angle = 30))</code></pre>
+<p><img src="/post/2020-08-07-linear-model-fitting-for-regression-basics-and-variation_files/figure-html/intercept-only-model-viz-2.png" width="576" /></p>
+<p>Showing intercept and slope model in the plot is less useful, as it has only two (different) standard error estimates – one for an intercept (dummy; ), and others for slopes () all intercept-coefficients. For e.g. the model,</p>
+<pre><code>lm(`mpg`~`cyl, data = mtcars_reg_df)</code></pre>
+<p>is less useful for comparing simple effects of factor means.</p>
+<p>Yet another variation of linear model is constructing a slope only model using coefficients and their SEs for plotting.</p>
+<pre class="r"><code># # method 3
+lm(`mpg`~`cyl`-1, data = mtcars_reg_df) %&gt;% 
+  # summary() %&gt;% coefficients() %&gt;% 
+  broom::tidy() %&gt;%
+  ggplot(aes(x = term, y = estimate)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = estimate-std.error, ymax = estimate+std.error)) +
+  labs(x = &quot;Number of cylinders&quot;,
+       y = &quot;MPG&quot;,
+       title = &quot;Mean MPG differs among cars with different cylinder numbers&quot;) +
+  theme(text = element_text(size = 12), axis.text.x = element_text(angle = 30))</code></pre>
+<p><img src="/post/2020-08-07-linear-model-fitting-for-regression-basics-and-variation_files/figure-html/unnamed-chunk-1-1.png" width="576" /></p>
+<p>Note that, here, slope shows a different distribution than that of intercept distribution.</p>
+</div>

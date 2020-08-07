@@ -1,0 +1,46 @@
+---
+title: Paste together multiple columns
+author: Deependra Dhakal
+date: '2020-08-07'
+slug: paste-together-multiple-columns
+categories:
+  - R
+tags:
+  - R
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-08-07T10:20:52+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<pre class="r"><code># # paste together dataframe columns by column index
+# take the following df
+
+df &lt;- data.frame(my_number = letters[1:5], 
+                 column_odd1 = rnorm(5), 
+                 column_even1 = rnorm(5), 
+                 column_odd2 = rnorm(5), 
+                 column_even2 = rnorm(5), 
+                 column_odd3 = rnorm(5), 
+                 column_even3 = rnorm(5))
+
+df %&gt;% 
+  select(1) %&gt;% 
+  bind_cols(data.frame(setNames(lapply(list(c(2,3), c(4, 5), c(6, 7)), function(i) 
+    do.call(sprintf, c(fmt = &quot;%0.3f (%0.3f)&quot;, # round at third place after decimal. use %s if columns were character type
+                       df[i]))), c(&quot;new_column1&quot;, &quot;new_column2&quot;, &quot;new_column3&quot;))))</code></pre>
+<pre><code>##   my_number     new_column1     new_column2    new_column3
+## 1         a -1.740 (-1.437) -0.533 (-0.331) 0.357 (-1.110)
+## 2         b  0.331 (-1.577)  -0.255 (0.478) -0.438 (0.339)
+## 3         c -0.824 (-0.722)  -0.671 (1.047)  0.904 (1.677)
+## 4         d   0.380 (0.382)  0.757 (-0.266) 1.328 (-1.523)
+## 5         e  -0.815 (0.744)  -1.243 (0.245) -0.515 (0.854)</code></pre>

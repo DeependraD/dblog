@@ -1,6 +1,17 @@
-# Shell commands and scripts
-
-## Bash
+---
+date: "2020-07-01"
+draft: false
+linktitle: Bash scripting
+menu:
+  gitnbash:
+    parent: Bash
+    weight: 1
+title: Bash scripting
+toc: true
+type: docs
+weight: 1
+tags: ['gnu', 'scripting']
+---
 
 This repo will contain mostly the commandline tricks for linux terminals and simple tweaks.
 The repository is inspired by various online tutorials including the ebooks and the videos on managing linux operating system. For my own intent, I'm listing some of the useful threads I found around in stackoverflow:
