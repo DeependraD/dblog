@@ -1,16 +1,16 @@
 ---
 date: "2020-07-01"
 draft: false
-linktitle: find
+linktitle: find (web resource) 
 menu:
   gitnbash:
     parent: Bash
     weight: 1
-title: The find command
+title: Webpicked find
 toc: true
 type: docs
 weight: 1
-tags: ['command', 'gnu']
+tags: ['find', 'gnu']
 ---
 
 There is probably a lot to look out in this open world for better, but that can be a good venture for a lifetime. Why not I embark on it now.

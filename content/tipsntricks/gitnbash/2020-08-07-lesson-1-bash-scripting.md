@@ -1,7 +1,7 @@
 ---
 date: "2020-07-01"
 draft: false
-linktitle: Bash scripting
+linktitle: bash scripting
 menu:
   gitnbash:
     parent: Bash
