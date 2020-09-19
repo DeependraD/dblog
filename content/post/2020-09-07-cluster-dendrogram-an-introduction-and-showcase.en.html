@@ -1,0 +1,173 @@
+---
+title: 'Cluster dendrogram: An introduction and showcase'
+author: Deependra Dhakal
+date: '2020-09-07'
+slug: cluster-dendrogram-an-introduction-and-showcase
+categories:
+  - R
+tags:
+  - tidyverse
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-09-07T22:12:28+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>A cluster analysis is a classification problem. It is dealt in several ways, one of which is hierarchial agglomeration. The method allows for easy presentation of high dimensional data, more of so when the number of observations is readily fitted into a visualization.</p>
+<p>Here’s I deal with a case of clustering typically seen in agriculture and field research where a researcher tests typically a large number of genotypes and seeks to see them organized into distinguishable clusters using dendrogram. Data concerns observations on disease incidence in rice genotypes of various stages – germinating seed to maturity nearing crop. Following provides a descriptive summary of the observation variables.</p>
+<pre class="r"><code>rice_path &lt;- read_csv(here::here(&quot;content&quot;, &quot;post&quot;, &quot;data&quot;, &quot;rice_genotypes_blight_pathology_disease.csv&quot;))
+landraces &lt;- read_csv(here::here(&quot;content&quot;, &quot;post&quot;, &quot;data&quot;, &quot;rice_genotypes_blight_pathology_landraces.csv&quot;))
+skimr::skim(rice_path)</code></pre>
+<table>
+<caption><span id="tab:rice-description">Table 1: </span>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">rice_path</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">60</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">numeric</td>
+<td align="left">3</td>
+</tr>
+<tr class="odd">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">severity_percent</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">58.79</td>
+<td align="right">10.34</td>
+<td align="right">33.33</td>
+<td align="right">51.86</td>
+<td align="right">59.26</td>
+<td align="right">66.67</td>
+<td align="right">81.49</td>
+<td align="left">▂▅▇▇▂</td>
+</tr>
+<tr class="even">
+<td align="left">mean_audpc</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">239.55</td>
+<td align="right">38.59</td>
+<td align="right">134.26</td>
+<td align="right">216.88</td>
+<td align="right">243.06</td>
+<td align="right">263.89</td>
+<td align="right">305.56</td>
+<td align="left">▁▃▆▇▅</td>
+</tr>
+<tr class="odd">
+<td align="left">final_seed_incidence</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">51.70</td>
+<td align="right">8.67</td>
+<td align="right">30.00</td>
+<td align="right">46.00</td>
+<td align="right">52.67</td>
+<td align="right">58.00</td>
+<td align="right">69.33</td>
+<td align="left">▂▃▇▇▃</td>
+</tr>
+</tbody>
+</table>
+<p>Scaling the data in all columns avoids the trouble with interpretation, particularly with all the different units of measurement in each variable.</p>
+<pre class="r"><code># scale data and prepare
+rice_path_disease &lt;- scale(rice_path)
+
+# distance and clustering
+dist_euclidean &lt;- dist(rice_path_disease, &quot;euclidean&quot;)
+# hclust_ave &lt;- hclust(dist_euclidean, method = &quot;ave&quot;)
+hclust_ave &lt;- hclust(dist_euclidean, method = &quot;ward.D2&quot;) # ward has high clustering power
+hclust_ave$labels &lt;- landraces$landraces[1:60][hclust_ave$order]
+
+# extract data
+hclust_ave_data &lt;- ggdendro::dendro_data(hclust_ave, type = &quot;rectangle&quot;)
+
+# determine number of clusters
+clust_five &lt;- cutree(hclust_ave, k=5)
+clust_df &lt;- tibble(label=names(clust_five), cluster=factor(clust_five))
+
+# merge the labels, with clust.df
+hclust_ave_data[[&quot;labels&quot;]] &lt;- merge(hclust_ave_data[[&quot;labels&quot;]], clust_df, by=&quot;label&quot;)</code></pre>
+<pre class="r"><code>clustering_dendrogram &lt;- ggplot() + 
+  geom_segment(data=hclust_ave_data[[&quot;segments&quot;]], aes(x=x, y=y, xend=xend, 
+                                        yend=yend)) + 
+  geom_text(data=hclust_ave_data[[&quot;labels&quot;]], aes(x, y, label=label, hjust=0, color=cluster), 
+            size=2.2) +
+  coord_flip() + scale_y_reverse(expand=c(0.2, 0)) + 
+  theme(axis.line.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.title.y=element_blank(),
+        panel.background=element_rect(fill=&quot;white&quot;),
+        panel.grid=element_blank()) +
+  labs(caption = &quot;Hierarchical clustering using euclidean distance and \nward&#39;s method for agglomeration and \nshowing five clusters in dendrogram&quot;)
+
+# ggsave(&quot;./clustering_dendrogram.png&quot;, plot = clustering_dendrogram, device = &quot;png&quot;, 
+#          width = 8, height = 6, units = &quot;in&quot;, dpi = 240)</code></pre>
+<p>While we use certain method in clustering, its efficacy as a classifer can be checked with <code>cluster::agnes()</code>.</p>
+<pre class="r"><code># methods to assess
+m &lt;- c(&quot;average&quot;, &quot;single&quot;, &quot;complete&quot;, &quot;ward&quot;)
+names(m) &lt;- c(&quot;average&quot;, &quot;single&quot;, &quot;complete&quot;, &quot;ward&quot;)
+
+# function to compute coefficient
+ac &lt;- function(x) {
+  agnes(rice_path_disease, method = x)$ac
+}
+
+map_dbl(m, ac)</code></pre>
+<pre><code>##   average    single  complete      ward 
+## 0.8171988 0.7323511 0.8932563 0.9257491</code></pre>
