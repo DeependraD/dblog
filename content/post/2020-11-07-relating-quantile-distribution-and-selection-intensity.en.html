@@ -1,0 +1,87 @@
+---
+title: Relating quantile distribution and selection intensity
+author: Deependra Dhakal
+date: '2020-11-07'
+slug: relating-quantile-distribution-and-selection-intensity
+categories:
+  - R
+tags:
+  - agriculture
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-11-07T19:15:55+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+math: yes
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="what-has-wikipedia-to-say-about" class="section level1">
+<h1>What has wikipedia to say about ?</h1>
+<p>In probability and statistics, the quantile function, associated with a probability distribution of a random variable, specifies the value of the random variable such that the probability of the variable being less than or equal to that value equals the given probability. It is also called the percent-point function or inverse cumulative distribution function.</p>
+<p>For example, the cumulative distribution function of exponential (<span class="math inline">\(\lambda\)</span>) (i.e. intensity <span class="math inline">\(\lambda\)</span> and expected value (mean) <span class="math inline">\(\frac{1}{\lambda}\)</span>) is:</p>
+<p><span class="math display">\[
+F(x;\lambda) = \begin{cases}
+1-e^{-\lambda x} &amp; x \ge 0, \\
+0 &amp; x &lt; 0.
+\end{cases}
+\]</span></p>
+<p>The quantile function for exponential (<span class="math inline">\(\lambda\)</span>) is derived by finding the value of <span class="math inline">\(Q\)</span> for which <span class="math inline">\(1 - \exp^{-\lambda Q} = p\)</span>:</p>
+<p><span class="math display">\[
+Q(p;\lambda )={\frac  {-\ln(1-p)}{\lambda }}
+\]</span></p>
+</div>
+<div id="plotting-quantile-function-using-ggplot2" class="section level1">
+<h1>Plotting quantile function using ggplot2</h1>
+<p>The standard Q-Q diagnostic for linear models plots quantiles of the standardized residuals vs. theoretical quantiles of N(0,1). By default, the ggplot doesn’t seem to contain code for calculating the parameters of the qquline, so,</p>
+<pre class="r"><code>res_vector &lt;- residuals(lm(data = mtcars, mpg ~ cyl + disp + hp))
+res_vector &lt;- rstandard(lm(data = mtcars, mpg ~ cyl + disp + hp))
+# the res_vec may/not be standardized residuals
+
+res_vector_q &lt;- quantile(res_vector[!is.na(res_vector)], c(0.25, 0.75)) # theoretical quantiles from given residuals
+res_vector_qnorm &lt;- qnorm(c(0.25, 0.75))
+slope &lt;- diff(res_vector_q)/diff(res_vector_qnorm) # slope
+intercept &lt;- res_vector_q[1L] - slope * res_vector_qnorm[1L] # intercept
+
+d &lt;- enframe(res_vector, value = &quot;residual&quot;)
+
+ggplot(d, aes(sample = residual)) + 
+  stat_qq(shape=1, size=3) + 
+  labs(title=&quot;Normal Q-Q&quot;, # plot title
+       x=&quot;Theoretical Quantiles&quot;, # x-axis label
+       y=&quot;Standardized/Non-standardized Residuals&quot;) + # residuals standardized/or not
+  geom_abline(slope = slope, intercept = intercept, linetype = &quot;dashed&quot;)</code></pre>
+<p><img src="/post/2020-11-07-relating-quantile-distribution-and-selection-intensity.en_files/figure-html/unnamed-chunk-1-1.png" width="480" /></p>
+<pre class="r"><code># or, with latest ggplot2, new function stat_qq_line is implemented.
+model &lt;- lm(mpg ~ wt, data = mtcars)
+ggplot(model, aes(sample = rstandard(model))) + geom_qq() + stat_qq_line()</code></pre>
+<p><img src="/post/2020-11-07-relating-quantile-distribution-and-selection-intensity.en_files/figure-html/unnamed-chunk-1-2.png" width="480" /></p>
+</div>
+<div id="selection-intensity" class="section level1">
+<h1>Selection intensity</h1>
+<p>The goal of this post is to demonstrate computing selection intensity and corrected selection intensity for finite population size. likewise, I try to explain a bit about quantile function, and about what it is used for in selection procedures. Furthermore, it is graphically demonstrated.</p>
+<p>Suppose we have a finite population of 100 individual (plants) for selection. Now we select top 10% of the individuals among them to progress into next generation. So,</p>
+<pre class="r"><code># http://www.ihh.kvl.dk/htm/kc/popgen/genetics/8/1.htm
+# http://agtr.ilri.cgiar.org/Documents/compendia/Comp%20Selection%20Appendix.pdf
+# https://jvanderw.une.edu.au/Day1cChangeofVariance.pdf
+# https://wiki.groenkennisnet.nl/display/TAB/Chapter+9.5%3A+Selected+proportion+and+selection+intensity
+
+selection.proportion &lt;- 0.10
+threshold &lt;- -qnorm(selection.proportion)
+height.at.threshold &lt;- exp(-0.5 * (threshold ^ 2)) / sqrt(2 * pi)
+# infinite pop size
+selection.intensity &lt;- height.at.threshold / selection.proportion
+# corrected for finite pop size
+# let us suppose population size
+pop.size &lt;- 10000
+selection.intensity.corr &lt;- selection.intensity - (pop.size - (pop.size * selection.proportion)) / (2 * selection.proportion * pop.size * ((pop.size + 1) * selection.intensity))
+-qnorm(0.1)</code></pre>
+<pre><code>## [1] 1.281552</code></pre>
+</div>

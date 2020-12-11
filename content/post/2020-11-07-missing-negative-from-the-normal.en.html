@@ -1,0 +1,95 @@
+---
+title: Missing negative from the normal
+author: Deependra Dhakal
+date: '2020-11-07'
+slug: missing-negative-from-the-normal
+categories:
+  - R
+tags:
+  - fun
+  - R
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-11-07T19:37:02+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+math: yes
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="a-normal-function-isnt-so-normal" class="section level1">
+<h1>A normal function isn’t so normal</h1>
+<p>The normal density function is:</p>
+<p><span class="math display">\[
+\large
+f(x) = \frac{1}{\sqrt{2 \pi} \sigma} \exp^{-\frac{(x - \mu)^2}{(2 \sigma^2)}}
+\]</span></p>
+<p>It doesn’t make sense to calculate the probability for a single value in a continuous probability function, it is by definition zero, but you can calculate relative likelihoods (heights). <code>dnorm</code> simply gives the value of the function for a given x, not the area under the curve for that x (which is basically nothing for a single value). To find the density (height) for a single x value on the normal distribution, use <code>dnorm()</code> in the following way (here each x value is treated as separate and vectorized over),</p>
+<p><a href="https://stackoverflow.com/questions/57345406/estimating-probability-density-in-a-range-between-two-x-values-on-simulated-data" class="uri">https://stackoverflow.com/questions/57345406/estimating-probability-density-in-a-range-between-two-x-values-on-simulated-data</a></p>
+<pre class="r"><code>example_data &lt;- c(0.2, 1.2, 1.2, 1.4, 1.5, 1.3, 1.2, 1.3, 1.6, 1.9, 2.3)
+
+dnorm(example_data, mean = 0, sd = 1)</code></pre>
+<pre><code>##  [1] 0.39104269 0.19418605 0.19418605 0.14972747 0.12951760 0.17136859
+##  [7] 0.19418605 0.17136859 0.11092083 0.06561581 0.02832704</code></pre>
+<pre class="r"><code>normal_density &lt;- function(x, mu=0, sd=1){1/(sqrt(2 * pi)*sd) * exp(-((x - mu)^2/(2 * sd^2)))}
+normal_density(example_data, mu = 0, sd = 1)</code></pre>
+<pre><code>##  [1] 0.39104269 0.19418605 0.19418605 0.14972747 0.12951760 0.17136859
+##  [7] 0.19418605 0.17136859 0.11092083 0.06561581 0.02832704</code></pre>
+<pre class="r"><code>plot.function(normal_density, from = example_data)</code></pre>
+<p><img src="/post/2020-11-07-missing-negative-from-the-normal.en_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>It is also possible to obtain approximate probability density function using <code>density</code> and <code>approxfun</code></p>
+<pre class="r"><code>estimated_dfun &lt;- approxfun(density(example_data), rule=2)</code></pre>
+<p>From the estimated density function point probability density estimates could be made as:</p>
+<pre class="r"><code>estimated_dfun(1.45) # use any number to find the height ?</code></pre>
+<pre><code>## [1] 1.083488</code></pre>
+<pre class="r"><code># the area under the curve:
+area_under &lt;- function(lower, upper) {
+    integrate(estimated_dfun, lower=lower, upper=upper) }</code></pre>
+<p>ecdf() is the way to go for a non-parametric estimate, but if you expect a normal distribution you can also do a parametric estimate.</p>
+<pre class="r"><code>dist_mean &lt;- 10
+dist_sd &lt;- 0.2
+a &lt;- 9.7
+b &lt;- 10.2
+
+set.seed(123)
+r &lt;- rnorm(1e4, dist_mean, dist_sd)
+
+# population
+pnorm(b, dist_mean, dist_sd) - pnorm(a, dist_mean, dist_sd)</code></pre>
+<pre><code>## [1] 0.7745375</code></pre>
+<pre class="r"><code># [1] 0.7745375
+
+# parametric estimate
+pnorm(b, mean(r), sd(r)) - pnorm(a, mean(r), sd(r))</code></pre>
+<pre><code>## [1] 0.7753985</code></pre>
+<pre class="r"><code># [1] 0.7753985
+
+# nonparametric estimate
+ecdfun &lt;- ecdf(r)
+ecdfun(b) - ecdfun(a)</code></pre>
+<pre><code>## [1] 0.7754</code></pre>
+<pre class="r"><code># [1] 0.7754</code></pre>
+<div id="bootstrap-tutorial" class="section level2">
+<h2>Bootstrap tutorial</h2>
+<p><a href="https://matthew-parker.rbind.io/post/2020-06-26-bootstrap-tutorial/" class="uri">https://matthew-parker.rbind.io/post/2020-06-26-bootstrap-tutorial/</a></p>
+</div>
+<div id="probability-distribution" class="section level2">
+<h2>Probability distribution</h2>
+<p><a href="https://jasonbintz.rbind.io/courses/math333/notes/probability-distributions/" class="uri">https://jasonbintz.rbind.io/courses/math333/notes/probability-distributions/</a></p>
+</div>
+<div id="linear-regression-illustrated" class="section level2">
+<h2>Linear regression illustrated</h2>
+<p><a href="https://vinaysingh.rbind.io/2020/03/09/linear-regression/" class="uri">https://vinaysingh.rbind.io/2020/03/09/linear-regression/</a></p>
+</div>
+<div id="mixed-model-simulation" class="section level2">
+<h2>Mixed model simulation</h2>
+<p><a href="https://aosmith.rbind.io/2018/04/23/simulate-simulate-part-2/" class="uri">https://aosmith.rbind.io/2018/04/23/simulate-simulate-part-2/</a></p>
+</div>
+</div>
