@@ -43,5 +43,5 @@
 # To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.
 [[main]]
   name = "CV"
-  url = "files/Deependra_CV.pdf"
+  url = "https://github.com/DeependraD/tex-for-beauty/releases/download/v1.06/Deependra_CV.pdf"
   weight = 70
