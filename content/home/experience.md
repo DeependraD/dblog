@@ -20,11 +20,29 @@ date_format = "Jan 2020"
 
 [[experience]]
   title = "Assistant Professor"
+  company = "AFU"
+  company_url = "http://afu.edu.np/"
+  location = "Kailali, Nepal"
+  date_start = "2022-04-15"
+  date_end = ""
+  description = """Leading teaching, research and extension activities from Department of Genetics and Plant Breeding, CNRM-Tikapur branch under AFU"""
+
+[[experience]]
+  title = "Seed Production Officer"
+  company = "MoLMACPA"
+  company_url = "http://seedlabgandaki.gov.np/"
+  location = "Kaski, Nepal"
+  date_start = "2021-04-21"
+  date_end = "2022-04-14"
+  description = """Seed certification and seed testing"""
+
+[[experience]]
+  title = "Assistant Professor"
   company = "GAASC"
   company_url = "http://gaasc.edu.np/"
   location = "Baitadi, Nepal"
-  date_start = "2019-04-01"
-  date_end = ""
+  date_start = "2019-03-29"
+  date_end = "2020-12-31"
   description = """Teaching undergraduate course of Plant Breeding and Genetics"""
 
 [[experience]]
@@ -33,7 +51,7 @@ date_format = "Jan 2020"
   company_url = "http://uniqueseedcompany.com/"
   location = "Kailali, Nepal"
   date_start = "2018-05-01"
-  date_end = "2019-04-02"
+  date_end = "2019-03-28"
   description = """
   Responsibilities include:
   

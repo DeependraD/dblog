@@ -138,7 +138,6 @@ twitter = "dd_rookie"
 date_format = "2006-01-02"
 #   Examples: "3:04 pm" or "15:04"
 time_format = "3:04 PM"
-
 # Address format (choose from the [address_formats] list below or add you own to the list).
 address_format = "en-us"
 

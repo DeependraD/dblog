@@ -19,9 +19,9 @@ interests:
 - Plant Breeding
 - Genetics
 organizations:
-- name: Gokuleshwor Agriculture and Animal Science College
-  url: "http://gaasc.edu.np/"
-role: Assistant Professor of Plant Breeding and Genetics
+- name: Agriculture and Forestry University
+  url: "http://afu.edu.np/ag/faculty/deependra-dhakal"
+role: Assistant Professor of Genetics and Plant Breeding
 social:
 - icon: envelope
   icon_pack: fas
@@ -43,4 +43,6 @@ user_groups:
 
 At different occassions I have jabbed myself to awefully curate (Mostly, compiling other times authoring myself) some useful contents (articles and blogs). Please don't be intimidated by the style and coverage of the contents -- I'm working on making it more comprehensive. Meanwhile, concerning majority of contents in this site, I shamelessly disclose that most were assembeled plain copy-text while I was and still am sifting through mostly coding and research stuffs deemed valuable to myself.
 
-Currently, I am affiliated as a contracted Assistant Professor in a private institution in Nepal. I have been mentoring as well guiding undergraduate students of Agriculture faculty in courses relating to Plant Breeding and Genetics since April 2019. I boast for having had experience in undertaking job in seed industry before falling back to academia again. In the seed production and processing company, I worked as seed production officer and seed researcher. I specialize in designing and taking care of research works, i.e. handling research trials and maintaining seed production data. My hobbies mostly relate to making sense of crop production dynamics, identifying sources of variation, analysis and inference of biological data and visualization. Occassionally, I run and play soccer, if and when chance favors.
+Currently, I work as a tenured faculty in Agriculture and Forestry University (AFU) Nepal. I have been mentoring as well guiding undergraduate students of Agriculture faculty in courses relating to Plant Breeding and Genetics since April 2019, long since acquiring the tenure. I cherish having had experience in seed industry before falling back to academia again. In the seed production and processing company, I worked as seed production officer and seed researcher. While taking up a job in role of crop development officer at a government run seed laboratory, I was fortunate to meet with practices and challenges of seed certification allthewhile working to improving laboratory workflows.
+
+I specialize in designing and handling research trials. While in seed industry, I engaged in organization, analysis and visualization of seed production and certification data. My hobbies mostly relate to making sense of crop production dynamics, identifying sources of variation, analysis and inference of biological data and visualization. Occassionally, I run and play soccer, if and when chance favors.

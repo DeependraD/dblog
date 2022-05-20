@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/18a87094-431d-442a-aa56-ef675f6563da/deploy-status)](https://app.netlify.com/sites/rookie/deploys)
+
 # Blogdown site source code repository
 
 This is the source repo that bears the code for target blogdown site at https://rookie.rbind.io/.
