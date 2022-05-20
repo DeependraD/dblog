@@ -20,7 +20,7 @@ type: docs
 4. Life Cycle of Organisms
 5. Mendel's Law of Inhertance[[Slide1](https://files.speakerdeck.com/presentations/4abd60324a3643f992be8e6bbb2667f9/05-mendel_s_law_of_segregation_and_independent_assortment.pdf)]
 6. Probability and Statistical Testing[[Slide 1](https://files.speakerdeck.com/presentations/b93b8934fd11499580a6ba91cb0c9332/06-probability_and_statistical_testing.pdf)]
-7. Gene Action and Interaction[[Slid1]](https://github.com/DeependraD/courseware_plbgen/raw/master/GEN211_introductory_genetics/theory/07-gene_action_and_interaction.pdf)
+7. Gene Action and Interaction[[Slide1](https://github.com/DeependraD/courseware_plbgen/raw/master/GEN211_introductory_genetics/theory/07-gene_action_and_interaction.pdf)]
 8. Sex Determination and Sex Linkage[[Slide1](https://github.com/DeependraD/courseware_plbgen/raw/master/GEN211_introductory_genetics/theory/08-sex_determination_and_sex_linkage.pdf)]
 9. Linkage and Crossing Over[[Slide1](https://github.com/DeependraD/courseware_plbgen/raw/master/GEN211_introductory_genetics/theory/09-linkage_and_crossing_over.pdf)]
 10. Extranuclear Inheritance
