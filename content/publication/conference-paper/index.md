@@ -15,7 +15,7 @@ featured: true
 image:
   caption: 'Image credit: [**Unsplash**](https://unsplash.com/photos/pLCdAaMFLTE)'
   focal_point: ""
-  preview_only: false
+  preview_only: true
 links:
 - name: Custom Link
   url: http://example.org
