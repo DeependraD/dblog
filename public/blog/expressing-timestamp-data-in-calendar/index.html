@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+  
+                           
+     
+
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.135.0">
+<title>Expressing timestamp data in calendar | Rookie site</title>
+
+
+<meta property="twitter:site" content="@dd_rookie">
+<meta property="twitter:creator" content="@dd_rookie">
+
+
+
+
+
+
+
+  
+    
+  
+<meta name="description" content="">
+
+
+<meta property="og:site_name" content="Rookie site">
+<meta property="og:title" content="Expressing timestamp data in calendar | Rookie site">
+<meta property="og:description" content="" />
+<meta property="og:type" content="page" />
+<meta property="og:url" content="http://localhost:4321/blog/expressing-timestamp-data-in-calendar/" />
+<meta property="og:locale" content="en">
+
+
+
+
+    
+        <meta property="og:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+        <meta property="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+    
+    
+  
+  <meta itemprop="name" content="Expressing timestamp data in calendar">
+  <meta itemprop="description" content="Unlike composing a text memos and keeping tracks of those, calendar graphics is a highly effective visual aid to taking notes and summarizing them. Well, we all have used calendar, one way or the other, in our lifetimes.
+Calendar based graphics enables an accurate catch at the very first glance; For example, it is very easy relating one activity of a period to another when they are laid linearly with precise graduations. Calendar graphics does exactly that – some features (usually tiles) provide graduation, representing fixed interval of time (e.g., a day). This when combined with text allows unlimited freedom to provide narration for specific intervals.">
+  <meta itemprop="datePublished" content="2018-11-04T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2018-11-04T00:00:00+00:00">
+  <meta itemprop="wordCount" content="709">
+  <meta itemprop="keywords" content="R,Dates,Tidyverse">
+  
+  <!--[if IE]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  
+  
+  <link rel="stylesheet" href="/style.main.min.1cbac35dadc4fd962ceb58cdbe3e4bd32eb4a149ef54664a24d670fb5307d543.css" integrity="sha256-HLrDXa3E/ZYs61jNvj5L0y60oUnvVGZKJNZw&#43;1MH1UM=" media="screen">
+  
+  
+  <script src="/panelset.min.ed1ac24b6e16f4e2481e3d1d098ae66f5bc77438aef619e6e266d8ac5b00dc72.js" type="text/javascript"></script>
+  
+  
+  <script src="/main.min.36817c360165917b68a008c77f2439837c7c187a0acd3e9c92ce8f23fdc2d825.js" type="text/javascript"></script>
+</head>
+<body>
+      <div class="grid-container">
+<header class="site-header pt4 pb2 mb4 bb b--transparent ph5 headroom z-max" role="banner">
+  <nav class="site-nav db dt-l w-100" role="navigation">
+    <a class="site-brand db dtc-l v-mid link no-underline w-100 w-33-l tc tl-l" href="http://localhost:4321/" title="Home">
+      <img src="/img/blogophonic-mark-dark.png" class="dib db-l h2 w-auto" alt="Rookie site">
+    </a>
+    <div class="site-links db dtc-l v-mid w-100 w-47-l tc tr-l mt3 mt0-l ttu tracked">
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/about/" title="About Rookie">About</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 active" href="/blog/" title="Blog">Blog</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/project/" title="Project Portfolio">Projects</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/talks/" title="Talks">Talks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/academia/" title="Academia">Academia</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/tipsntricks/" title="Tips and tricks">Tips and tricks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="https://github.com/DeependraD/tex-for-beauty/releases/download/v1.06/Deependra_CV.pdf" title="CV copy">CV</a>
+      
+      
+    </div>
+  </nav>
+</header>
+
+<main class="page-main pa4" role="main">
+  <section class="page-content mw7 center">
+    <article class="post-content pa0 ph4-l">
+      <header class="post-header">
+        <h1 class="f1 lh-solid measure-narrow mb3 fw4">Expressing timestamp data in calendar</h1>
+        
+        <p class="f6 measure lh-copy mv1">By Deependra Dhakal in <a href="http://localhost:4321/categories/r">R</a>  <a href="http://localhost:4321/categories/tidyverse">tidyverse</a> </p>
+        <p class="f7 db mv0 ttu">November 4, 2018</p>
+
+      
+
+      </header>
+      <section class="post-body pt5 pb4">
+        <p>Unlike composing a text memos and keeping tracks of those, calendar graphics is a highly effective visual aid to taking notes and summarizing them. Well, we all have used calendar, one way or the other, in our lifetimes.</p>
+<p>Calendar based graphics enables an accurate catch at the very first glance; For example, it is very easy relating one activity of a period to another when they are laid linearly with precise graduations. Calendar graphics does exactly that &ndash; some features (usually tiles) provide graduation, representing fixed interval of time (e.g., a day). This when combined with text allows unlimited freedom to provide narration for specific intervals.</p>
+<p>In this post, I show how ggplot2&rsquo;s graphics capabilities can be exploited while constructing an activity calendar. Some of the tidy-eval features are also borrowed and integrated to extend the flexibility of the function.</p>
+<p>Any events referred to in this article is fully contrieved.</p>
+
+
+
+
+<h2 id="discrete-value-mapping-in-calendar-graphics">Discrete value mapping in calendar graphics
+  <a href="#discrete-value-mapping-in-calendar-graphics"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># a function to take calendar data and necessary arugments and spit a calendar plot</span>
+</span></span><span style="display:flex;"><span>ggcal_spit <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#000;font-weight:bold">function</span>(year_month_day, calendar_data, date_column, activities_column){
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic"># year_month_day declares which month to construct calendar of</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic"># for example to refer to june: &#34;2018-06-1&#34;</span>
+</span></span><span style="display:flex;"><span>  cdcol <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">enquo</span>(date_column)
+</span></span><span style="display:flex;"><span>  act <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">enquo</span>(activities_column)
+</span></span><span style="display:flex;"><span>  start <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">as.Date</span>(year_month_day)
+</span></span><span style="display:flex;"><span>  dates <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">data.frame</span>(date<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">seq</span>(start, length.out<span style="color:#000;font-weight:bold">=</span>lubridate<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">days_in_month</span>(start), by<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;1 day&#34;</span>)) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">mutate</span>(weeknum <span style="color:#000;font-weight:bold">=</span> lubridate<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">week</span>(date)<span style="color:#099">-1</span>, <span style="color:#998;font-style:italic"># or similar to lubridate::epiweek(): as.numeric(format(as.Date(date, format = &#34;%Y-%m-%d&#34;), &#34;%U&#34;)), </span>
+</span></span><span style="display:flex;"><span>           month <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">format</span>(date, <span style="color:#d14">&#34;%m&#34;</span>),
+</span></span><span style="display:flex;"><span>           weekday <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">factor</span>(<span style="color:#900;font-weight:bold">format</span>(date, <span style="color:#d14">&#34;%a&#34;</span>), levels<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;Mon&#34;</span>, <span style="color:#d14">&#34;Tue&#34;</span>, <span style="color:#d14">&#34;Wed&#34;</span>, <span style="color:#d14">&#34;Thu&#34;</span>, <span style="color:#d14">&#34;Fri&#34;</span>, <span style="color:#d14">&#34;Sat&#34;</span>, <span style="color:#d14">&#34;Sun&#34;</span>)),
+</span></span><span style="display:flex;"><span>           day <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">format</span>(date, <span style="color:#d14">&#34;%d&#34;</span>) <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#900;font-weight:bold">as.numeric</span>()) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># given a pseudocalendar (datewise record of activities)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># extract activities of the month specified in year_month_day</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">mutate</span>(Activities <span style="color:#000;font-weight:bold">=</span> calendar_data <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>             <span style="color:#900;font-weight:bold">filter</span>(<span style="color:#000;font-weight:bold">!!</span>cdcol <span style="color:#000;font-weight:bold">&gt;=</span> start, <span style="color:#000;font-weight:bold">!!</span>cdcol <span style="color:#000;font-weight:bold">&lt;</span> start <span style="color:#000;font-weight:bold">+</span> lubridate<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">days</span>(lubridate<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">days_in_month</span>(start))) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>             <span style="color:#900;font-weight:bold">pull</span>(<span style="color:#000;font-weight:bold">!!</span>act) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>             <span style="color:#900;font-weight:bold">str_wrap</span>(width <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">30</span>))
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  ggcal <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">ggplot</span>(dates, <span style="color:#900;font-weight:bold">aes</span>(x<span style="color:#000;font-weight:bold">=</span>weekday, y<span style="color:#000;font-weight:bold">=</span>weeknum)) <span style="color:#000;font-weight:bold">+</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">geom_tile</span>(colour <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;black&#34;</span>, fill <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;turquoise&#34;</span>, alpha <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0.8</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">geom_text</span>(<span style="color:#900;font-weight:bold">aes</span>(label<span style="color:#000;font-weight:bold">=</span>day), size <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">9</span>, alpha <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0.5</span>, color <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;red&#34;</span>, check_overlap <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">FALSE</span>, nudge_y <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">-0.4</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">geom_text</span>(<span style="color:#900;font-weight:bold">aes</span>(label<span style="color:#000;font-weight:bold">=</span>Activities), size <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">3.5</span>, alpha <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">1</span>, color <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;blue&#34;</span>, check_overlap <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">FALSE</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">scale_x_discrete</span>(expand <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#099">0</span>,<span style="color:#099">0</span>)) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">theme</span>(axis.ticks <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_blank</span>()) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">theme</span>(axis.title.y <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_blank</span>()) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">theme</span>(axis.title.x <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_blank</span>()) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">theme</span>(panel.background <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_rect</span>(fill <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;transparent&#34;</span>))<span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">theme</span>(legend.position <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;none&#34;</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">theme</span>()
+</span></span><span style="display:flex;"><span>  <span style="color:#000;font-weight:bold">return</span>(ggcal)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>For example to generate calendar graphs for two months: January and February, we map the data over dates specifying those two months in some way.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># import calendar data</span>
+</span></span><span style="display:flex;"><span>calendar <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">read_csv</span>(here<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">here</span>(<span style="color:#d14">&#34;content&#34;</span>, <span style="color:#d14">&#34;blog&#34;</span>, <span style="color:#d14">&#34;data&#34;</span>, <span style="color:#d14">&#34;Calendar_of_activities_year_xy.csv&#34;</span>)) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(Date_eng <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">as.Date</span>(Date_eng, <span style="color:#d14">&#34;%d-%b-%y&#34;</span>)) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(Date_eng_start <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">as.Date</span>(Date_eng, <span style="color:#d14">&#34;%d-%b-%y&#34;</span>), 
+</span></span><span style="display:flex;"><span>         Date_eng_end <span style="color:#000;font-weight:bold">=</span> Date_eng_start <span style="color:#000;font-weight:bold">+</span> lubridate<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">days</span>(<span style="color:#099">1</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># generate a ggplot list object of calender </span>
+</span></span><span style="display:flex;"><span>month_calendar <span style="color:#000;font-weight:bold">&lt;-</span> purrr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">map</span>(.x <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">seq.Date</span>(<span style="color:#900;font-weight:bold">as.Date</span>(<span style="color:#d14">&#34;2018-01-01&#34;</span>), by <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;month&#34;</span>, length.out <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">2</span>), 
+</span></span><span style="display:flex;"><span>                        .f <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">~</span><span style="color:#900;font-weight:bold">ggcal_spit</span>(.x, 
+</span></span><span style="display:flex;"><span>                                         calendar_data <span style="color:#000;font-weight:bold">=</span> calendar, 
+</span></span><span style="display:flex;"><span>                                         date_column <span style="color:#000;font-weight:bold">=</span> Date_eng, 
+</span></span><span style="display:flex;"><span>                                         activities_column <span style="color:#000;font-weight:bold">=</span> Activity1))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">walk</span>(month_calendar, print)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # save all monthly calendars as png image</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># purrr::walk2(.x = paste(&#34;Calendar_of_activities_&#34;, month.abb[1:2], &#34;_2018&#34;, &#34;.png&#34;, sep = &#34;&#34;), </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#              .y = month_calendar, </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#              .f = ~ggsave(.x, </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#                    plot = .y, device = &#34;png&#34;, width = 12, </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#                    height = 8, units = &#34;in&#34;, </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#                    dpi = 250))</span>
+</span></span></code></pre></div><p><img src="/blog/expressing-timestamp-data-in-calendar/index_files/figure-html/calendar-plot-1.png" width="960" style="display: block; margin: auto;" /><img src="/blog/expressing-timestamp-data-in-calendar/index_files/figure-html/calendar-plot-2.png" width="960" style="display: block; margin: auto;" /></p>
+<p>Note that calendar weekdays start at monday, but this might be misleading in some instances so a few other tweaks are required.</p>
+
+
+
+
+<h2 id="numeric-value-mapping-in-calendar-graphics">Numeric value mapping in calendar graphics
+  <a href="#numeric-value-mapping-in-calendar-graphics"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>mydate <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">seq</span>(<span style="color:#900;font-weight:bold">as.Date</span>(<span style="color:#d14">&#34;2017-02-01&#34;</span>), <span style="color:#900;font-weight:bold">as.Date</span>(<span style="color:#d14">&#34;2017-07-22&#34;</span>), by<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;1 day&#34;</span>)
+</span></span><span style="display:flex;"><span>myfills <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">rnorm</span>(<span style="color:#900;font-weight:bold">length</span>(mydate))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ggcal <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#000;font-weight:bold">function</span>(dates, fills) {
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic"># get ordered vector of month names</span>
+</span></span><span style="display:flex;"><span>  months <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">format</span>(<span style="color:#900;font-weight:bold">seq</span>(<span style="color:#900;font-weight:bold">as.Date</span>(<span style="color:#d14">&#34;2016-01-01&#34;</span>), <span style="color:#900;font-weight:bold">as.Date</span>(<span style="color:#d14">&#34;2016-12-01&#34;</span>), by<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;1 month&#34;</span>), <span style="color:#d14">&#34;%B&#34;</span>)
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic"># get lower and upper bound to fill in missing values</span>
+</span></span><span style="display:flex;"><span>  mindate <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">as.Date</span>(<span style="color:#900;font-weight:bold">format</span>(<span style="color:#900;font-weight:bold">min</span>(dates), <span style="color:#d14">&#34;%Y-%m-01&#34;</span>))
+</span></span><span style="display:flex;"><span>  maxdate <span style="color:#000;font-weight:bold">&lt;-</span> (<span style="color:#900;font-weight:bold">seq</span>(<span style="color:#900;font-weight:bold">as.Date</span>(<span style="color:#900;font-weight:bold">format</span>(<span style="color:#900;font-weight:bold">max</span>(dates), <span style="color:#d14">&#34;%Y-%m-01&#34;</span>)), length.out <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">2</span>, by<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;1 month&#34;</span>)<span style="color:#099">-1</span>)[2]
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic"># set up tibble with all the dates.</span>
+</span></span><span style="display:flex;"><span>  filler <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">tibble</span>(date <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">seq</span>(mindate, maxdate, by<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;1 day&#34;</span>))
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  t1 <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">tibble</span>(date <span style="color:#000;font-weight:bold">=</span> dates, fill<span style="color:#000;font-weight:bold">=</span>fills) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">right_join</span>(filler, by<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;date&#34;</span>) <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#998;font-style:italic"># fill in missing dates with NA</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">mutate</span>(dow <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">as.numeric</span>(<span style="color:#900;font-weight:bold">format</span>(date, <span style="color:#d14">&#34;%w&#34;</span>))) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">mutate</span>(month <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">format</span>(date, <span style="color:#d14">&#34;%B&#34;</span>)) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">mutate</span>(woy <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">as.numeric</span>(<span style="color:#900;font-weight:bold">format</span>(date, <span style="color:#d14">&#34;%U&#34;</span>))) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">mutate</span>(year <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">as.numeric</span>(<span style="color:#900;font-weight:bold">format</span>(date, <span style="color:#d14">&#34;%Y&#34;</span>))) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">mutate</span>(month <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">factor</span>(month, levels<span style="color:#000;font-weight:bold">=</span>months, ordered<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">TRUE</span>)) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">arrange</span>(year, month) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">mutate</span>(monlabel<span style="color:#000;font-weight:bold">=</span>month)
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#000;font-weight:bold">if</span> (<span style="color:#900;font-weight:bold">length</span>(<span style="color:#900;font-weight:bold">unique</span>(t1<span style="color:#000;font-weight:bold">$</span>year))<span style="color:#000;font-weight:bold">&gt;</span><span style="color:#099">1</span>) { <span style="color:#998;font-style:italic"># multi-year data set</span>
+</span></span><span style="display:flex;"><span>    t1<span style="color:#000;font-weight:bold">$</span>monlabel <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">paste</span>(t1<span style="color:#000;font-weight:bold">$</span>month, t1<span style="color:#000;font-weight:bold">$</span>year)
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  t2 <span style="color:#000;font-weight:bold">&lt;-</span> t1 <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">mutate</span>(monlabel <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">factor</span>(monlabel, ordered<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">TRUE</span>)) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">mutate</span>(monlabel <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">fct_inorder</span>(monlabel)) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">mutate</span>(monthweek <span style="color:#000;font-weight:bold">=</span> woy<span style="color:#000;font-weight:bold">-</span><span style="color:#900;font-weight:bold">min</span>(woy),
+</span></span><span style="display:flex;"><span>           y<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">max</span>(monthweek)<span style="color:#000;font-weight:bold">-</span>monthweek<span style="color:#099">+1</span>)
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  weekdays <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;S&#34;</span>, <span style="color:#d14">&#34;M&#34;</span>, <span style="color:#d14">&#34;T&#34;</span>, <span style="color:#d14">&#34;W&#34;</span>, <span style="color:#d14">&#34;T&#34;</span>, <span style="color:#d14">&#34;F&#34;</span>, <span style="color:#d14">&#34;S&#34;</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">ggplot</span>(t2, <span style="color:#900;font-weight:bold">aes</span>(dow, y, fill<span style="color:#000;font-weight:bold">=</span>fill)) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">geom_tile</span>(color<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;gray80&#34;</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">facet_wrap</span>(<span style="color:#000;font-weight:bold">~</span>monlabel, ncol<span style="color:#000;font-weight:bold">=</span><span style="color:#099">3</span>, scales<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;free&#34;</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">scale_x_continuous</span>(expand<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">c</span>(<span style="color:#099">0</span>,<span style="color:#099">0</span>), position<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;top&#34;</span>,
+</span></span><span style="display:flex;"><span>                       breaks<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">seq</span>(<span style="color:#099">0</span>,<span style="color:#099">6</span>), labels<span style="color:#000;font-weight:bold">=</span>weekdays) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">scale_y_continuous</span>(expand<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">c</span>(<span style="color:#099">0</span>,<span style="color:#099">0</span>)) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">theme</span>(panel.background<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">element_rect</span>(fill<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">NA</span>, color<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">NA</span>),
+</span></span><span style="display:flex;"><span>          strip.background <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_rect</span>(fill<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">NA</span>, color<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">NA</span>),
+</span></span><span style="display:flex;"><span>          strip.text.x <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_text</span>(hjust<span style="color:#000;font-weight:bold">=</span><span style="color:#099">0</span>, face<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;bold&#34;</span>),
+</span></span><span style="display:flex;"><span>          legend.title <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>          axis.ticks<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>          axis.title<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>          axis.text.y <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>          strip.placement <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;outsite&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">print</span>(<span style="color:#900;font-weight:bold">ggcal</span>(mydate, myfills))
+</span></span></code></pre></div><img src="/blog/expressing-timestamp-data-in-calendar/index_files/figure-html/calendar-numeric-1.png" width="960" style="display: block; margin: auto;" />
+
+        
+        <details closed class="f6 fw7 input-reset">
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Posted on:</dt>
+    <dd class="fw5 ml0">November 4, 2018</dd>
+  </dl>
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Length:</dt>
+    <dd class="fw5 ml0">4 minute read, 709 words</dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Categories:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/categories/r">R</a>  <a href="http://localhost:4321/categories/tidyverse">tidyverse</a> </dd>
+  </dl>
+  
+  
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Tags:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/tags/r">R</a>  <a href="http://localhost:4321/tags/dates">Dates</a>  <a href="http://localhost:4321/tags/tidyverse">tidyverse</a> </dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">See Also:</dt>
+    
+    <dd class="fw5 ml0"><a href="/blog/cluster-dendrogram-an-introduction-and-showcase/">Cluster dendrogram: An introduction and showcase</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/paste-together-multiple-columns/">Paste together multiple columns</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/logistic-regression-part-ii-varietal-adoption-dataset/">Logistic Regression: Part II - Varietal adoption dataset</a></dd>
+    
+  </dl>
+</details>
+
+      </section>
+      <footer class="post-footer">
+        <div class="post-pagination dt w-100 mt4 mb2">
+  
+  
+    <a class="prev dtc pr2 tl v-top fw6"
+    href="http://localhost:4321/blog/developing-flowcharts-an-illustration/">&larr; Developing flowcharts: an illustration of wheat breeding scheme</a>
+  
+  
+  
+    <a class="next dtc pl2 tr v-top fw6"
+    href="http://localhost:4321/blog/image-and-video-editing-hacks/">Image and video editing hacks using ffmpeg &rarr;</a>
+  
+</div>
+
+      </footer>
+    </article>
+    
+      <div class="post-comments pa0 pa4-l mt4">
+  
+    
+      <script src="https://utteranc.es/client.js"
+              repo="deependrad/dblog"
+              issue-term="pathname"
+              theme="boxy-light"
+              label="comments :crystal_ball:"
+              crossorigin="anonymous"
+              async
+              type="text/javascript">
+      </script>
+    
+  
+</div>
+
+    
+  </section>
+</main>
+<footer class="site-footer pv4 bt b--transparent ph5" role="contentinfo">
+  <nav class="db dt-l w-100">
+    <p class="site-copyright f7 db dtc-l v-mid w-100 w-33-l tc tl-l pv2 pv0-l mv0 lh-copy">
+      &copy; 2024 Dblog
+      <span class="middot-divider"></span>
+      Made with <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/hugo-apero/" rel="dct:source">Hugo Apéro</a></span>.
+      <br />
+      
+Based on <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/formspree/blogophonic-hugo" rel="dct:source">Blogophonic</a></span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://formspree.io" property="cc:attributionName" rel="cc:attributionURL">Formspree</a>.
+    </p>
+    
+    <div class="site-social-links db dtc-l v-mid w-100 w-33-l tc pv2 pv0-l mv0">
+      <div class="social-icon-links" aria-hidden="true">
+  
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://github.com/deependrad/dblog" title="github" target="_blank" rel="me noopener">
+      <i class="fab fa-github fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://bsky.app/" title="bluesky" target="_blank" rel="me noopener">
+      <i class="fab fa-bluesky fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://twitter.com/dd_rookie" title="x-twitter" target="_blank" rel="me noopener">
+      <i class="fab fa-x-twitter fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://orcid.org/0000-0002-0347-7950" title="orcid" target="_blank" rel="me noopener">
+      <i class="ai ai-orcid fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="/blog/index.xml" title="rss" >
+      <i class="fas fa-rss fa-lg fa-fw"></i>
+    </a>
+  
+</div>
+
+    </div>
+    
+    <div class="site-links f6 db dtc-l v-mid w-100 w-67-l tc tr-l pv2 pv0-l mv0">
+      
+      <a class="dib pv1 ph2 link" href="/license/" title="License">License</a>
+      
+      <a class="dib pv1 ph2 link" href="/contact/" title="Contact form">Contact</a>
+      
+      <a class="dib pv1 ph2 link" href="/contributors/" title="Contributors">Contributors</a>
+      
+    </div>
+  </nav>
+  
+    <script>
+
+    var i, text, code, codes = document.getElementsByTagName('code');
+    for (let i = 0; i < codes.length;) {
+      code = codes[i];
+      if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+        text = code.textContent;
+        if (/^\$[^$]/.test(text) && /[^$]\$$/.test(text)) {
+          text = text.replace(/^\$/, '\\(').replace(/\$$/, '\\)');
+          code.textContent = text;
+        }
+        if (/^\\\((.|\s)+\\\)$/.test(text) ||
+            /^\\\[(.|\s)+\\\]$/.test(text) ||
+            /^\$(.|\s)+\$$/.test(text) ||
+            /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+          code.outerHTML = code.innerHTML;  
+          continue;
+        }
+      }
+      i++;
+    }
+</script>
+
+  
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+
+
+    
+  
+  
+</footer>
+
+      </div>
+    </body>
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Graphics on Rookie site</title>
+    <link>http://localhost:4321/categories/graphics/</link>
+    <description>Recent content in Graphics on Rookie site</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 06 Aug 2020 14:58:48 +0545</lastBuildDate>
+    <atom:link href="http://localhost:4321/categories/graphics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Not so fun with Nepalese flag</title>
+      <link>http://localhost:4321/blog/not-so-fun-with-nepalese-flag/</link>
+      <pubDate>Thu, 06 Aug 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/not-so-fun-with-nepalese-flag/</guid>
+      <description>&lt;h1 id=&#34;anatomy-of-flag&#34;&gt;Anatomy of flag&#xA;  &lt;a href=&#34;#anatomy-of-flag&#34;&gt;&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;The anatomy of flag is well described in &#xA;&lt;a href=&#34;https://rookie.rbind.io/tipsntricks/readresort/2020-05-29-know-your-flag/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;tipsntricks/readresort section&lt;/a&gt; but the quirks of constructing it are not. I will be updating attending to complete the graphics as soon as I learn more.&lt;/p&gt;&#xA;&lt;p&gt;So far, only this ugly shape is what I have here to show;&lt;/p&gt;&#xA;&lt;img src=&#34;http://localhost:4321/blog/not-so-fun-with-nepalese-flag/index_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;768&#34; /&gt;</description>
+    </item>
+  </channel>
+</rss>

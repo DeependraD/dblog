@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Rookie site</title>
+    <link>https://rookie.rbind.io/post/</link>
+    <description>Recent content in Posts on Rookie site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 01 May 2017 00:00:00 +0000</lastBuildDate><atom:link href="https://rookie.rbind.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>An encounter with blogdown</title>
+      <link>https://rookie.rbind.io/post/2017-05-01-an-encounter-with-blogdown/</link>
+      <pubDate>Mon, 01 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://rookie.rbind.io/post/2017-05-01-an-encounter-with-blogdown/</guid>
+      <description>An encounter with web content related to R, although for me it is usually random, is in general welcoming. The link to this amazing feature building on the fact that using a markdown language is rather a pleasant way to write a blog post in a fully costumizable website all by yourself is enticing, to me at least. I started weaving thoughts right at the moment.</description>
+    </item>
+    
+  </channel>
+</rss>

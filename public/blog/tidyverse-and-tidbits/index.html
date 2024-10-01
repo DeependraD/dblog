@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+  
+                           
+     
+
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.135.0">
+<title>Tidyverse and tidbits | Rookie site</title>
+
+
+<meta property="twitter:site" content="@dd_rookie">
+<meta property="twitter:creator" content="@dd_rookie">
+
+
+
+
+
+
+
+  
+    
+  
+<meta name="description" content="">
+
+
+<meta property="og:site_name" content="Rookie site">
+<meta property="og:title" content="Tidyverse and tidbits | Rookie site">
+<meta property="og:description" content="" />
+<meta property="og:type" content="page" />
+<meta property="og:url" content="http://localhost:4321/blog/tidyverse-and-tidbits/" />
+<meta property="og:locale" content="en">
+
+
+
+
+    
+        <meta property="og:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+        <meta property="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+    
+    
+  
+  <meta itemprop="name" content="Tidyverse and tidbits">
+  <meta itemprop="description" content="Ideas surrounding tidy evaluation R code is a tree
+Every expression in R can be broken down to a form represented by a tree. For instance, on top of the tree there is “a function call” followed by it’s branches: first child = function name itself, other children = function arguments. Complex calls have multiple levels of branching.
+The code tree could be captured by quoting
+expr() quotes your(function developer) expression">
+  <meta itemprop="datePublished" content="2018-10-18T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2018-10-18T00:00:00+00:00">
+  <meta itemprop="wordCount" content="5762">
+  <meta itemprop="keywords" content="R,Tidyverse">
+  
+  <!--[if IE]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  
+  
+  <link rel="stylesheet" href="/style.main.min.1cbac35dadc4fd962ceb58cdbe3e4bd32eb4a149ef54664a24d670fb5307d543.css" integrity="sha256-HLrDXa3E/ZYs61jNvj5L0y60oUnvVGZKJNZw&#43;1MH1UM=" media="screen">
+  
+  
+  <script src="/panelset.min.ed1ac24b6e16f4e2481e3d1d098ae66f5bc77438aef619e6e266d8ac5b00dc72.js" type="text/javascript"></script>
+  
+  
+  <script src="/main.min.36817c360165917b68a008c77f2439837c7c187a0acd3e9c92ce8f23fdc2d825.js" type="text/javascript"></script>
+</head>
+<body>
+      <div class="grid-container">
+<header class="site-header pt4 pb2 mb4 bb b--transparent ph5 headroom z-max" role="banner">
+  <nav class="site-nav db dt-l w-100" role="navigation">
+    <a class="site-brand db dtc-l v-mid link no-underline w-100 w-33-l tc tl-l" href="http://localhost:4321/" title="Home">
+      <img src="/img/blogophonic-mark-dark.png" class="dib db-l h2 w-auto" alt="Rookie site">
+    </a>
+    <div class="site-links db dtc-l v-mid w-100 w-47-l tc tr-l mt3 mt0-l ttu tracked">
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/about/" title="About Rookie">About</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 active" href="/blog/" title="Blog">Blog</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/project/" title="Project Portfolio">Projects</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/talks/" title="Talks">Talks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/academia/" title="Academia">Academia</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/tipsntricks/" title="Tips and tricks">Tips and tricks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="https://github.com/DeependraD/tex-for-beauty/releases/download/v1.06/Deependra_CV.pdf" title="CV copy">CV</a>
+      
+      
+    </div>
+  </nav>
+</header>
+
+<main class="page-main pa4" role="main">
+  <section class="page-content mw7 center">
+    <article class="post-content pa0 ph4-l">
+      <header class="post-header">
+        <h1 class="f1 lh-solid measure-narrow mb3 fw4">Tidyverse and tidbits</h1>
+        
+        <p class="f6 measure lh-copy mv1">By Deependra Dhakal in <a href="http://localhost:4321/categories/r">R</a>  <a href="http://localhost:4321/categories/tidyverse">tidyverse</a> </p>
+        <p class="f7 db mv0 ttu">October 18, 2018</p>
+
+      
+
+      </header>
+      <section class="post-body pt5 pb4">
+        <script src="/blog/tidyverse-and-tidbits/index_files/kePrint/kePrint.js"></script>
+<link href="/blog/tidyverse-and-tidbits/index_files/lightable/lightable.css" rel="stylesheet" />
+
+
+
+
+<h1 id="ideas-surrounding-tidy-evaluation">Ideas surrounding tidy evaluation
+  <a href="#ideas-surrounding-tidy-evaluation"></a>
+</h1>
+<ol>
+<li>
+<p>R code is a tree</p>
+<p>Every expression in R can be broken down to a form represented by a tree. For instance, on top of the tree there is &ldquo;a function call&rdquo; followed by it&rsquo;s branches: first child = function name itself, other children = function arguments. Complex calls have multiple levels of branching.</p>
+</li>
+<li>
+<p>The code tree could be captured by quoting</p>
+<p>expr() quotes <strong>your</strong>(function developer) expression</p>
+<p>f1 &lt;- function(z) expr(z)</p>
+<p>f1(a + b)</p>
+<p>enexpr() quotes <strong>user&rsquo;s</strong> expression</p>
+<p>f2 &lt;- function(z) enexpr(z)</p>
+<p>f2(x + y)</p>
+</li>
+<li>
+<p>Quoting and unquoting of expression enables building up of complex code trees</p>
+<p>Unquoting is achieved by bang bang operator (!!)</p>
+</li>
+</ol>
+<p>For example, let&rsquo;s create a function that makes scatter plot when fed a dataframe, x-variable and y-variable:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>scatter_maker <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#000;font-weight:bold">function</span>(df, xvar, yvar) {
+</span></span><span style="display:flex;"><span>  xvar <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">enexpr</span>(xvar)
+</span></span><span style="display:flex;"><span>  yvar <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">enexpr</span>(yvar)
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">ggplot</span>(df, <span style="color:#900;font-weight:bold">aes</span>(<span style="color:#000;font-weight:bold">!!</span>xvar, <span style="color:#000;font-weight:bold">!!</span>yvar)) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">geom_point</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The function is executed in the demo below:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#900;font-weight:bold">scatter_maker</span>(mtcars, disp, mpg) <span style="color:#000;font-weight:bold">+</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">theme_bw</span>()
+</span></span></code></pre></div><div class="figure">
+<img src="/blog/tidyverse-and-tidbits/index_files/figure-html/scatter-demo-1.png" alt="Scatterplot of displacement versus miles per gallon of mtcars dataset" width="672" />
+<p class="caption">Figure 1: Scatterplot of displacement versus miles per gallon of mtcars dataset</p>
+</div>
+<ol start="4">
+<li>Quosures capture both expression and environment</li>
+</ol>
+
+
+
+
+<h1 id="quote-and-eval">quote() and eval()
+  <a href="#quote-and-eval"></a>
+</h1>
+<ol>
+<li>Quoting an expression is a bit like quoting a string</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>hm_quoted <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">quote</span>(height <span style="color:#000;font-weight:bold">/</span> mass)
+</span></span><span style="display:flex;"><span>hm_quoted
+</span></span></code></pre></div><pre tabindex="0"><code>## height/mass
+</code></pre><ol start="2">
+<li>But it&rsquo;s R code that can be evaluated and with a data mask it works!</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># eval(hm_quoted) # doesn&#39;t work because lacks data mask</span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">head</span>(<span style="color:#900;font-weight:bold">eval</span>(hm_quoted, starwars)) <span style="color:#998;font-style:italic"># works</span>
+</span></span></code></pre></div><pre tabindex="0"><code>## [1] 2.233766 2.226667 3.000000 1.485294 3.061224 1.483333
+</code></pre>
+
+
+
+<h1 id="why-quote-at-all">Why quote at-all
+  <a href="#why-quote-at-all"></a>
+</h1>
+<ol>
+<li>Data masking</li>
+<li>Allows you to refer to data objects directly</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># because transmute() is a quoting function,</span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">transmute</span>(starwars, height <span style="color:#000;font-weight:bold">/</span> mass)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 87 × 1
+##    `height/mass`
+##            &lt;dbl&gt;
+##  1          2.23
+##  2          2.23
+##  3          3   
+##  4          1.49
+##  5          3.06
+##  6          1.48
+##  7          2.2 
+##  8          3.03
+##  9          2.18
+## 10          2.36
+## # ℹ 77 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # unlike below where data objects could not be directly refered to</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># height / mass</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># starwars$height / starwars$mass</span>
+</span></span></code></pre></div>
+
+
+
+<h1 id="resolved-messy-data-with-tidy-evaluation">Resolved messy data with tidy evaluation
+  <a href="#resolved-messy-data-with-tidy-evaluation"></a>
+</h1>
+<p>A messy dataset exists despite all the sufferings. No wonder, it is resolvable, though.</p>
+<p>The identification is done through keywords like &ldquo;gen1&rdquo;, &ldquo;gen2&rdquo;, &hellip; The rowtype and the height columns occur in precedence to the identifier key. Our function will break apart the respective entries of rowtype and height into separate columns.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>dat <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">tibble</span>(mess <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;row:Three-row&#34;</span>, <span style="color:#d14">&#34;ht:Short height&#34;</span>, <span style="color:#d14">&#34;gen1&#34;</span>, 
+</span></span><span style="display:flex;"><span>                       <span style="color:#d14">&#34;row:Two-row&#34;</span>, <span style="color:#d14">&#34;ht:Tall height&#34;</span>, <span style="color:#d14">&#34;gen2&#34;</span>,
+</span></span><span style="display:flex;"><span>                       <span style="color:#d14">&#34;row:Three-row&#34;</span>, <span style="color:#d14">&#34;ht:Short height&#34;</span>, <span style="color:#d14">&#34;gen4&#34;</span>,
+</span></span><span style="display:flex;"><span>                       <span style="color:#d14">&#34;ht:Tall height&#34;</span>, <span style="color:#d14">&#34;row:Three-row&#34;</span>, <span style="color:#d14">&#34;gen3&#34;</span>,  
+</span></span><span style="display:flex;"><span>                       <span style="color:#d14">&#34;row:Three-row&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dat
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 13 × 1
+##    mess           
+##    &lt;chr&gt;          
+##  1 row:Three-row  
+##  2 ht:Short height
+##  3 gen1           
+##  4 row:Two-row    
+##  5 ht:Tall height 
+##  6 gen2           
+##  7 row:Three-row  
+##  8 ht:Short height
+##  9 gen4           
+## 10 ht:Tall height 
+## 11 row:Three-row  
+## 12 gen3           
+## 13 row:Three-row
+</code></pre><p>Let&rsquo;s define new verb <code>untangle2()</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>untangle2 <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#000;font-weight:bold">function</span>(df, regex, orig, new) {
+</span></span><span style="display:flex;"><span>  orig <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">enexpr</span>(orig)
+</span></span><span style="display:flex;"><span>  new <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">sym</span>(<span style="color:#900;font-weight:bold">quo_name</span>(<span style="color:#900;font-weight:bold">enexpr</span>(new)))
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic"># orig &lt;- enquo(orig) # this too works!</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic"># new &lt;- sym(quo_name(enquo(new))) # this too works!</span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  df <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">mutate</span>(
+</span></span><span style="display:flex;"><span>      <span style="color:#000;font-weight:bold">!!</span>new <span style="color:#000;font-weight:bold">:=</span> <span style="color:#900;font-weight:bold">if_else</span>(<span style="color:#900;font-weight:bold">grepl</span>(regex, <span style="color:#000;font-weight:bold">!!</span> orig), <span style="color:#000;font-weight:bold">!!</span> orig, <span style="color:#000;font-weight:bold">NA_character_</span>)
+</span></span><span style="display:flex;"><span>    ) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">fill</span>(<span style="color:#000;font-weight:bold">!!</span> new) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">filter</span>(<span style="color:#000;font-weight:bold">!</span> <span style="color:#900;font-weight:bold">grepl</span>(regex, <span style="color:#000;font-weight:bold">!!</span> orig))
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dat <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">untangle2</span>(<span style="color:#d14">&#34;^row&#34;</span>, mess, rowtype) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">untangle2</span>(<span style="color:#d14">&#34;^ht&#34;</span>, mess, height)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 4 × 3
+##   mess  rowtype       height         
+##   &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt;          
+## 1 gen1  row:Three-row ht:Short height
+## 2 gen2  row:Two-row   ht:Tall height 
+## 3 gen4  row:Three-row ht:Short height
+## 4 gen3  row:Three-row ht:Tall height
+</code></pre>
+
+
+
+<h1 id="list-behavior">List behavior
+  <a href="#list-behavior"></a>
+</h1>
+<p>When supplied a list to a dataframe as argument, list elements will be attempted to be supplied as individual column vectors. As long as the length of list element is same as the number of rows in dataframe, columns will be appended without an error.</p>
+<p>However, if the complete list object is to be added in as a column vector, it&rsquo;s identity needs to be preserved. Function <code>I()</code> preserves the identity by wrapping the object around &ldquo;AsIs&rdquo; class. For example, let&rsquo;s create a dataframe with a list object containing it&rsquo;s elements.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># all list elements of equal length as `nrow`.</span>
+</span></span><span style="display:flex;"><span>df1 <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">data.frame</span>(x <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">3</span>, y <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">list</span>(<span style="color:#099">3</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">5</span>, <span style="color:#099">4</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">6</span>, <span style="color:#099">5</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">7</span>))
+</span></span><span style="display:flex;"><span>df
+</span></span></code></pre></div><pre tabindex="0"><code>## function (x, df1, df2, ncp, log = FALSE) 
+## {
+##     if (missing(ncp)) 
+##         .Call(C_df, x, df1, df2, log)
+##     else .Call(C_dnf, x, df1, df2, ncp, log)
+## }
+## &lt;bytecode: 0x000001b357b97c20&gt;
+## &lt;environment: namespace:stats&gt;
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># this results in error due to an attempt to bind list elements of unequal length as columns</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># df &lt;- data.frame(x = 1:3, y = list(3:9, 1:3, 1:3))</span>
+</span></span></code></pre></div><p>When dealing with unequal length lists, try wrapping the list around in <code>I()</code> function, as shown below.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>df <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">data.frame</span>(x <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">3</span>, y <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">I</span>(<span style="color:#900;font-weight:bold">list</span>(<span style="color:#099">3</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">9</span>, <span style="color:#099">1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">3</span>, <span style="color:#099">1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">3</span>)))
+</span></span><span style="display:flex;"><span>df
+</span></span></code></pre></div><pre tabindex="0"><code>##   x            y
+## 1 1 3, 4, 5,....
+## 2 2      1, 2, 3
+## 3 3      1, 2, 3
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Distinction can be made based on the classes</span>
+</span></span><span style="display:flex;"><span>purrr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">compose</span>(class)(<span style="color:#900;font-weight:bold">list</span>(<span style="color:#099">3</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">9</span>, <span style="color:#099">1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">3</span>, <span style="color:#099">1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">3</span>))
+</span></span></code></pre></div><pre tabindex="0"><code>## [1] &#34;list&#34;
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>purrr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">compose</span>(class, I)(<span style="color:#900;font-weight:bold">list</span>(<span style="color:#099">3</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">9</span>, <span style="color:#099">1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">3</span>, <span style="color:#099">1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">3</span>)) <span style="color:#998;font-style:italic"># compose applies multiple functions right to left</span>
+</span></span></code></pre></div><pre tabindex="0"><code>## [1] &#34;AsIs&#34;
+</code></pre>
+
+
+
+<h1 id="using-pmap-to-perform-list-operations-inside-a-dataframe">Using pmap to perform list operations inside a dataframe
+  <a href="#using-pmap-to-perform-list-operations-inside-a-dataframe"></a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>params <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">expand.grid</span>(param_a <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#099">2</span>, <span style="color:#099">4</span>, <span style="color:#099">6</span>), 
+</span></span><span style="display:flex;"><span>                      param_b <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#099">3</span>, <span style="color:#099">6</span>, <span style="color:#099">9</span>), 
+</span></span><span style="display:flex;"><span>                      param_c <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#099">50</span>, <span style="color:#099">100</span>), 
+</span></span><span style="display:flex;"><span>                      param_d <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#099">1</span>, <span style="color:#099">0</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>params <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  knitr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">kable</span>(caption <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;Fictious data set to be used as template&#34;</span>, 
+</span></span><span style="display:flex;"><span>               format <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;html&#34;</span>) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  kableExtra<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">kable_styling</span>(bootstrap_options <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;striped&#34;</span>, font_size <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">10</span>)
+</span></span></code></pre></div><table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:list-col-df-purrr)Fictious data set to be used as template</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> param_a </th>
+   <th style="text-align:right;"> param_b </th>
+   <th style="text-align:right;"> param_c </th>
+   <th style="text-align:right;"> param_d </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+</tbody>
+</table>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># using map function to obtain a list</span>
+</span></span><span style="display:flex;"><span>df.preprocessed <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">as_tibble</span>(params) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(test_var <span style="color:#000;font-weight:bold">=</span> purrr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">map</span>(param_a, <span style="color:#000;font-weight:bold">function</span>(x){<span style="color:#900;font-weight:bold">rep</span>(<span style="color:#099">5</span>, x)}))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># using pmap for more flexible operation and unnesting to get expanded list</span>
+</span></span><span style="display:flex;"><span>df.preprocessed1 <span style="color:#000;font-weight:bold">&lt;-</span> dplyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">as_tibble</span>(params) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(test_var <span style="color:#000;font-weight:bold">=</span> purrr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">pmap</span>(., 
+</span></span><span style="display:flex;"><span>                                <span style="color:#000;font-weight:bold">function</span>(param_a, param_b, <span style="color:#000;font-weight:bold">...</span>){
+</span></span><span style="display:flex;"><span>                                  <span style="color:#900;font-weight:bold">rep</span>(<span style="color:#099">5</span>, param_a) <span style="color:#000;font-weight:bold">*</span> param_b
+</span></span><span style="display:flex;"><span>                                })) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  tidyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">unnest</span>()
+</span></span></code></pre></div><pre tabindex="0"><code>## Warning: `cols` is now required when using `unnest()`.
+## ℹ Please use `cols = c(test_var)`.
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># rowwise operation will also enable the same</span>
+</span></span><span style="display:flex;"><span>my_fun <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#000;font-weight:bold">function</span>(param_a, param_b){
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">rep</span>(<span style="color:#099">5</span>, param_a) <span style="color:#000;font-weight:bold">*</span> param_b
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dplyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">as.tbl</span>(params) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">rowwise</span>() <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  dplyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">mutate</span>(test_var <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">list</span>(<span style="color:#900;font-weight:bold">my_fun</span>(param_a, param_b))) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  tidyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">unnest</span>()
+</span></span></code></pre></div><pre tabindex="0"><code>## Warning: `as.tbl()` was deprecated in dplyr 1.0.0.
+## ℹ Please use `tibble::as_tibble()` instead.
+## `cols` is now required when using `unnest()`. ℹ Please use `cols =
+## c(test_var)`.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+</code></pre><pre tabindex="0"><code>## # A tibble: 144 × 5
+##    param_a param_b param_c param_d test_var
+##      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+##  1       2       3      50       1       15
+##  2       2       3      50       1       15
+##  3       4       3      50       1       15
+##  4       4       3      50       1       15
+##  5       4       3      50       1       15
+##  6       4       3      50       1       15
+##  7       6       3      50       1       15
+##  8       6       3      50       1       15
+##  9       6       3      50       1       15
+## 10       6       3      50       1       15
+## # ℹ 134 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># of all pmap solution could be the most flexible option</span>
+</span></span><span style="display:flex;"><span>dplyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">as_tibble</span>(params) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  dplyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">mutate</span>(test_var <span style="color:#000;font-weight:bold">=</span> purrr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">pmap</span>(<span style="color:#900;font-weight:bold">list</span>(x <span style="color:#000;font-weight:bold">=</span> param_a
+</span></span><span style="display:flex;"><span>                                            ,y <span style="color:#000;font-weight:bold">=</span> param_b
+</span></span><span style="display:flex;"><span>                                            ,z <span style="color:#000;font-weight:bold">=</span> param_c
+</span></span><span style="display:flex;"><span>                                            ,u <span style="color:#000;font-weight:bold">=</span> param_d),
+</span></span><span style="display:flex;"><span>                                       <span style="color:#000;font-weight:bold">~</span> <span style="color:#900;font-weight:bold">rep</span>(<span style="color:#099">5</span>,<span style="color:#000;font-weight:bold">..1</span>)<span style="color:#000;font-weight:bold">*</span><span style="color:#000;font-weight:bold">..2</span>)
+</span></span><span style="display:flex;"><span>  )
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 36 × 5
+##    param_a param_b param_c param_d test_var 
+##      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;list&gt;   
+##  1       2       3      50       1 &lt;dbl [2]&gt;
+##  2       4       3      50       1 &lt;dbl [4]&gt;
+##  3       6       3      50       1 &lt;dbl [6]&gt;
+##  4       2       6      50       1 &lt;dbl [2]&gt;
+##  5       4       6      50       1 &lt;dbl [4]&gt;
+##  6       6       6      50       1 &lt;dbl [6]&gt;
+##  7       2       9      50       1 &lt;dbl [2]&gt;
+##  8       4       9      50       1 &lt;dbl [4]&gt;
+##  9       6       9      50       1 &lt;dbl [6]&gt;
+## 10       2       3     100       1 &lt;dbl [2]&gt;
+## # ℹ 26 more rows
+</code></pre>
+
+
+
+<h1 id="apply-a-function-to-certain-columns-only-by-rows">Apply a function to certain columns only, by rows
+  <a href="#apply-a-function-to-certain-columns-only-by-rows"></a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>mtcars <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">select</span>(am, gear, carb) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  purrrlyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">by_row</span>(sum, .collate <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;cols&#34;</span>, .to <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;sum_am_gear_carb&#34;</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 32 × 4
+##       am  gear  carb sum_am_gear_carb
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt;
+##  1     1     4     4                9
+##  2     1     4     4                9
+##  3     1     4     1                6
+##  4     0     3     1                4
+##  5     0     3     2                5
+##  6     0     3     1                4
+##  7     0     3     4                7
+##  8     0     4     2                6
+##  9     0     4     2                6
+## 10     0     4     4                8
+## # ℹ 22 more rows
+</code></pre>
+
+
+
+<h1 id="do-any-arbitrary-operation">Do any arbitrary operation
+  <a href="#do-any-arbitrary-operation"></a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>mtcars <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">group_by</span>(cyl) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  dplyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">do</span>(broom<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">tidy</span>(<span style="color:#900;font-weight:bold">lm</span>(mpg <span style="color:#000;font-weight:bold">~</span> drat <span style="color:#000;font-weight:bold">+</span> wt, data <span style="color:#000;font-weight:bold">=</span> .)))
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 9 × 6
+## # Groups:   cyl [3]
+##     cyl term        estimate std.error statistic p.value
+##   &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1     4 (Intercept)   33.2      17.1       1.94  0.0877 
+## 2     4 drat           1.32      3.45      0.384 0.711  
+## 3     4 wt            -5.24      2.22     -2.37  0.0456 
+## 4     6 (Intercept)   30.7       7.51      4.08  0.0151 
+## 5     6 drat          -0.444     1.17     -0.378 0.725  
+## 6     6 wt            -2.99      1.57     -1.91  0.129  
+## 7     8 (Intercept)   29.7       7.09      4.18  0.00153
+## 8     8 drat          -1.47      1.63     -0.903 0.386  
+## 9     8 wt            -2.45      0.799    -3.07  0.0107
+</code></pre><p>The do call is combined with group_by to get any summary of current dataframe</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>iris <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">group_by</span>(Species) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">do</span>({
+</span></span><span style="display:flex;"><span>    mod <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">lm</span>(Sepal.Length <span style="color:#000;font-weight:bold">~</span> Sepal.Width, data <span style="color:#000;font-weight:bold">=</span> .)
+</span></span><span style="display:flex;"><span>    pred <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">predict</span>(mod, newdata <span style="color:#000;font-weight:bold">=</span> .[<span style="color:#d14">&#34;Sepal.Width&#34;</span>])
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">data.frame</span>(., pred)
+</span></span><span style="display:flex;"><span>  })
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 150 × 6
+## # Groups:   Species [3]
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species  pred
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   &lt;dbl&gt;
+##  1          5.1         3.5          1.4         0.2 setosa   5.06
+##  2          4.9         3            1.4         0.2 setosa   4.71
+##  3          4.7         3.2          1.3         0.2 setosa   4.85
+##  4          4.6         3.1          1.5         0.2 setosa   4.78
+##  5          5           3.6          1.4         0.2 setosa   5.12
+##  6          5.4         3.9          1.7         0.4 setosa   5.33
+##  7          4.6         3.4          1.4         0.3 setosa   4.99
+##  8          5           3.4          1.5         0.2 setosa   4.99
+##  9          4.4         2.9          1.4         0.2 setosa   4.64
+## 10          4.9         3.1          1.5         0.1 setosa   4.78
+## # ℹ 140 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # same thing could be done through explicit function call with do</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># iris %&gt;%</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#   group_by(Species) %&gt;%</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#   do((function(df) {</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#     mod &lt;- lm(Sepal.Length ~ Sepal.Width, data = df)</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#     pred &lt;- predict(mod,newdata = df[&#34;Sepal.Width&#34;])</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#     data.frame(df,pred)</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#   })(.))</span>
+</span></span></code></pre></div>
+
+
+
+<h1 id="using-dplyr-functions-inside-your-own-functions">Using dplyr functions inside your own functions
+  <a href="#using-dplyr-functions-inside-your-own-functions"></a>
+</h1>
+<p>Create column selection/extraction function, for example.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>extract_vars <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#000;font-weight:bold">function</span>(data, some_string){
+</span></span><span style="display:flex;"><span>  data <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">select</span>(<span style="color:#900;font-weight:bold">contains</span>({{ some_string }})) <span style="color:#000;font-weight:bold">-&gt;</span> data
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#000;font-weight:bold">return</span>(data)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">extract_vars</span>(mtcars, <span style="color:#d14">&#34;drat&#34;</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>##                     drat
+## Mazda RX4           3.90
+## Mazda RX4 Wag       3.90
+## Datsun 710          3.85
+## Hornet 4 Drive      3.08
+## Hornet Sportabout   3.15
+## Valiant             2.76
+## Duster 360          3.21
+## Merc 240D           3.69
+## Merc 230            3.92
+## Merc 280            3.92
+## Merc 280C           3.92
+## Merc 450SE          3.07
+## Merc 450SL          3.07
+## Merc 450SLC         3.07
+## Cadillac Fleetwood  2.93
+## Lincoln Continental 3.00
+## Chrysler Imperial   3.23
+## Fiat 128            4.08
+## Honda Civic         4.93
+## Toyota Corolla      4.22
+## Toyota Corona       3.70
+## Dodge Challenger    2.76
+## AMC Javelin         3.15
+## Camaro Z28          3.73
+## Pontiac Firebird    3.08
+## Fiat X1-9           4.08
+## Porsche 914-2       4.43
+## Lotus Europa        3.77
+## Ford Pantera L      4.22
+## Ferrari Dino        3.62
+## Maserati Bora       3.54
+## Volvo 142E          4.11
+</code></pre>
+
+
+
+<h1 id="effiecient-ways-to-operate-on-list">Effiecient ways to operate on list
+  <a href="#effiecient-ways-to-operate-on-list"></a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>x <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">list</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">list</span>(name <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;sue&#34;</span>, number <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">1</span>, veg <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;onion&#34;</span>, <span style="color:#d14">&#34;carrot&#34;</span>)),
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">list</span>(name <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;doug&#34;</span>, number <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">2</span>, veg <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;potato&#34;</span>, <span style="color:#d14">&#34;beet&#34;</span>))
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>Base <code>rbind()</code> returns a matrix of lists. However, a complete list object <code>x</code> is packed in a single row, with two list columns for each next level list.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#900;font-weight:bold">rbind</span>(x)
+</span></span></code></pre></div><pre tabindex="0"><code>##   [,1]   [,2]  
+## x list,3 list,3
+</code></pre>
+
+
+
+<h1 id="binds-each-element-as-row-but-third-element-is-list">Binds each element as row but third element is list
+  <a href="#binds-each-element-as-row-but-third-element-is-list"></a>
+</h1>
+<p>Throwing a <code>do.call()</code> call leads to desired results.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#900;font-weight:bold">do.call</span>(rbind, x)
+</span></span></code></pre></div><pre tabindex="0"><code>##      name   number veg        
+## [1,] &#34;sue&#34;  1      character,2
+## [2,] &#34;doug&#34; 2      character,2
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#900;font-weight:bold">do.call</span>(rbind, x) <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#900;font-weight:bold">class</span>()
+</span></span></code></pre></div><pre tabindex="0"><code>## [1] &#34;matrix&#34; &#34;array&#34;
+</code></pre>
+
+
+
+<h1 id="produces-rowbinding-for-dataframe-but-doesnt-work-with-list-elements">Produces rowbinding for dataframe but doesn&rsquo;t work with list elements
+  <a href="#produces-rowbinding-for-dataframe-but-doesnt-work-with-list-elements"></a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#900;font-weight:bold">map_dfr</span>(x, <span style="color:#000;font-weight:bold">~</span> .x<span style="color:#900;font-weight:bold">[c</span>(<span style="color:#d14">&#34;name&#34;</span>, <span style="color:#d14">&#34;number&#34;</span>)])
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 2 × 2
+##   name  number
+##   &lt;chr&gt;  &lt;dbl&gt;
+## 1 sue        1
+## 2 doug       2
+</code></pre>
+
+
+
+<h1 id="tibble-and-map-data-to-list-column-in-isolation">Tibble and map data to list column in isolation
+  <a href="#tibble-and-map-data-to-list-column-in-isolation"></a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#900;font-weight:bold">tibble</span>(
+</span></span><span style="display:flex;"><span>  name <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">map_chr</span>(x, <span style="color:#d14">&#34;name&#34;</span>), 
+</span></span><span style="display:flex;"><span>  number <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">map_dbl</span>(x, <span style="color:#d14">&#34;number&#34;</span>), 
+</span></span><span style="display:flex;"><span>  veg <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">map</span>(x, <span style="color:#d14">&#34;veg&#34;</span>)
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 2 × 3
+##   name  number veg      
+##   &lt;chr&gt;  &lt;dbl&gt; &lt;list&gt;   
+## 1 sue        1 &lt;chr [2]&gt;
+## 2 doug       2 &lt;chr [2]&gt;
+</code></pre>
+
+
+
+<h1 id="modeling-exploration-summary-extraction-and-visualization-examples-using-dplyr-verbs">Modeling, exploration, summary extraction and visualization examples using dplyr verbs.
+  <a href="#modeling-exploration-summary-extraction-and-visualization-examples-using-dplyr-verbs"></a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>gap <span style="color:#000;font-weight:bold">&lt;-</span> gapminder <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">filter</span>(continent <span style="color:#000;font-weight:bold">==</span> <span style="color:#d14">&#34;Asia&#34;</span>) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(yr1952 <span style="color:#000;font-weight:bold">=</span> year <span style="color:#000;font-weight:bold">-</span> <span style="color:#099">1952</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">ggplot</span>(gap, <span style="color:#900;font-weight:bold">aes</span>(x <span style="color:#000;font-weight:bold">=</span> lifeExp, y <span style="color:#000;font-weight:bold">=</span> country)) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">geom_point</span>()
+</span></span></code></pre></div><img src="/blog/tidyverse-and-tidbits/index_files/figure-html/modeling-and-visualization-1.png" width="672" />
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>gap <span style="color:#000;font-weight:bold">&lt;-</span> gap <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(country <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">fct_reorder2</span>(country, .x <span style="color:#000;font-weight:bold">=</span> year, .y <span style="color:#000;font-weight:bold">=</span> lifeExp))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">ggplot</span>(gap, <span style="color:#900;font-weight:bold">aes</span>(x <span style="color:#000;font-weight:bold">=</span> lifeExp, y <span style="color:#000;font-weight:bold">=</span> country)) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">geom_point</span>()
+</span></span></code></pre></div><img src="/blog/tidyverse-and-tidbits/index_files/figure-html/modeling-and-visualization-2.png" width="672" />
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>gap_nested <span style="color:#000;font-weight:bold">&lt;-</span> gap <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">group_by</span>(country) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">nest</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>gap_nested<span style="color:#000;font-weight:bold">$</span>data[[3]]
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 12 × 6
+##    continent  year lifeExp       pop gdpPercap yr1952
+##    &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;     &lt;int&gt;     &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Asia       1952    37.5  46886859      684.      0
+##  2 Asia       1957    39.3  51365468      662.      5
+##  3 Asia       1962    41.2  56839289      686.     10
+##  4 Asia       1967    43.5  62821884      721.     15
+##  5 Asia       1972    45.3  70759295      630.     20
+##  6 Asia       1977    46.9  80428306      660.     25
+##  7 Asia       1982    50.0  93074406      677.     30
+##  8 Asia       1987    52.8 103764241      752.     35
+##  9 Asia       1992    56.0 113704579      838.     40
+## 10 Asia       1997    59.4 123315288      973.     45
+## 11 Asia       2002    62.0 135656790     1136.     50
+## 12 Asia       2007    64.1 150448339     1391.     55
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>gap_fitted <span style="color:#000;font-weight:bold">&lt;-</span> gap_nested <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(fit <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">map</span>(data, <span style="color:#000;font-weight:bold">~</span> <span style="color:#900;font-weight:bold">lm</span>(lifeExp <span style="color:#000;font-weight:bold">~</span> yr1952, data <span style="color:#000;font-weight:bold">=</span> .x)))
+</span></span><span style="display:flex;"><span>gap_fitted
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 33 × 3
+## # Groups:   country [33]
+##    country          data              fit   
+##    &lt;fct&gt;            &lt;list&gt;            &lt;list&gt;
+##  1 Afghanistan      &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  2 Bahrain          &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  3 Bangladesh       &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  4 Cambodia         &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  5 China            &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  6 Hong Kong, China &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  7 India            &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  8 Indonesia        &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+##  9 Iran             &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+## 10 Iraq             &lt;tibble [12 × 6]&gt; &lt;lm&gt;  
+## # ℹ 23 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>gap_fitted <span style="color:#000;font-weight:bold">&lt;-</span> gap_fitted <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(
+</span></span><span style="display:flex;"><span>    intercept <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">map_dbl</span>(fit, <span style="color:#000;font-weight:bold">~</span> <span style="color:#900;font-weight:bold">coef</span>(.x)[[<span style="color:#d14">&#34;(Intercept)&#34;</span>]]),
+</span></span><span style="display:flex;"><span>    slope <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">map_dbl</span>(fit, <span style="color:#000;font-weight:bold">~</span> <span style="color:#900;font-weight:bold">coef</span>(.x)[[<span style="color:#d14">&#34;yr1952&#34;</span>]]),
+</span></span><span style="display:flex;"><span>    r_squared <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">map_dbl</span>(fit, <span style="color:#000;font-weight:bold">~</span> <span style="color:#900;font-weight:bold">summary</span>(.x)[[<span style="color:#d14">&#34;r.squared&#34;</span>]])
+</span></span><span style="display:flex;"><span>  )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>gap_fitted <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">top_n</span>(n <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">5</span>, wt <span style="color:#000;font-weight:bold">=</span> r_squared) <span style="color:#998;font-style:italic"># whoa! Nepal is 4th</span>
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 33 × 6
+## # Groups:   country [33]
+##    country          data              fit    intercept slope r_squared
+##    &lt;fct&gt;            &lt;list&gt;            &lt;list&gt;     &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+##  1 Afghanistan      &lt;tibble [12 × 6]&gt; &lt;lm&gt;        29.9 0.275     0.948
+##  2 Bahrain          &lt;tibble [12 × 6]&gt; &lt;lm&gt;        52.7 0.468     0.967
+##  3 Bangladesh       &lt;tibble [12 × 6]&gt; &lt;lm&gt;        36.1 0.498     0.989
+##  4 Cambodia         &lt;tibble [12 × 6]&gt; &lt;lm&gt;        37.0 0.396     0.639
+##  5 China            &lt;tibble [12 × 6]&gt; &lt;lm&gt;        47.2 0.531     0.871
+##  6 Hong Kong, China &lt;tibble [12 × 6]&gt; &lt;lm&gt;        63.4 0.366     0.972
+##  7 India            &lt;tibble [12 × 6]&gt; &lt;lm&gt;        39.3 0.505     0.968
+##  8 Indonesia        &lt;tibble [12 × 6]&gt; &lt;lm&gt;        36.9 0.635     0.997
+##  9 Iran             &lt;tibble [12 × 6]&gt; &lt;lm&gt;        45.0 0.497     0.995
+## 10 Iraq             &lt;tibble [12 × 6]&gt; &lt;lm&gt;        50.1 0.235     0.546
+## # ℹ 23 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#900;font-weight:bold">ggplot</span>(gap_fitted, <span style="color:#900;font-weight:bold">aes</span>(x <span style="color:#000;font-weight:bold">=</span> intercept, y <span style="color:#000;font-weight:bold">=</span> country)) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">geom_point</span>()
+</span></span></code></pre></div><img src="/blog/tidyverse-and-tidbits/index_files/figure-html/modeling-and-visualization-3.png" width="672" />
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#900;font-weight:bold">ggplot</span>(gap_fitted, <span style="color:#900;font-weight:bold">aes</span>(x <span style="color:#000;font-weight:bold">=</span> slope, y <span style="color:#000;font-weight:bold">=</span> country)) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">geom_point</span>()
+</span></span></code></pre></div><img src="/blog/tidyverse-and-tidbits/index_files/figure-html/modeling-and-visualization-4.png" width="672" />
+<p>To get summary statistics implementing certain custom functions on list items. The case example below shows application of some high level functions available in tidyverse.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#900;font-weight:bold">set.seed</span>(<span style="color:#099">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># construct a dataframe</span>
+</span></span><span style="display:flex;"><span>d <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">tibble</span>(n <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#099">5</span>, <span style="color:#099">1</span>, <span style="color:#099">3</span>))
+</span></span><span style="display:flex;"><span>e <span style="color:#000;font-weight:bold">&lt;-</span> d <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#900;font-weight:bold">group_by</span>(n) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">do</span>(<span style="color:#900;font-weight:bold">tibble</span>(y <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">rnorm</span>(.$n), dat <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">list</span>(<span style="color:#900;font-weight:bold">data.frame</span>(a <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">1</span>)))) 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># this method is tranmutating type (drops original)</span>
+</span></span><span style="display:flex;"><span>e <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#900;font-weight:bold">rowwise</span>() <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#900;font-weight:bold">do</span>(<span style="color:#900;font-weight:bold">tibble</span>(sum <span style="color:#000;font-weight:bold">=</span> .$y <span style="color:#000;font-weight:bold">+</span> .$n))
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 9 × 1
+## # Rowwise: 
+##     sum
+##   &lt;dbl&gt;
+## 1 0.374
+## 2 3.18 
+## 3 2.16 
+## 4 4.60 
+## 5 5.33 
+## 6 4.18 
+## 7 5.49 
+## 8 5.74 
+## 9 5.58
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># this only adds the mutated summary (keeps original)</span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">mutate</span>(e, sum <span style="color:#000;font-weight:bold">=</span> purrr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">map2_dbl</span>(y, n, `+`))
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 9 × 4
+## # Groups:   n [3]
+##       n      y dat            sum
+##   &lt;dbl&gt;  &lt;dbl&gt; &lt;list&gt;       &lt;dbl&gt;
+## 1     1 -0.626 &lt;df [1 × 1]&gt; 0.374
+## 2     3  0.184 &lt;df [1 × 1]&gt; 3.18 
+## 3     3 -0.836 &lt;df [1 × 1]&gt; 2.16 
+## 4     3  1.60  &lt;df [1 × 1]&gt; 4.60 
+## 5     5  0.330 &lt;df [1 × 1]&gt; 5.33 
+## 6     5 -0.820 &lt;df [1 × 1]&gt; 4.18 
+## 7     5  0.487 &lt;df [1 × 1]&gt; 5.49 
+## 8     5  0.738 &lt;df [1 × 1]&gt; 5.74 
+## 9     5  0.576 &lt;df [1 × 1]&gt; 5.58
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # .f should be able to work with a list or a data frame. As it</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># happens, sum() handles data frame so the following works:</span>
+</span></span><span style="display:flex;"><span>mtcars <span style="color:#000;font-weight:bold">%&gt;%</span> purrrlyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">by_row</span>(sum)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 32 × 12
+##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out     
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;   
+##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl [1]&gt;
+##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl [1]&gt;
+##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl [1]&gt;
+##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl [1]&gt;
+##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl [1]&gt;
+##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl [1]&gt;
+##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl [1]&gt;
+##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl [1]&gt;
+##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl [1]&gt;
+## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl [1]&gt;
+## # ℹ 22 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # Other functions such as mean() may need to be adjusted with one</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # of the lift_xy() helpers:</span>
+</span></span><span style="display:flex;"><span>mtcars <span style="color:#000;font-weight:bold">%&gt;%</span> purrrlyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">by_row</span>(purrr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">lift_vl</span>(mean))
+</span></span></code></pre></div><pre tabindex="0"><code>## Warning: `lift_vl()` was deprecated in purrr 1.0.0.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+</code></pre><pre tabindex="0"><code>## # A tibble: 32 × 12
+##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out     
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;   
+##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl [1]&gt;
+##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl [1]&gt;
+##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl [1]&gt;
+##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl [1]&gt;
+##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl [1]&gt;
+##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl [1]&gt;
+##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl [1]&gt;
+##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl [1]&gt;
+##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl [1]&gt;
+## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl [1]&gt;
+## # ℹ 22 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># To run a function with invoke_rows(), make sure it is variadic (that</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># it accepts dots) or that .f&#39;s signature is compatible with the</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># column names</span>
+</span></span><span style="display:flex;"><span>mtcars <span style="color:#000;font-weight:bold">%&gt;%</span> purrrlyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">invoke_rows</span>(.f <span style="color:#000;font-weight:bold">=</span> sum)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 32 × 12
+##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out     
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;   
+##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl [1]&gt;
+##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl [1]&gt;
+##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl [1]&gt;
+##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl [1]&gt;
+##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl [1]&gt;
+##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl [1]&gt;
+##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl [1]&gt;
+##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl [1]&gt;
+##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl [1]&gt;
+## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl [1]&gt;
+## # ℹ 22 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>mtcars <span style="color:#000;font-weight:bold">%&gt;%</span> purrrlyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">invoke_rows</span>(.f <span style="color:#000;font-weight:bold">=</span> purrr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">lift_vd</span>(mean))
+</span></span></code></pre></div><pre tabindex="0"><code>## Warning: `lift_vd()` was deprecated in purrr 1.0.0.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+</code></pre><pre tabindex="0"><code>## # A tibble: 32 × 12
+##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb .out     
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;   
+##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 &lt;dbl [1]&gt;
+##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 &lt;dbl [1]&gt;
+##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 &lt;dbl [1]&gt;
+##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 &lt;dbl [1]&gt;
+##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 &lt;dbl [1]&gt;
+##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 &lt;dbl [1]&gt;
+##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 &lt;dbl [1]&gt;
+##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 &lt;dbl [1]&gt;
+##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;dbl [1]&gt;
+## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;dbl [1]&gt;
+## # ℹ 22 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # invoke_rows() with cols collation is equivalent to plyr::mdply()</span>
+</span></span><span style="display:flex;"><span>p <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">expand.grid</span>(mean <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">5</span>, sd <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">seq</span>(<span style="color:#099">0</span>, <span style="color:#099">1</span>, length <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">10</span>))
+</span></span><span style="display:flex;"><span>p <span style="color:#000;font-weight:bold">%&gt;%</span> purrrlyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">invoke_rows</span>(.f <span style="color:#000;font-weight:bold">=</span> rnorm, n <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">5</span>, .collate <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;cols&#34;</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 50 × 7
+##     mean    sd .out1 .out2 .out3 .out4 .out5
+##    &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1 0     1      1     1    1     1    
+##  2     2 0     2      2     2    2     2    
+##  3     3 0     3      3     3    3     3    
+##  4     4 0     4      4     4    4     4    
+##  5     5 0     5      5     5    5     5    
+##  6     1 0.111 0.966  1.17  1.04 0.931 0.754
+##  7     2 0.111 2.12   2.00  2.00 2.10  2.09 
+##  8     3 0.111 3.07   3.10  3.09 3.01  2.78 
+##  9     4 0.111 4.07   3.99  3.98 3.84  3.95 
+## 10     5 0.111 5.05   5.15  4.99 5.04  4.99 
+## # ℹ 40 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># p %&gt;% plyr::mdply(rnorm, n = 5) %&gt;% dplyr::tbl_df()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # To integrate the result as part of the data frame, use rows or</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # cols collation:</span>
+</span></span><span style="display:flex;"><span>mtcars[1<span style="color:#000;font-weight:bold">:</span><span style="color:#099">2</span>] <span style="color:#000;font-weight:bold">%&gt;%</span> purrrlyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">by_row</span>(<span style="color:#000;font-weight:bold">function</span>(x) <span style="color:#099">1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">5</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 32 × 3
+##      mpg   cyl .out     
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;   
+##  1  21       6 &lt;int [5]&gt;
+##  2  21       6 &lt;int [5]&gt;
+##  3  22.8     4 &lt;int [5]&gt;
+##  4  21.4     6 &lt;int [5]&gt;
+##  5  18.7     8 &lt;int [5]&gt;
+##  6  18.1     6 &lt;int [5]&gt;
+##  7  14.3     8 &lt;int [5]&gt;
+##  8  24.4     4 &lt;int [5]&gt;
+##  9  22.8     4 &lt;int [5]&gt;
+## 10  19.2     6 &lt;int [5]&gt;
+## # ℹ 22 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>mtcars[1<span style="color:#000;font-weight:bold">:</span><span style="color:#099">2</span>] <span style="color:#000;font-weight:bold">%&gt;%</span> purrrlyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">by_row</span>(<span style="color:#000;font-weight:bold">function</span>(x) <span style="color:#099">1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">5</span>, .collate <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;rows&#34;</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 160 × 4
+##      mpg   cyl  .row  .out
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;
+##  1    21     6     1     1
+##  2    21     6     1     2
+##  3    21     6     1     3
+##  4    21     6     1     4
+##  5    21     6     1     5
+##  6    21     6     2     1
+##  7    21     6     2     2
+##  8    21     6     2     3
+##  9    21     6     2     4
+## 10    21     6     2     5
+## # ℹ 150 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>mtcars[1<span style="color:#000;font-weight:bold">:</span><span style="color:#099">2</span>] <span style="color:#000;font-weight:bold">%&gt;%</span> purrrlyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">by_row</span>(<span style="color:#000;font-weight:bold">function</span>(x) <span style="color:#099">1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">5</span>, .collate <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;cols&#34;</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 32 × 7
+##      mpg   cyl .out1 .out2 .out3 .out4 .out5
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1  21       6     1     2     3     4     5
+##  2  21       6     1     2     3     4     5
+##  3  22.8     4     1     2     3     4     5
+##  4  21.4     6     1     2     3     4     5
+##  5  18.7     8     1     2     3     4     5
+##  6  18.1     6     1     2     3     4     5
+##  7  14.3     8     1     2     3     4     5
+##  8  24.4     4     1     2     3     4     5
+##  9  22.8     4     1     2     3     4     5
+## 10  19.2     6     1     2     3     4     5
+## # ℹ 22 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # getting custom summary functions with purrr and dplyr verbs</span>
+</span></span><span style="display:flex;"><span>mtcars <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">group_by</span>(cyl) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  tidyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">nest</span>() <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(model <span style="color:#000;font-weight:bold">=</span> purrr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">map</span>(data, <span style="color:#000;font-weight:bold">~</span><span style="color:#900;font-weight:bold">lm</span>(qsec <span style="color:#000;font-weight:bold">~</span> hp, .)),
+</span></span><span style="display:flex;"><span>         coef  <span style="color:#000;font-weight:bold">=</span> purrr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">map_dbl</span>(model, <span style="color:#000;font-weight:bold">~</span><span style="color:#900;font-weight:bold">coef</span>(.)[2])) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  tidyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">unnest</span>(data)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 32 × 13
+## # Groups:   cyl [3]
+##      cyl   mpg  disp    hp  drat    wt  qsec    vs    am  gear  carb model 
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;
+##  1     6  21    160    110  3.9   2.62  16.5     0     1     4     4 &lt;lm&gt;  
+##  2     6  21    160    110  3.9   2.88  17.0     0     1     4     4 &lt;lm&gt;  
+##  3     6  21.4  258    110  3.08  3.22  19.4     1     0     3     1 &lt;lm&gt;  
+##  4     6  18.1  225    105  2.76  3.46  20.2     1     0     3     1 &lt;lm&gt;  
+##  5     6  19.2  168.   123  3.92  3.44  18.3     1     0     4     4 &lt;lm&gt;  
+##  6     6  17.8  168.   123  3.92  3.44  18.9     1     0     4     4 &lt;lm&gt;  
+##  7     6  19.7  145    175  3.62  2.77  15.5     0     1     5     6 &lt;lm&gt;  
+##  8     4  22.8  108     93  3.85  2.32  18.6     1     1     4     1 &lt;lm&gt;  
+##  9     4  24.4  147.    62  3.69  3.19  20       1     0     4     2 &lt;lm&gt;  
+## 10     4  22.8  141.    95  3.92  3.15  22.9     1     0     4     2 &lt;lm&gt;  
+## # ℹ 22 more rows
+## # ℹ 1 more variable: coef &lt;dbl&gt;
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # run a regression after group_by operation</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # and save results to dataframe</span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">group_by</span>(mtcars, gear) <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#900;font-weight:bold">do</span>(res <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">residuals</span>(<span style="color:#900;font-weight:bold">lm</span>(mpg<span style="color:#000;font-weight:bold">~</span>carb, .)))
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 3 × 2
+## # Rowwise: 
+##    gear res       
+##   &lt;dbl&gt; &lt;list&gt;    
+## 1     3 &lt;dbl [15]&gt;
+## 2     4 &lt;dbl [12]&gt;
+## 3     5 &lt;dbl [5]&gt;
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # yet better way to capture the results -- residuals.</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # then it can be combined with original data. </span>
+</span></span><span style="display:flex;"><span>mtcars <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">group_by</span>(cyl) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">do</span>(model <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">lm</span>(mpg <span style="color:#000;font-weight:bold">~</span> wt, data<span style="color:#000;font-weight:bold">=</span>.)) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">do</span>((<span style="color:#000;font-weight:bold">function</span>(reg_mod) {
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">data.frame</span>(reg_res <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">residuals</span>(reg_mod<span style="color:#000;font-weight:bold">$</span>model))
+</span></span><span style="display:flex;"><span>  })(.))
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 32 × 1
+## # Rowwise: 
+##    reg_res
+##      &lt;dbl&gt;
+##  1 -3.67  
+##  2  2.84  
+##  3  1.02  
+##  4  5.25  
+##  5 -0.0513
+##  6  4.69  
+##  7 -4.15  
+##  8 -1.34  
+##  9 -1.49  
+## 10 -0.627 
+## # ℹ 22 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # Custom data modeling</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # using dplyr do() calls</span>
+</span></span><span style="display:flex;"><span>fertility <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">read_csv</span>(here<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">here</span>(<span style="color:#d14">&#34;content&#34;</span>, <span style="color:#d14">&#34;blog&#34;</span>, <span style="color:#d14">&#34;data&#34;</span>, <span style="color:#d14">&#34;fertility.csv&#34;</span>))
+</span></span></code></pre></div><pre tabindex="0"><code>## Rows: 60 Columns: 3
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &#34;,&#34;
+## dbl (3): AGE, Year, fertility
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # binding predictions to original dataframe</span>
+</span></span><span style="display:flex;"><span>fertility <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">group_by</span>(Year) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">do</span>(<span style="color:#900;font-weight:bold">data.frame</span>(.,pred <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">predict</span>(mgcv<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">gam</span>(fertility <span style="color:#000;font-weight:bold">~</span> <span style="color:#900;font-weight:bold">s</span>(AGE), data<span style="color:#000;font-weight:bold">=</span>.))))
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 60 × 4
+## # Groups:   Year [2]
+##      AGE  Year fertility    pred
+##    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+##  1    15  1930      5.17  -0.828
+##  2    16  1930     14.2   16.2  
+##  3    17  1930     27.7   33.4  
+##  4    18  1930     44.6   51.1  
+##  5    19  1930     59.1   69.2  
+##  6    20  1930     89.7   87.3  
+##  7    21  1930    105.   104.   
+##  8    22  1930    120.   120.   
+##  9    23  1930    137.   132.   
+## 10    24  1930    149.   141.   
+## # ℹ 50 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # same but different approach</span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">do.call</span>(rbind,
+</span></span><span style="display:flex;"><span>        <span style="color:#900;font-weight:bold">lapply</span>(<span style="color:#900;font-weight:bold">split</span>(fertility, fertility<span style="color:#000;font-weight:bold">$</span>Year), <span style="color:#000;font-weight:bold">function</span>(df) {
+</span></span><span style="display:flex;"><span>          df<span style="color:#000;font-weight:bold">$</span>pred <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">predict</span>(mgcv<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">gam</span>(fertility <span style="color:#000;font-weight:bold">~</span> <span style="color:#900;font-weight:bold">s</span>(AGE), data<span style="color:#000;font-weight:bold">=</span>df))
+</span></span><span style="display:flex;"><span>          df
+</span></span><span style="display:flex;"><span>        }))
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 60 × 4
+##      AGE  Year fertility    pred
+##  * &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+##  1    15  1930      5.17  -0.828
+##  2    16  1930     14.2   16.2  
+##  3    17  1930     27.7   33.4  
+##  4    18  1930     44.6   51.1  
+##  5    19  1930     59.1   69.2  
+##  6    20  1930     89.7   87.3  
+##  7    21  1930    105.   104.   
+##  8    22  1930    120.   120.   
+##  9    23  1930    137.   132.   
+## 10    24  1930    149.   141.   
+## # ℹ 50 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # same using data.table library</span>
+</span></span><span style="display:flex;"><span>fertility <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  data.table<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">data.table</span>() <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">group_by</span>(Year) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(pred <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">predict</span>(mgcv<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">gam</span>(fertility <span style="color:#000;font-weight:bold">~</span> <span style="color:#900;font-weight:bold">s</span>(AGE))))
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 60 × 4
+## # Groups:   Year [2]
+##      AGE  Year fertility      pred
+##    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl[1d]&gt;
+##  1    15  1930      5.17    -0.828
+##  2    16  1930     14.2     16.2  
+##  3    17  1930     27.7     33.4  
+##  4    18  1930     44.6     51.1  
+##  5    19  1930     59.1     69.2  
+##  6    20  1930     89.7     87.3  
+##  7    21  1930    105.     104.   
+##  8    22  1930    120.     120.   
+##  9    23  1930    137.     132.   
+## 10    24  1930    149.     141.   
+## # ℹ 50 more rows
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # this fails at last line</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># fertility %&gt;%</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#   group_by(Year) %&gt;%</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#   dplyr::do(model = mgcv::gam(fertility ~ s(AGE), data = .)) %&gt;%</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#   left_join(fertility, .) %&gt;%</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#   mutate(smoothed = predict(model, newdata = AGE))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # multiple model fitting and parameter extraction</span>
+</span></span><span style="display:flex;"><span>fitmodel <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#000;font-weight:bold">function</span>(d) <span style="color:#900;font-weight:bold">lm</span>(mpg <span style="color:#000;font-weight:bold">~</span> disp, data <span style="color:#000;font-weight:bold">=</span> mtcars)
+</span></span><span style="display:flex;"><span>by_cyl <span style="color:#000;font-weight:bold">&lt;-</span> mtcars <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">group_by</span>(cyl) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  tidyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">nest</span>() <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(mod <span style="color:#000;font-weight:bold">=</span> purrr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">map</span>(data, fitmodel), 
+</span></span><span style="display:flex;"><span>         pars <span style="color:#000;font-weight:bold">=</span> purrr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">map</span>(mod, broom<span style="color:#000;font-weight:bold">::</span>tidy), 
+</span></span><span style="display:flex;"><span>         pred <span style="color:#000;font-weight:bold">=</span> purrr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">map</span>(mod, broom<span style="color:#000;font-weight:bold">::</span>augment))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pars <span style="color:#000;font-weight:bold">&lt;-</span> by_cyl <span style="color:#000;font-weight:bold">%&gt;%</span> tidyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">unnest</span>(pars)
+</span></span><span style="display:flex;"><span>pars
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 6 × 9
+## # Groups:   cyl [3]
+##     cyl data     mod    term      estimate std.error statistic  p.value pred    
+##   &lt;dbl&gt; &lt;list&gt;   &lt;list&gt; &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;list&gt;  
+## 1     6 &lt;tibble&gt; &lt;lm&gt;   (Interce…  29.6      1.23        24.1  3.58e-21 &lt;tibble&gt;
+## 2     6 &lt;tibble&gt; &lt;lm&gt;   disp       -0.0412   0.00471     -8.75 9.38e-10 &lt;tibble&gt;
+## 3     4 &lt;tibble&gt; &lt;lm&gt;   (Interce…  29.6      1.23        24.1  3.58e-21 &lt;tibble&gt;
+## 4     4 &lt;tibble&gt; &lt;lm&gt;   disp       -0.0412   0.00471     -8.75 9.38e-10 &lt;tibble&gt;
+## 5     8 &lt;tibble&gt; &lt;lm&gt;   (Interce…  29.6      1.23        24.1  3.58e-21 &lt;tibble&gt;
+## 6     8 &lt;tibble&gt; &lt;lm&gt;   disp       -0.0412   0.00471     -8.75 9.38e-10 &lt;tibble&gt;
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>prediction <span style="color:#000;font-weight:bold">&lt;-</span> by_cyl <span style="color:#000;font-weight:bold">%&gt;%</span> tidyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">unnest</span>(pred)
+</span></span><span style="display:flex;"><span>prediction
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 96 × 13
+## # Groups:   cyl [3]
+##      cyl data     mod    pars     .rownames      mpg  disp .fitted .resid   .hat
+##    &lt;dbl&gt; &lt;list&gt;   &lt;list&gt; &lt;list&gt;   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1     6 &lt;tibble&gt; &lt;lm&gt;   &lt;tibble&gt; Mazda RX4     21    160     23.0 -2.01  0.0418
+##  2     6 &lt;tibble&gt; &lt;lm&gt;   &lt;tibble&gt; Mazda RX4 W…  21    160     23.0 -2.01  0.0418
+##  3     6 &lt;tibble&gt; &lt;lm&gt;   &lt;tibble&gt; Datsun 710    22.8  108     25.1 -2.35  0.0629
+##  4     6 &lt;tibble&gt; &lt;lm&gt;   &lt;tibble&gt; Hornet 4 Dr…  21.4  258     19.0  2.43  0.0328
+##  5     6 &lt;tibble&gt; &lt;lm&gt;   &lt;tibble&gt; Hornet Spor…  18.7  360     14.8  3.94  0.0663
+##  6     6 &lt;tibble&gt; &lt;lm&gt;   &lt;tibble&gt; Valiant       18.1  225     20.3 -2.23  0.0313
+##  7     6 &lt;tibble&gt; &lt;lm&gt;   &lt;tibble&gt; Duster 360    14.3  360     14.8 -0.462 0.0663
+##  8     6 &lt;tibble&gt; &lt;lm&gt;   &lt;tibble&gt; Merc 240D     24.4  147.    23.6  0.846 0.0461
+##  9     6 &lt;tibble&gt; &lt;lm&gt;   &lt;tibble&gt; Merc 230      22.8  141.    23.8 -0.997 0.0482
+## 10     6 &lt;tibble&gt; &lt;lm&gt;   &lt;tibble&gt; Merc 280      19.2  168.    22.7 -3.49  0.0396
+## # ℹ 86 more rows
+## # ℹ 3 more variables: .sigma &lt;dbl&gt;, .cooksd &lt;dbl&gt;, .std.resid &lt;dbl&gt;
+</code></pre>
+
+
+
+<h1 id="workarounds-on-unequal-length-lists">Workarounds on unequal length lists
+  <a href="#workarounds-on-unequal-length-lists"></a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>hareramshyam <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">list</span>(harry <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#099">1</span>, <span style="color:#099">2</span>, <span style="color:#099">3</span>, <span style="color:#099">4</span>, <span style="color:#099">5</span>), ram <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#099">2</span>, <span style="color:#099">3</span>, <span style="color:#099">4</span>, <span style="color:#099">6</span>, <span style="color:#099">8</span>), shyam <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#099">3</span>, <span style="color:#099">4</span>, <span style="color:#099">5</span>, <span style="color:#099">3</span>, <span style="color:#099">2</span>, <span style="color:#099">4</span>, <span style="color:#099">5</span>, <span style="color:#099">6</span>, <span style="color:#099">3</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">## binding rows for two list items of equal lengths is possible</span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">bind_rows</span>(hareramshyam[1<span style="color:#000;font-weight:bold">:</span><span style="color:#099">2</span>])
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 5 × 2
+##   harry   ram
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     2
+## 2     2     3
+## 3     3     4
+## 4     4     6
+## 5     5     8
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># bind_rows(hareramshyam) ## this fails</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">## so to complete the list by filling with nas to match the </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">## length of each element in list, use</span>
+</span></span><span style="display:flex;"><span>mymax <span style="color:#000;font-weight:bold">&lt;-</span> hareramshyam <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">lapply</span>(length) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  unlist <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  max
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>hareramshyam <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">lapply</span>(<span style="color:#000;font-weight:bold">function</span>(x) <span style="color:#900;font-weight:bold">c</span>(x, <span style="color:#900;font-weight:bold">rep</span>(<span style="color:#000;font-weight:bold">NA_integer_</span>, mymax<span style="color:#000;font-weight:bold">-</span><span style="color:#900;font-weight:bold">length</span>(x)))) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">bind_rows</span>()
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 9 × 3
+##   harry   ram shyam
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     2     3
+## 2     2     3     4
+## 3     3     4     5
+## 4     4     6     3
+## 5     5     8     2
+## 6    NA    NA     4
+## 7    NA    NA     5
+## 8    NA    NA     6
+## 9    NA    NA     3
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic">## here is a two liner that could be cause the same</span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">lapply</span>(hareramshyam, `length&lt;-`, 
+</span></span><span style="display:flex;"><span>       <span style="color:#900;font-weight:bold">max</span>(<span style="color:#900;font-weight:bold">lengths</span>(hareramshyam))) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">bind_rows</span>()
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 9 × 3
+##   harry   ram shyam
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     2     3
+## 2     2     3     4
+## 3     3     4     5
+## 4     4     6     3
+## 5     5     8     2
+## 6    NA    NA     4
+## 7    NA    NA     5
+## 8    NA    NA     6
+## 9    NA    NA     3
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># or use plyr&#39;s binder to avoid recycling</span>
+</span></span><span style="display:flex;"><span>plyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">rbind.fill</span>(<span style="color:#900;font-weight:bold">map</span>(hareramshyam, <span style="color:#000;font-weight:bold">~</span> <span style="color:#900;font-weight:bold">as.data.frame</span>(<span style="color:#900;font-weight:bold">t</span>(.x),stringsAsFactors<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">FALSE</span>)))
+</span></span></code></pre></div><pre tabindex="0"><code>##   V1 V2 V3 V4 V5 V6 V7 V8 V9
+## 1  1  2  3  4  5 NA NA NA NA
+## 2  2  3  4  6  8 NA NA NA NA
+## 3  3  4  5  3  2  4  5  6  3
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic">## to fill, for example above, dataframe of NAs with other</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">## elements of the dataframe</span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">lapply</span>(hareramshyam, `length&lt;-`, 
+</span></span><span style="display:flex;"><span>       <span style="color:#900;font-weight:bold">max</span>(<span style="color:#900;font-weight:bold">lengths</span>(hareramshyam))) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">bind_rows</span>() <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(harry <span style="color:#000;font-weight:bold">=</span> dplyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">coalesce</span>(harry, shyam), 
+</span></span><span style="display:flex;"><span>         ram <span style="color:#000;font-weight:bold">=</span> dplyr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">coalesce</span>(ram, shyam))
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 9 × 3
+##   harry   ram shyam
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     2     3
+## 2     2     3     4
+## 3     3     4     5
+## 4     4     6     3
+## 5     5     8     2
+## 6     4     4     4
+## 7     5     5     5
+## 8     6     6     6
+## 9     3     3     3
+</code></pre>
+        
+        <details closed class="f6 fw7 input-reset">
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Posted on:</dt>
+    <dd class="fw5 ml0">October 18, 2018</dd>
+  </dl>
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Length:</dt>
+    <dd class="fw5 ml0">28 minute read, 5762 words</dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Categories:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/categories/r">R</a>  <a href="http://localhost:4321/categories/tidyverse">tidyverse</a> </dd>
+  </dl>
+  
+  
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Tags:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/tags/r">R</a>  <a href="http://localhost:4321/tags/tidyverse">tidyverse</a> </dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">See Also:</dt>
+    
+    <dd class="fw5 ml0"><a href="/blog/cluster-dendrogram-an-introduction-and-showcase/">Cluster dendrogram: An introduction and showcase</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/paste-together-multiple-columns/">Paste together multiple columns</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/logistic-regression-part-ii-varietal-adoption-dataset/">Logistic Regression: Part II - Varietal adoption dataset</a></dd>
+    
+  </dl>
+</details>
+
+      </section>
+      <footer class="post-footer">
+        <div class="post-pagination dt w-100 mt4 mb2">
+  
+  
+    <a class="prev dtc pr2 tl v-top fw6"
+    href="http://localhost:4321/blog/grade-x-result/">&larr; Grade X result</a>
+  
+  
+  
+    <a class="next dtc pl2 tr v-top fw6"
+    href="http://localhost:4321/blog/flowering-phenology-of-rice-genotypes/">Flowering phenology of Rice genotypes in irrigated tropical condition of Nepal &rarr;</a>
+  
+</div>
+
+      </footer>
+    </article>
+    
+      <div class="post-comments pa0 pa4-l mt4">
+  
+    
+      <script src="https://utteranc.es/client.js"
+              repo="deependrad/dblog"
+              issue-term="pathname"
+              theme="boxy-light"
+              label="comments :crystal_ball:"
+              crossorigin="anonymous"
+              async
+              type="text/javascript">
+      </script>
+    
+  
+</div>
+
+    
+  </section>
+</main>
+<footer class="site-footer pv4 bt b--transparent ph5" role="contentinfo">
+  <nav class="db dt-l w-100">
+    <p class="site-copyright f7 db dtc-l v-mid w-100 w-33-l tc tl-l pv2 pv0-l mv0 lh-copy">
+      &copy; 2024 Dblog
+      <span class="middot-divider"></span>
+      Made with <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/hugo-apero/" rel="dct:source">Hugo Apéro</a></span>.
+      <br />
+      
+Based on <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/formspree/blogophonic-hugo" rel="dct:source">Blogophonic</a></span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://formspree.io" property="cc:attributionName" rel="cc:attributionURL">Formspree</a>.
+    </p>
+    
+    <div class="site-social-links db dtc-l v-mid w-100 w-33-l tc pv2 pv0-l mv0">
+      <div class="social-icon-links" aria-hidden="true">
+  
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://github.com/deependrad/dblog" title="github" target="_blank" rel="me noopener">
+      <i class="fab fa-github fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://bsky.app/" title="bluesky" target="_blank" rel="me noopener">
+      <i class="fab fa-bluesky fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://twitter.com/dd_rookie" title="x-twitter" target="_blank" rel="me noopener">
+      <i class="fab fa-x-twitter fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://orcid.org/0000-0002-0347-7950" title="orcid" target="_blank" rel="me noopener">
+      <i class="ai ai-orcid fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="/blog/index.xml" title="rss" >
+      <i class="fas fa-rss fa-lg fa-fw"></i>
+    </a>
+  
+</div>
+
+    </div>
+    
+    <div class="site-links f6 db dtc-l v-mid w-100 w-67-l tc tr-l pv2 pv0-l mv0">
+      
+      <a class="dib pv1 ph2 link" href="/license/" title="License">License</a>
+      
+      <a class="dib pv1 ph2 link" href="/contact/" title="Contact form">Contact</a>
+      
+      <a class="dib pv1 ph2 link" href="/contributors/" title="Contributors">Contributors</a>
+      
+    </div>
+  </nav>
+  
+    <script>
+
+    var i, text, code, codes = document.getElementsByTagName('code');
+    for (let i = 0; i < codes.length;) {
+      code = codes[i];
+      if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+        text = code.textContent;
+        if (/^\$[^$]/.test(text) && /[^$]\$$/.test(text)) {
+          text = text.replace(/^\$/, '\\(').replace(/\$$/, '\\)');
+          code.textContent = text;
+        }
+        if (/^\\\((.|\s)+\\\)$/.test(text) ||
+            /^\\\[(.|\s)+\\\]$/.test(text) ||
+            /^\$(.|\s)+\$$/.test(text) ||
+            /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+          code.outerHTML = code.innerHTML;  
+          continue;
+        }
+      }
+      i++;
+    }
+</script>
+
+  
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+
+
+    
+  
+  
+</footer>
+
+      </div>
+    </body>
+</html>

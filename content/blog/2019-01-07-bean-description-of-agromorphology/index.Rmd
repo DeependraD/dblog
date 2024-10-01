@@ -1,0 +1,58 @@
+---
+title: 'Bean: Description of Agromorphology'
+author: Deependra Dhakal
+date: '2019-01-07'
+slug: bean-description-of-agromorphology
+categories:
+  - agriculture
+tags:
+  - agriculture
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(tidy = TRUE, cache = FALSE, echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.8, 
+                      message = FALSE, warning = FALSE, cache = TRUE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+```
+
+## Introduction
+
+Agromorphology constitutes what's observable and that which is economic. Because agriculture has important connection to economy, this connection is at best rung everywhere though what agriculture reveres and, and when talked modestly, relies on: Crops.
+
+Unsurprisingly, finer details that agriculture touches upon to make ends met (processes and resources involved along the Production-Consumption chain) are convoluted. We just cannot discourse enough. This post, however, tries to make a connection between the economy and botany, however through generalization and prioritization.
+
+Various parts of statements made here are open to discussion and revaluation because welfare state of people changes, across innumerable dimensions. A trait or feature valued today might not even matter in the next year. Nevertheless, there are some generally agreed upon features that make crops cultivable (or at the least prompts domestication). An important generalization is that humankind cannot survive without food to eat and that exceptionally large portion of this need is met by plants. So, what characteristics of a plant should fit in the armory for defense against hunger? It might be reasonable to just mention the consumable yield, but there's more to that. Neither plants are isolated beings nor they are random. Every food production system (alike a sytem for modern vehicle manufacture) has process underpinnings. Every environment is characterized by the processes that occur between its, essentially, interacting components. Evolutionary forces have acted through various degrees of pressure to yield shapes and forms that plants today pose, thus providing a sound basis for itemization and prioritization of the elements. All of these shall lend a sense of what traits are of importance.
+
+Citing an example of Bean crop, this post enlists and tries to exposit the economic relevance of some of its traits. Here, we try to objectively dwell on the observable traits of significance. This shall provide this article a dogmatic flavor in the sense that a lot of scientific assertions will cited, regarding several numerical approximation of traits (expressed in measured values) and their dichotomization. The latter shall be based on the comparative studies that have been conducted in several disciplines of Agriculture science.
+
+## Agromorphological descriptors of Bean
+
+(Excerpted from genesys-pgr database)
+
+```{r descriptors-bean}
+descriptors_bean <- read_csv(here::here("content", "blog", "data", "descriptors_bean.csv"), comment = "#")
+descriptors_bean %>%
+  knitr::kable(caption = "Descriptor traits of faba bean", format = "html") %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12) %>%
+  kableExtra::column_spec(2, bold = TRUE) %>% 
+  kableExtra::scroll_box(width = "100%", 
+                         box_css = "border: 2px solid #22d0dd; padding: 10px; ")
+```
+
+## Where to look for
+
+### [Crop Ontology Curation Tool](http://www.cropontology.org/ontology)
+
+About section of the website referred to in the title briefs on Crop Ontology Project. Interestingly, the project was the result of Generation Challenge Programme (GCP), the program which from the beginning underlined the importance of controlled vocabularies and ontologies for digital annotation of data. Ontological description enables logical definition of the relationship between terms which, inturn, is computationally structured. While it is being increasingly important that the definition of terms frequented in agriculture, especially plant breeding and germplasm be explicitly stated, several projects notably Integrated Breeding Platform are working on dynamically validating ontological terms so as to enable its refinement, to add standardized protocols for trait measurement and to conviniently map published experimental results to standardized ontological database.
+
+## References
+
+https://www.genesys-pgr.org/c/fababean
+
+https://www.genesys-pgr.org/c/fababean/descriptors

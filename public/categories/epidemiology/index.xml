@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Epidemiology on Rookie site</title>
+    <link>http://localhost:4321/categories/epidemiology/</link>
+    <description>Recent content in Epidemiology on Rookie site</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 07 Aug 2020 09:07:35 +0545</lastBuildDate>
+    <atom:link href="http://localhost:4321/categories/epidemiology/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Disease epidemiology: A simulation scenario of infectious viral disease (COVID-19)</title>
+      <link>http://localhost:4321/blog/disease-epidemiology-a-simulation-scenario-of-infectious-viral-disease-covid-19/</link>
+      <pubDate>Fri, 07 Aug 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/disease-epidemiology-a-simulation-scenario-of-infectious-viral-disease-covid-19/</guid>
+      <description>&lt;h2 id=&#34;sir-model-of-covid-19-epidemiology&#34;&gt;SIR model of COVID-19 epidemiology&#xA;  &lt;a href=&#34;#sir-model-of-covid-19-epidemiology&#34;&gt;&lt;svg class=&#34;anchor-symbol&#34; aria-hidden=&#34;true&#34; height=&#34;26&#34; width=&#34;26&#34; viewBox=&#34;0 0 22 22&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&#xA;      &lt;path d=&#34;M0 0h24v24H0z&#34; fill=&#34;currentColor&#34;&gt;&lt;/path&gt;&#xA;      &lt;path d=&#34;M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z&#34;&gt;&lt;/path&gt;&#xA;    &lt;/svg&gt;&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;## # A tibble: 5,555 × 6&#xD;&#xA;##    beta_id  time       S      I      R beta_value&#xD;&#xA;##    &amp;lt;chr&amp;gt;   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;  &amp;lt;dbl&amp;gt;  &amp;lt;dbl&amp;gt;      &amp;lt;dbl&amp;gt;&#xD;&#xA;##  1 1         0   0.7     0.02   0.01          3.2&#xD;&#xA;##  2 1         0.5 0.662   0.0541 0.0134        3.2&#xD;&#xA;##  3 1         1   0.575   0.133  0.0223        3.2&#xD;&#xA;##  4 1         1.5 0.420   0.268  0.0420        3.2&#xD;&#xA;##  5 1         2   0.242   0.411  0.0763        3.2&#xD;&#xA;##  6 1         2.5 0.117   0.491  0.122         3.2&#xD;&#xA;##  7 1         3   0.0521  0.506  0.172         3.2&#xD;&#xA;##  8 1         3.5 0.0235  0.484  0.222         3.2&#xD;&#xA;##  9 1         4   0.0111  0.450  0.269         3.2&#xD;&#xA;## 10 1         4.5 0.00559 0.413  0.312         3.2&#xD;&#xA;## # ℹ 5,545 more rows&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;img src=&#34;http://localhost:4321/blog/disease-epidemiology-a-simulation-scenario-of-infectious-viral-disease-covid-19/index_files/figure-html/covid-sir-graph-1.png&#34; width=&#34;576&#34; /&gt;</description>
+    </item>
+  </channel>
+</rss>

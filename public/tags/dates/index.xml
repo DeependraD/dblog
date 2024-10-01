@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dates on Rookie site</title>
+    <link>http://localhost:4321/tags/dates/</link>
+    <description>Recent content in Dates on Rookie site</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 04 Nov 2018 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:4321/tags/dates/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agriculture development chronology in Nepal</title>
+      <link>http://localhost:4321/blog/agriculture-development-chronology-in-nepal/</link>
+      <pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/agriculture-development-chronology-in-nepal/</guid>
+      <description>&lt;h2 id=&#34;toolbox-for-working-with-unicode-and-nepali-fonts&#34;&gt;Toolbox for working with Unicode and Nepali fonts&#xA;  &lt;a href=&#34;#toolbox-for-working-with-unicode-and-nepali-fonts&#34;&gt;&lt;svg class=&#34;anchor-symbol&#34; aria-hidden=&#34;true&#34; height=&#34;26&#34; width=&#34;26&#34; viewBox=&#34;0 0 22 22&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&#xA;      &lt;path d=&#34;M0 0h24v24H0z&#34; fill=&#34;currentColor&#34;&gt;&lt;/path&gt;&#xA;      &lt;path d=&#34;M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z&#34;&gt;&lt;/path&gt;&#xA;    &lt;/svg&gt;&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Here&amp;rsquo;s a collection of excellent python scripts to convert back and forth among unicode and preeti font. To convert unicode text to preeti font:&lt;/p&gt;&#xA;&lt;p&gt;&#xA;&lt;a href=&#34;https://github.com/globalpolicy/UnicodeToPreeti&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;https://github.com/globalpolicy/UnicodeToPreeti&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;To convert preeti font to unicode text:&lt;/p&gt;&#xA;&lt;p&gt;&#xA;&lt;a href=&#34;https://github.com/globalpolicy/PreetiToUnicode&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;https://github.com/globalpolicy/PreetiToUnicode&lt;/a&gt;&lt;/p&gt;&#xA;&lt;img src=&#34;http://localhost:4321/blog/agriculture-development-chronology-in-nepal/index_files/figure-html/development-chron-1.png&#34; width=&#34;960&#34; style=&#34;display: block; margin: auto;&#34; /&gt;</description>
+    </item>
+    <item>
+      <title>Expressing timestamp data in calendar</title>
+      <link>http://localhost:4321/blog/expressing-timestamp-data-in-calendar/</link>
+      <pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/expressing-timestamp-data-in-calendar/</guid>
+      <description>&lt;p&gt;Unlike composing a text memos and keeping tracks of those, calendar graphics is a highly effective visual aid to taking notes and summarizing them. Well, we all have used calendar, one way or the other, in our lifetimes.&lt;/p&gt;&#xA;&lt;p&gt;Calendar based graphics enables an accurate catch at the very first glance; For example, it is very easy relating one activity of a period to another when they are laid linearly with precise graduations. Calendar graphics does exactly that &amp;ndash; some features (usually tiles) provide graduation, representing fixed interval of time (e.g., a day). This when combined with text allows unlimited freedom to provide narration for specific intervals.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Memorize the date? Don&#39;t need to, use lubridate</title>
+      <link>http://localhost:4321/blog/memorize-the-date-don-t-need-to-use-lubridate/</link>
+      <pubDate>Wed, 17 Oct 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/memorize-the-date-don-t-need-to-use-lubridate/</guid>
+      <description>&lt;h1 id=&#34;my-sufferance&#34;&gt;My sufferance&#xA;  &lt;a href=&#34;#my-sufferance&#34;&gt;&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;Time and again, I&amp;rsquo;ve suffered due to my humanistic limitations of memorizing things promptly. I &lt;strong&gt;suck&lt;/strong&gt; at remembering stuffs, dates particularly. So, In this blog trip (Oh! this is a trip btw, because I don&amp;rsquo;t forsee myself surpassing my memory limitations any sooner than death), I will be stating if not rambing on some lifesaving tricks of picking up pieces of your faulty brain.&lt;/p&gt;&#xA;&#xA;&#xA;&#xA;&#xA;&lt;h1 id=&#34;the-balm&#34;&gt;The balm&#xA;  &lt;a href=&#34;#the-balm&#34;&gt;&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;I&amp;rsquo;m getting into the details of using base R&amp;rsquo;s &lt;code&gt;date()&lt;/code&gt; and date related functions. At this time, It&amp;rsquo;s might seem relevent to have some understanding of &amp;ldquo;POSIXlt&amp;rdquo; and &amp;ldquo;POSIXct&amp;rdquo; object classes. But most often these never interfere unless you have a good &amp;ndash; not expecting perfect &amp;ndash; conscience of how you recorded your dates and what you eventually intent to achieve from it. Anyway, for a quick reference, here I&amp;rsquo;ve quoted the R&amp;rsquo;s documentation on &lt;code&gt;?DateTimeClasses&lt;/code&gt;:&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

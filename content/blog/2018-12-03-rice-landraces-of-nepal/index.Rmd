@@ -1,0 +1,40 @@
+---
+title: 'Rice landraces of Nepal: A reflection of past'
+author: Deependra Dhakal
+date: '2018-12-03'
+slug: rice-landraces-of-nepal
+categories:
+  - agriculture
+tags:
+  - agriculture
+header:
+  caption: 'Anadi rice growing near its maturity; Source: Baluwaphanta, Kailali'
+  image: 'anadi_kailali.jpg'
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(cache = FALSE, echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.8, 
+                      message = FALSE, warning = FALSE, cache = TRUE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+```
+
+
+## Background
+
+This is really a brash article meant to convey exactly what title hints at. Much of the contents are translated/transliterated from "Rice Science and Technology in Nepal: A historical, socio-cultural and technical compendium", which was published in 2017. As of now, primary authors are left uncredited, but as entries become widely accepted, original writers and publishers will be duely recognized.
+
+The list of all rice landraces, disclosed and recognized so far, include those enlisted in the Table \@ref(tab:riceland).
+
+```{r riceland}
+rice_landraces <- read_csv(here::here("content", "blog", "data", "rice_cultivar_past_reflection.csv"), comment = "#")
+rice_landraces %>%
+  knitr::kable(caption = "Rice landraces of Nepal", format = "html") %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12) %>%
+  kableExtra::column_spec(2, bold = TRUE) %>% 
+  kableExtra::scroll_box(width = "120%", height = "800px", 
+                         box_css = "border: 2px solid #22d0dd; padding: 10px; ")
+```
+

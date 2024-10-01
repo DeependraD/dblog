@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Research-Review on Rookie site</title>
+    <link>http://localhost:4321/tags/research-review/</link>
+    <description>Recent content in Research-Review on Rookie site</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 17 Oct 2018 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:4321/tags/research-review/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Flowering phenology of Rice genotypes in irrigated tropical condition of Nepal</title>
+      <link>http://localhost:4321/blog/flowering-phenology-of-rice-genotypes/</link>
+      <pubDate>Wed, 17 Oct 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/flowering-phenology-of-rice-genotypes/</guid>
+      <description>&lt;p&gt;Dhangadhi of Kailali, Nepal remains relatively hotter during summer season with respect to average condition of terai agro-ecology. A regime of high day temperature with bright sunshine and cool night temperature along with plenty of seasonal rain during larger part of rice growing season favors good growth of rice crop in the region.&lt;/p&gt;&#xA;&lt;p&gt;Based on a range of cultivation sowings carried out in the summer/rainy season of 2018, flowering dates were recorded for each plot of varieties, and the duration since planting to flowering was determined. Here, flowering time is ascribed to the period when approximately 50% of the anthers in each plots could be promptly seen as extruding. I summarize the resulting days to flowering period in the bar chart shown in Figure &lt;a href=&#34;#fig:rice-dtf&#34;&gt;1&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Diallel cross: A case study of mating designs</title>
+      <link>http://localhost:4321/blog/diallel-cross-analysis/</link>
+      <pubDate>Sat, 15 Sep 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/diallel-cross-analysis/</guid>
+      <description>&lt;script src=&#34;http://localhost:4321/blog/diallel-cross-analysis/index_files/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;&#xD;&#xA;&lt;link href=&#34;http://localhost:4321/blog/diallel-cross-analysis/index_files/lightable/lightable.css&#34; rel=&#34;stylesheet&#34; /&gt;&#xD;&#xA;&lt;script src=&#34;http://localhost:4321/blog/diallel-cross-analysis/index_files/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;&#xD;&#xA;&lt;link href=&#34;http://localhost:4321/blog/diallel-cross-analysis/index_files/lightable/lightable.css&#34; rel=&#34;stylesheet&#34; /&gt;&#xD;&#xA;&lt;script src=&#34;http://localhost:4321/blog/diallel-cross-analysis/index_files/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;&#xD;&#xA;&lt;link href=&#34;http://localhost:4321/blog/diallel-cross-analysis/index_files/lightable/lightable.css&#34; rel=&#34;stylesheet&#34; /&gt;&#xD;&#xA;&lt;script src=&#34;http://localhost:4321/blog/diallel-cross-analysis/index_files/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;&#xD;&#xA;&lt;link href=&#34;http://localhost:4321/blog/diallel-cross-analysis/index_files/lightable/lightable.css&#34; rel=&#34;stylesheet&#34; /&gt;&#xD;&#xA;&lt;script src=&#34;http://localhost:4321/blog/diallel-cross-analysis/index_files/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;&#xD;&#xA;&lt;link href=&#34;http://localhost:4321/blog/diallel-cross-analysis/index_files/lightable/lightable.css&#34; rel=&#34;stylesheet&#34; /&gt;&#xD;&#xA;&lt;script src=&#34;http://localhost:4321/blog/diallel-cross-analysis/index_files/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;&#xD;&#xA;&lt;link href=&#34;http://localhost:4321/blog/diallel-cross-analysis/index_files/lightable/lightable.css&#34; rel=&#34;stylesheet&#34; /&gt;&#xD;&#xA;&#xA;&#xA;&#xA;&#xA;&lt;h1 id=&#34;mating-designs&#34;&gt;Mating designs&#xA;  &lt;a href=&#34;#mating-designs&#34;&gt;&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&#xA;&#xA;&#xA;&#xA;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&#xA;  &lt;a href=&#34;#introduction&#34;&gt;&lt;svg class=&#34;anchor-symbol&#34; aria-hidden=&#34;true&#34; height=&#34;26&#34; width=&#34;26&#34; viewBox=&#34;0 0 22 22&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&#xA;      &lt;path d=&#34;M0 0h24v24H0z&#34; fill=&#34;currentColor&#34;&gt;&lt;/path&gt;&#xA;      &lt;path d=&#34;M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z&#34;&gt;&lt;/path&gt;&#xA;    &lt;/svg&gt;&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Mating designs allow for partitioning of phenotypic effects – as due to genotype, environment or interacting effects among genes and alleles. Using one or more of these mating schemes, identification of heterotic groups, estimation of general and specific combining abilities and testing of environmental interactions could be done. Progenies resulting from a well designed mating are used for the dissection of trait genetics.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

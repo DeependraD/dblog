@@ -1,0 +1,209 @@
+---
+title: Design and analysis of spit plot experiments
+author: Deependra Dhakal
+date: '2018-11-27'
+slug: design-and-analysis-of-spit-plot-experiments
+categories:
+  - agriculture
+  - factor
+  - R
+  - Plant Breeding
+tags:
+  - agriculture
+  - R
+link-citations: yes
+math: yes
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(tidy = TRUE, cache = FALSE, echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.6, 
+                      message = FALSE, warning = FALSE, cache = TRUE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+library(tidyverse)
+library(gplots)
+library(agricolae)
+library(car)
+library(lattice)
+library(plantbreeding) # requires "reshape" as dependency
+require(agridat)
+require(desplot)
+# install.packages("multcompView")
+library(multcompView)
+set.seed(453)
+```
+
+
+## Split plot design
+
+## Design and fieldbook template
+
+In a field experiment to test for effects of fungicide on crop, treatment of fungicides may be distinguised into multiple factors -- based on chemical constituent, based on formulation, based on the mode of spray, etc. In a general case scenario where two former factors could be controlled, factor combinations may be organized in several different ways. When fully crossed implementation is not possible, split plot design comes to the rescue.
+
+It is fair to assume that fungicide constituent is relatively difficult to allocate in highly isolated patches, so we can allocate a larger plot parcel to this factor and allocate different levels of formulation to sub-plots.
+
+The design fieldbook seems somewhat similar to that shown in Table \@ref(tab:split-fieldbook).
+
+```{r split-design, include=FALSE}
+trt1 <- c("Carbendazim", "Mancozeb + Metalaxyl", "Fenamidone + Mancozeb", "Propiconazole", "Trichoderma", "Fenamidone")
+trt2 <- c("Control", "Seed Treatment", "Foliar Spray", "Seed + Foliar")
+splitplotr3t1t2 <- design.split(trt1, trt2, r = 3, serie = 2, seed = 234)
+split_field <- splitplotr3t1t2$book
+```
+
+```{r split-fieldbook}
+split_field <- cbind(split_field, mainplot = as.factor(c(rep(1:18, each = 4))))
+
+split_field %>%
+  head(n = 8) %>% 
+  knitr::kable(caption = "Split plot design with main and subplot factors in three replication blocks") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10, full_width = TRUE) %>% 
+  kableExtra::row_spec(0, bold = TRUE)
+
+```
+
+## Layout plan
+
+An example grid layout plan of the aboveshown design is shown below.
+
+```{r split-layout, warning = FALSE}
+desplot(form = trt1 ~ mainplot*splots|block, 
+        out1 = trt1 , out2 = trt2, data = split_field, 
+        text = trt2, cex = 0.8, 
+        out1.gpar=list(col = "black", lwd = 3), 
+        out2.gpar=list(col = "darkblue", lwd = 1, lty = 1), 
+        main = "Field Plot Layout in Split Plot Design")
+```
+
+## Analyis of split plot design
+
+Let us take a grain yield dataset. The dataset contains 48 observations. Below, (in Table \@ref(tab:split-grain-yield)) data head have been shown after import, type-conversion and factor recoding.
+
+```{r split-grain-yield}
+grain_yld <- read_csv(here::here("content", "blog", "data", "grain_yield_split_plot.csv"))
+grain_yld <- grain_yld %>% 
+  mutate_at(c("rep", "density", "nitrogen"), as.factor) %>% 
+  mutate(density = factor(density, levels = c("1", "2", "3", "4"), 
+                          labels = c("low", "medium_low", "medium_high", "high")))
+
+grain_yld %>%
+  head(n = 8) %>% 
+  knitr::kable(caption = "Split plot design with main and subplot factors in three replication blocks") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10, full_width = TRUE) %>% 
+  kableExtra::row_spec(0, bold = TRUE)
+```
+
+
+## Calculating variance, and setting hypothesis: A case involving single factor
+
+In the most primitive scenario, manual calculation of variance components could just as easily be done. However, as the number of treatment factors rise, so does the complexity of computation.  Manual calculation of sum of squares and the test statistic could be done as shown below. This, however, only remains valid as long as no grouping factors besides `nitrogen` are present, thus making it a classical scenario of single factor variance partitioning.
+
+```{r split-manual-calc, echo=TRUE}
+mu <- mean(grain_yld$yield) # whole sample mean
+ssto <- sum((grain_yld$yield-mu)^2) # total sum of squares
+mu.i <- tapply(grain_yld$yield, grain_yld$nitrogen, mean) # nitrogen(factor) means 
+sstr <- sum(table(grain_yld$nitrogen)*(mu.i-mu)^2) # nitrogen(factor) sum of squares
+sse <- ssto-sstr # error sum of squares
+fstat <- (sstr/3)/(sse/45) # F-statistic
+```
+
+Source | Sums of Squares | Degrees of Freedom | Mean Square | F-Stat | p-value
+------ | --------------- | ------------------ | ----------- | ------ | -------
+Treatment | `r sstr` | 3 | `r sstr/3` | `r fstat` | `r pf(fstat,3,45,lower=FALSE)`
+Error | `r sse` | 45 | `r sse/45` |  |
+
+$$
+\begin{align*}
+   H_0 & : \mu_1 = \mu_2 = \mu_3   
+   \\
+   H_A & : \mbox{At least one pair of means not equal}
+\end{align*}
+$$
+
+Before proceeding for an inference, It is worthwhile to be acquainted with what the distribution looks like.
+
+```{r split-grain-hist}
+ggplot(grain_yld) + 
+  geom_histogram(mapping = aes(yield), stat = "bin",
+  position = "stack", binwidth = NULL, bins = 25, na.rm = FALSE,
+  show.legend = NA, inherit.aes = TRUE) +
+  theme_bw()
+```
+
+
+Getting back to our specific split-plot design case, we develop model and generate the ANOVA table (Table \@ref(tab:split-model1)). A split plot design is modeled with main plot factor nested within replication and a sub plot factor nested within main plot factor. This essentially partitions the main effects of replication and the main plot factor.
+
+```{r split-model1}
+split_mod1 <- lm(yield ~ rep/density + density/nitrogen, data = grain_yld)
+anova(split_mod1) %>% 
+  knitr::kable(caption = "Model assumption 1: ANOVA of split plot design with main and subplot factors in three replication blocks") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10, full_width = TRUE) %>% 
+  kableExtra::row_spec(0, bold = TRUE)
+```
+
+Alternatively, following model specification could be made by regarding response (yield) as a product of main plot effect and sub plot effect, wherein main plot is nested inside replication (block) (ANOVA shown in Table \@ref(tab:split-model2)).
+
+```{r split-model2}
+split_mod2 <- lm(yield ~ density * nitrogen + rep/density, data = grain_yld)
+anova(split_mod2) %>% 
+  knitr::kable(caption = "Model assumption 2: ANOVA of split plot design with main and subplot factors in three replication blocks") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10, full_width = TRUE) %>% 
+  kableExtra::row_spec(0, bold = TRUE)
+```
+
+It should be the right time, now, to use plotting libraries and generate some beautiful graphs.
+
+```{r split-visualization}
+with(grain_yld, xyplot(yield ~ nitrogen | density))
+with(grain_yld, xyplot(yield ~ nitrogen | density, 
+                       groups = rep, aspect = "xy", 
+                       type = "o", 
+                       main = "Effect of Nitrogen levels on yield broken down by crop density"))
+```
+
+Best to take a look at some diagnostic plots now, just to make sure model assumptions and validity are not being flouted.
+
+```{r split-diagnostic-plotting, fig.height=8, fig.width=8}
+par(mfrow = c(3, 2))
+plot(split_mod1, 1)
+plot(split_mod1, 2)
+plot(split_mod1, 3)
+plot(split_mod1, 4)
+plot(split_mod1, 5)
+```
+
+Box-Cox plots helps determine whether or not a transformation is required. To recapitulate the importance of Box-Cox plot, below is an statement quoted from http://www.itl.nist.gov/div898/handbook/eda/section3/eda336.htm, which goes:
+
+> The Box-Cox normality plot shows that the maximum value of the correlation coefficient exists at λ = (x-axis value | maximum y-axis height). The histogram of the data after applying the Box-Cox transformation(were it not indicative of normal) with λ = (x-axis value | maximum y-axis height) shows a data set for which the normality assumption is reasonable. This can be verified with a normal probability plot of the transformed data.
+
+```{r transformation-diagnosis}
+boxCox(split_mod1)
+```
+
+Mean separation should proceed as follows.
+
+```{r mean-separation-n}
+dunc_mean <- duncan.test(y = split_mod1, trt = "nitrogen", alpha = 0.05, 
+                      main = "Duncan multiple comparison among levels of nitrogen", 
+                      console = TRUE)
+```
+
+Visualize the means resulting from Duncan's test.
+
+```{r split-mean-visualization}
+se.i <- qt(1 - 0.05/2, 24) * dunc_mean$means[, 2]
+bp <- barplot(dunc_mean$means$yield, 
+              names.arg = c("low", "medium_low", "medium_high", "high"), 
+              main = "Yield means at different Nitrogen levels", 
+              xlab = "Nitrogen levels", ylab = "Yield", 
+              plot.ci = TRUE, 
+              ci.l = mu.i - se.i,
+              ci.u = mu.i + se.i)
+
+# Group them together
+text(bp, 0, dunc_mean$groups[, 2], cex = 1, pos = 3, add = TRUE)
+```

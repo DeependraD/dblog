@@ -1,0 +1,148 @@
+---
+title: "Varietal database of lentil in Nepal"
+author: "Deependra Dhakal"
+date: '2018-10-26'
+header:
+  caption: 'Lentil seed production plot; Source: Image collection of Unique Seed Company, Dhangadhi, Nepal'
+  image: 'Lentil_seed_plot_USC.jpg'
+tags:
+  - agriculture
+categories:
+  - agriculture
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(tidy = TRUE, cache = TRUE, 
+                      echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, 
+                      fig.show = "hold", fig.align = "center", fig.width = 8,
+                      fig.asp = 0.8, message = FALSE, warning = FALSE)
+options(knitr.kable.NA = "", digits = 3)
+```
+
+This one is my effort to compose an updated database on the current situation of lentil germplasm in Nepal. I've managed to list out the varieties that have been made available so far (either through release or registration process). Although, a lot of other popular genotypes are trending in cultivation as of now. I consider NARC's varietal catalogs to be the most authentic, so have borrowed most of the information from these published documents.
+
+Several inconsistencies exists even among higly praised documents, mainly for the attributes that are most affected by environmental variation; these include, but not limited to, yield, days to flowering and days to maturity traits. Besides that, publishers should also have assisted the records with the mention of cropping system in which the varieties were raised. It's implication cannot be underemphasized, and real case scenario could justify that. For example, a crop certainly yields much in a sole cropped situation in contrast to when it is grown as mixed crop. A reasonable comparison between these two systems of cultivation cannot be made precisely. So, it's best to leave with an explaination about how crops were grown in these types of situation.  Wherever possible these values should be further contextualized (for example by, noting the actual location it were grown in, the season it was sown, etc.). 
+
+As for this post, the database will to be updated as the information comes along to reflect the latest details. Following is a list of released and registered varieties of lentil:
+
+```{r varieties-list}
+lentil_vars <- read_csv("https://raw.githubusercontent.com/DeependraD/publicdata/master/crop_varieties/lentil_varieties.csv")
+
+lentil_vars %>%
+  knitr::kable(caption = "Released and registered varieties of lentil in Nepal", format = "html") %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12) %>%
+  kableExtra::column_spec(1, bold = TRUE) %>% 
+  kableExtra::scroll_box(width = "800px", height = "100%", 
+                         box_css = "border: 2px solid #22d0dd; padding: 10px; ")
+```
+
+It it very unfortunate that we have very contrasting information published (without explaination) in different versions of national databases. For instance, in Table \@ref(tab:varieties-list), `Production1 (ton_per_ha)` column was borrowed from "Krishi Diary, 2075" and the other column for the same yield trait (`Production2 (ton_per_ha)`) from elsewhere. I defer the exact reference and citation for a later date.
+
+As to the status of cultivation of lentil, recent data shows that there is, in overall, a rising trend of lentil cultivation in Nepal, albeit the progress has slowed down in recent years. Below, I summarize the historical trend reported since 1961 A.D. of cultivated area, production and productivity.
+
+```{r data-import-and-library}
+require(ggpmisc)
+my.formula <- y ~ x
+
+lentil_faostat <- read_csv(here::here("content", "blog", "data", "FAOSTAT_lentil_nepal_production_area_yield_10-26-2018.csv"))
+lentil_faostat <- lentil_faostat %>% 
+  select(Element, Crop = Item, Year, Unit, Value) %>% 
+  mutate(Year = as.factor(Year))
+```
+
+
+```{r area-trend, fig.align='center', fig.asp=0.5, fig.cap="Historical trend in cultivated area of Lentil"}
+
+# historical area trend
+lentil_faostat_area <- lentil_faostat %>% 
+  select(-Crop) %>% 
+  spread(key = Element, value = Value) %>% 
+  filter(!is.na(`Area harvested`)) %>% 
+  select(-Production, -Yield)
+
+lentil_faostat_area_vis <- lentil_faostat_area %>% 
+  ggplot() +
+  geom_col(aes(Year, `Area harvested`), show.legend = TRUE, inherit.aes = TRUE) +
+  geom_smooth(aes(x = as.numeric(Year), y = `Area harvested`), 
+              method = "lm", se = FALSE, formula = my.formula) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 12), labels = scales::comma_format()) +
+  stat_poly_eq(aes(x = as.numeric(Year), y = `Area harvested`, 
+                   label = paste(..eq.label.., ..rr.label.., 
+                                 sep = "~~~")), parse = TRUE, 
+               formula = my.formula, 
+               label.x.npc = "left", label.y.npc = "top", inherit.aes = TRUE) +
+  labs(title = paste("Yearwise (AD)", "area harvested", sep = " "), 
+       x = 'Year', y = 'Area harvested (ha)') + 
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 65, vjust = 0.2))
+
+lentil_faostat_area_vis
+# ggsave("historical_lentil_area_nepal.png", lentil_faostat_area_vis, 
+#        width = 8, units = "in", dpi = 150)
+```
+
+
+```{r production-trend, fig.align='center', fig.asp=0.5, fig.cap="Historical trend in production of Lentil"}
+# historical production trend
+lentil_faostat_production <- lentil_faostat %>% 
+  select(-Crop) %>% 
+  spread(key = Element, value = Value) %>% 
+  filter(!is.na(`Production`)) %>% 
+  select(-`Area harvested`, -Yield)
+
+lentil_faostat_production_vis <- lentil_faostat_production %>% 
+  ggplot() +
+  geom_col(aes(Year, `Production`), show.legend = TRUE, inherit.aes = TRUE) +
+  geom_smooth(aes(x = as.numeric(Year), y = `Production`), 
+              method = "lm", se = FALSE, formula = my.formula) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 12), labels = scales::comma_format()) +
+  stat_poly_eq(aes(x = as.numeric(Year), y = `Production`, 
+                   label = paste(..eq.label.., ..rr.label.., 
+                                 sep = "~~~")), parse = TRUE, 
+               formula = my.formula, 
+               label.x.npc = "left", label.y.npc = "top", inherit.aes = TRUE) +
+  labs(title = paste("Yearwise (AD)", "production", sep = " "), 
+       x = 'Year', y = 'Production (tons)') + 
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 65, vjust = 0.2))
+
+lentil_faostat_production_vis
+# ggsave("historical_lentil_production_nepal.png", lentil_faostat_production_vis, 
+#        width = 8, units = "in", dpi = 150)
+```
+
+
+```{r productivity-trend, fig.align='center', fig.asp=0.5, fig.cap="Historical trend in productivity of Lentil"}
+# historical yield trend
+lentil_faostat_yield <- lentil_faostat %>% 
+  select(-Crop) %>% 
+  spread(key = Element, value = Value) %>% 
+  filter(!is.na(`Yield`)) %>% 
+  select(-`Area harvested`, -Production) %>% 
+  mutate(Yield = Yield/10)
+
+lentil_faostat_yield_vis <- lentil_faostat_yield %>% 
+  ggplot() +
+  geom_col(aes(Year, `Yield`), show.legend = TRUE, inherit.aes = TRUE) +
+  geom_smooth(aes(x = as.numeric(Year), y = `Yield`), 
+              method = "lm", se = FALSE, formula = my.formula) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 12), labels = scales::comma_format()) +
+  stat_poly_eq(aes(x = as.numeric(Year), y = `Yield`, 
+                   label = paste(..eq.label.., ..rr.label.., 
+                                 sep = "~~~")), parse = TRUE, 
+               formula = my.formula, 
+               label.x.npc = "left", label.y.npc = "top", inherit.aes = TRUE) +
+  labs(title = paste("Yearwise (AD)", "yield", sep = " "), 
+       x = 'Year', y = 'Yield (kg)') + 
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 65, vjust = 0.2))
+
+lentil_faostat_yield_vis
+# ggsave("historical_lentil_yield_nepal.png", lentil_faostat_yield_vis, 
+#        width = 8, units = "in", dpi = 150)
+```
+
+**\*Note**: The database referred to in summarizing above figures.

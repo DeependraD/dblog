@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Academia and blogseries on Rookie site</title>
+    <link>http://localhost:4321/academia/</link>
+    <description>Recent content in Academia and blogseries on Rookie site</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 01 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:4321/academia/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Prework</title>
+      <link>http://localhost:4321/academia/prework/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/academia/prework/</guid>
+      <description>&lt;p&gt;Welcome to the &#xA;&lt;a href=&#34;http://localhost:4321/&#34;&gt;Introducing Yourself Online&lt;/a&gt; workshop! We look forward to meeting you. Before attending the workshop, please complete the following prework.&lt;/p&gt;&#xA;&#xA;&#xA;&#xA;&#xA;&lt;h2 id=&#34;set-up-rstudio-cloud&#34;&gt;Set up RStudio Cloud&#xA;  &lt;a href=&#34;#set-up-rstudio-cloud&#34;&gt;&lt;svg class=&#34;anchor-symbol&#34; aria-hidden=&#34;true&#34; height=&#34;26&#34; width=&#34;26&#34; viewBox=&#34;0 0 22 22&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&#xA;      &lt;path d=&#34;M0 0h24v24H0z&#34; fill=&#34;currentColor&#34;&gt;&lt;/path&gt;&#xA;      &lt;path d=&#34;M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z&#34;&gt;&lt;/path&gt;&#xA;    &lt;/svg&gt;&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Sign up for a free RStudio Cloud account at &#xA;&lt;a href=&#34;https://rstudio.cloud/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;https://rstudio.cloud/&lt;/a&gt; before the workshop. I recommend logging in with an existing Google or GitHub account, if you have one (rather than creating a new account with another password you have to remember). I want you to be able to work from your own laptop in this workshop, but Cloud is an important back-up plan should you run into troubles.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Introductory agricultural economics and extension</title>
+      <link>http://localhost:4321/academia/agricultural-economics/</link>
+      <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/academia/agricultural-economics/</guid>
+      <description>&lt;p&gt;Here are the links to lecture notes that I prepared for tutoring preparation classes of Agricultural Economics. Download by clicking on the links below:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;a href=&#34;https://speakerd.s3.amazonaws.com/presentations/463cc916e2534d759f4f8e2280af7e1a/Economics_Introduction.pdf&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Introduction to agricultural economics, demand and supply, market competition and price&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;a href=&#34;https://speakerd.s3.amazonaws.com/presentations/f6d5d3a96ad74175829f854cda57419e/Introduction_to_agribusiness.pdf&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Agribusiness: Introduction, scope and importance&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;a href=&#34;https://speakerd.s3.amazonaws.com/presentations/615a8df073974c029d673c04fe3382f7/PMAMP.pdf&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Prime minister agriculture modernization project&lt;/a&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;a href=&#34;https://speakerd.s3.amazonaws.com/presentations/60cc557e0453458ba52b603076f774a5/PMAMP_zones_superzones.pdf&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;PMAMP program profile as of 2075-76&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;a href=&#34;https://speakerd.s3.amazonaws.com/presentations/370d94978f8f4047bb5dbdb091467a7a/Poverty_and_food_security.pdf&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Poverty and food security&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;a href=&#34;https://speakerd.s3.amazonaws.com/presentations/1fc2ae0b64be4a4d81a1732151e4631c/Primary_and_Secondary_Data.pdf&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Primary and secondary data&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;a href=&#34;https://speakerd.s3.amazonaws.com/presentations/eb41c913888a4449a7014f203e2c6f5f/OVOP_and_ODOP.pdf&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;OVOP and ODOP program&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;a href=&#34;https://speakerd.s3.amazonaws.com/presentations/c4683275047b4641846b3e23da9d515b/Cooperatives_and_its_status_in_Nepal.pdf&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Cooperatives and status in Nepal&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;a href=&#34;https://speakerd.s3.amazonaws.com/presentations/333b8519eb6e4a109c1c89a7ccab2d0b/Crop_cutting_and_its_Importance.pdf&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Crop cutting&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ol&gt;</description>
+    </item>
+  </channel>
+</rss>

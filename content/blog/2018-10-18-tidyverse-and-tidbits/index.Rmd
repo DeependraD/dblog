@@ -1,0 +1,500 @@
+---
+title: Tidyverse and tidbits
+author: Deependra Dhakal
+date: '2018-10-18'
+slug: tidyverse-and-tidbits
+categories:
+  - R
+  - tidyverse
+tags:
+  - R
+  - tidyverse
+output:
+  blogdown::html_page:
+    toc: true  
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("rlang")
+library("tidyverse")
+library(gapminder)
+library(gridExtra)
+```
+
+# Ideas surrounding tidy evaluation
+
+1. R code is a tree
+
+    Every expression in R can be broken down to a form represented by a tree. For instance, on top of the tree there is "a function call" followed by it's branches: first child = function name itself, other children = function arguments. Complex calls have multiple levels of branching.
+
+2. The code tree could be captured by quoting
+
+    expr() quotes **your**(function developer) expression
+    
+    f1 <- function(z) expr(z)
+    
+    f1(a + b)
+    
+    enexpr() quotes **user's** expression
+    
+    f2 <- function(z) enexpr(z)
+    
+    f2(x + y)
+
+3. Quoting and unquoting of expression enables building up of complex code trees
+    
+    Unquoting is achieved by bang bang operator (!!)
+
+For example, let's create a function that makes scatter plot when fed a dataframe, x-variable and y-variable:
+    
+```{r scatter-maker}
+scatter_maker <- function(df, xvar, yvar) {
+  xvar <- enexpr(xvar)
+  yvar <- enexpr(yvar)
+  
+  ggplot(df, aes(!!xvar, !!yvar)) +
+    geom_point()
+}
+```
+
+The function is executed in the demo below:
+
+```{r scatter-demo, fig.cap="Scatterplot of displacement versus miles per gallon of mtcars dataset"}
+scatter_maker(mtcars, disp, mpg) + 
+  theme_bw()
+```
+
+4. Quosures capture both expression and environment
+
+# quote() and eval()
+
+1. Quoting an expression is a bit like quoting a string
+
+```{r quote-example}
+hm_quoted <- quote(height / mass)
+hm_quoted
+```
+
+2. But it's R code that can be evaluated and with a data mask it works!
+
+```{r quote-evaluation}
+# eval(hm_quoted) # doesn't work because lacks data mask
+head(eval(hm_quoted, starwars)) # works
+```
+
+# Why quote at-all
+
+1. Data masking
+2. Allows you to refer to data objects directly
+
+```{r quoting-benefits}
+# because transmute() is a quoting function,
+transmute(starwars, height / mass)
+
+# # unlike below where data objects could not be directly refered to
+# height / mass
+# starwars$height / starwars$mass
+```
+
+# Resolved messy data with tidy evaluation
+
+A messy dataset exists despite all the sufferings. No wonder, it is resolvable, though. 
+
+The identification is done through keywords like "gen1", "gen2", ... The rowtype and the height columns occur in precedence to the identifier key. Our function will break apart the respective entries of rowtype and height into separate columns.
+
+```{r messy-dat}
+dat <- tibble(mess = c("row:Three-row", "ht:Short height", "gen1", 
+                       "row:Two-row", "ht:Tall height", "gen2",
+                       "row:Three-row", "ht:Short height", "gen4",
+                       "ht:Tall height", "row:Three-row", "gen3",  
+                       "row:Three-row"))
+
+dat
+```
+
+Let's define new verb `untangle2()`.
+
+```{r untangler}
+untangle2 <- function(df, regex, orig, new) {
+  orig <- enexpr(orig)
+  new <- sym(quo_name(enexpr(new)))
+  # orig <- enquo(orig) # this too works!
+  # new <- sym(quo_name(enquo(new))) # this too works!
+  
+  df %>% 
+    mutate(
+      !!new := if_else(grepl(regex, !! orig), !! orig, NA_character_)
+    ) %>% 
+    fill(!! new) %>% 
+    filter(! grepl(regex, !! orig))
+}
+
+dat %>% 
+  untangle2("^row", mess, rowtype) %>% 
+  untangle2("^ht", mess, height)
+```
+
+
+# List behavior
+
+When supplied a list to a dataframe as argument, list elements will be attempted to be supplied as individual column vectors. As long as the length of list element is same as the number of rows in dataframe, columns will be appended without an error.
+
+However, if the complete list object is to be added in as a column vector, it's identity needs to be preserved. Function `I()` preserves the identity by wrapping the object around "AsIs" class. For example, let's create a dataframe with a list object containing it's elements.
+
+```{r list-equal-length}
+# all list elements of equal length as `nrow`.
+df1 <- data.frame(x = 1:3, y = list(3:5, 4:6, 5:7))
+df
+
+# this results in error due to an attempt to bind list elements of unequal length as columns
+# df <- data.frame(x = 1:3, y = list(3:9, 1:3, 1:3))
+```
+
+When dealing with unequal length lists, try wrapping the list around in `I()` function, as shown below.
+
+```{r list-unequal-length}
+df <- data.frame(x = 1:3, y = I(list(3:9, 1:3, 1:3)))
+df
+
+# Distinction can be made based on the classes
+purrr::compose(class)(list(3:9, 1:3, 1:3))
+purrr::compose(class, I)(list(3:9, 1:3, 1:3)) # compose applies multiple functions right to left
+```
+
+
+# Using pmap to perform list operations inside a dataframe
+
+```{r list-col-df-purrr}
+params <- expand.grid(param_a = c(2, 4, 6), 
+                      param_b = c(3, 6, 9), 
+                      param_c = c(50, 100), 
+                      param_d = c(1, 0))
+
+params %>%
+  knitr::kable(caption = "Fictious data set to be used as template", 
+               format = "html") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10)
+
+# using map function to obtain a list
+df.preprocessed <- as_tibble(params) %>% 
+  mutate(test_var = purrr::map(param_a, function(x){rep(5, x)}))
+
+# using pmap for more flexible operation and unnesting to get expanded list
+df.preprocessed1 <- dplyr::as_tibble(params) %>%
+  mutate(test_var = purrr::pmap(., 
+                                function(param_a, param_b, ...){
+                                  rep(5, param_a) * param_b
+                                })) %>% 
+  tidyr::unnest()
+
+# rowwise operation will also enable the same
+my_fun <- function(param_a, param_b){
+  rep(5, param_a) * param_b
+}
+
+dplyr::as.tbl(params) %>%
+  rowwise() %>% 
+  dplyr::mutate(test_var = list(my_fun(param_a, param_b))) %>% 
+  tidyr::unnest()
+
+# of all pmap solution could be the most flexible option
+dplyr::as_tibble(params) %>%
+  dplyr::mutate(test_var = purrr::pmap(list(x = param_a
+                                            ,y = param_b
+                                            ,z = param_c
+                                            ,u = param_d),
+                                       ~ rep(5,..1)*..2)
+  )
+```
+
+
+# Apply a function to certain columns only, by rows
+
+```{r function-by-row}
+mtcars %>% 
+  select(am, gear, carb) %>% 
+  purrrlyr::by_row(sum, .collate = "cols", .to = "sum_am_gear_carb")
+```
+
+# Do any arbitrary operation
+
+```{r do-operation-on-groups}
+mtcars %>% 
+  group_by(cyl) %>% 
+  dplyr::do(broom::tidy(lm(mpg ~ drat + wt, data = .)))
+```
+
+The do call is combined with group_by to get any summary of current dataframe
+
+```{r do-operation-on-groups2}
+iris %>%
+  group_by(Species) %>%
+  do({
+    mod <- lm(Sepal.Length ~ Sepal.Width, data = .)
+    pred <- predict(mod, newdata = .["Sepal.Width"])
+    data.frame(., pred)
+  })
+
+# # same thing could be done through explicit function call with do
+# iris %>%
+#   group_by(Species) %>%
+#   do((function(df) {
+#     mod <- lm(Sepal.Length ~ Sepal.Width, data = df)
+#     pred <- predict(mod,newdata = df["Sepal.Width"])
+#     data.frame(df,pred)
+#   })(.))
+
+```
+
+
+# Using dplyr functions inside your own functions
+
+Create column selection/extraction function, for example.
+
+```{r extending-dplyr-verbs}
+extract_vars <- function(data, some_string){
+  data %>% 
+    select(contains({{ some_string }})) -> data
+  
+  return(data)
+}
+
+extract_vars(mtcars, "drat")
+```
+
+
+# Effiecient ways to operate on list
+
+```{r demo-list1}
+x <- list(
+  list(name = "sue", number = 1, veg = c("onion", "carrot")),
+  list(name = "doug", number = 2, veg = c("potato", "beet"))
+)
+```
+
+Base `rbind()` returns a matrix of lists. However, a complete list object `x` is packed in a single row, with two list columns for each next level list.
+
+```{r base-rbind}
+rbind(x)
+```
+
+# Binds each element as row but third element is list
+
+Throwing a `do.call()` call leads to desired results.
+
+```{r do-calls-on-list}
+do.call(rbind, x)
+do.call(rbind, x) %>% class()
+```
+
+
+# Produces rowbinding for dataframe but doesn't work with list elements
+
+```{r dfr-limitation}
+map_dfr(x, ~ .x[c("name", "number")])
+```
+
+# Tibble and map data to list column in isolation
+
+```{r tibble-specification}
+tibble(
+  name = map_chr(x, "name"), 
+  number = map_dbl(x, "number"), 
+  veg = map(x, "veg")
+)
+```
+
+
+# Modeling, exploration, summary extraction and visualization examples using dplyr verbs.
+
+```{r modeling-and-visualization}
+gap <- gapminder %>%
+  filter(continent == "Asia") %>%
+  mutate(yr1952 = year - 1952)
+
+ggplot(gap, aes(x = lifeExp, y = country)) +
+  geom_point()
+
+gap <- gap %>%
+  mutate(country = fct_reorder2(country, .x = year, .y = lifeExp))
+
+ggplot(gap, aes(x = lifeExp, y = country)) +
+  geom_point()
+
+gap_nested <- gap %>%
+  group_by(country) %>%
+  nest()
+
+gap_nested$data[[3]]
+
+gap_fitted <- gap_nested %>%
+  mutate(fit = map(data, ~ lm(lifeExp ~ yr1952, data = .x)))
+gap_fitted
+
+gap_fitted <- gap_fitted %>%
+  mutate(
+    intercept = map_dbl(fit, ~ coef(.x)[["(Intercept)"]]),
+    slope = map_dbl(fit, ~ coef(.x)[["yr1952"]]),
+    r_squared = map_dbl(fit, ~ summary(.x)[["r.squared"]])
+  )
+
+gap_fitted %>% 
+  top_n(n = 5, wt = r_squared) # whoa! Nepal is 4th
+
+ggplot(gap_fitted, aes(x = intercept, y = country)) +
+  geom_point()
+
+ggplot(gap_fitted, aes(x = slope, y = country)) +
+  geom_point()
+
+```
+
+To get summary statistics implementing certain custom functions on list items. The case example below shows application of some high level functions available in tidyverse.
+
+```{r modeling-and-summary-extraction}
+set.seed(1)
+
+# construct a dataframe
+d <- tibble(n = c(5, 1, 3))
+e <- d %>% group_by(n) %>% 
+  do(tibble(y = rnorm(.$n), dat = list(data.frame(a = 1)))) 
+
+# this method is tranmutating type (drops original)
+e %>% rowwise() %>% do(tibble(sum = .$y + .$n))
+
+# this only adds the mutated summary (keeps original)
+mutate(e, sum = purrr::map2_dbl(y, n, `+`))
+
+# # .f should be able to work with a list or a data frame. As it
+# happens, sum() handles data frame so the following works:
+mtcars %>% purrrlyr::by_row(sum)
+
+# # Other functions such as mean() may need to be adjusted with one
+# # of the lift_xy() helpers:
+mtcars %>% purrrlyr::by_row(purrr::lift_vl(mean))
+
+# To run a function with invoke_rows(), make sure it is variadic (that
+# it accepts dots) or that .f's signature is compatible with the
+# column names
+mtcars %>% purrrlyr::invoke_rows(.f = sum)
+mtcars %>% purrrlyr::invoke_rows(.f = purrr::lift_vd(mean))
+
+# # invoke_rows() with cols collation is equivalent to plyr::mdply()
+p <- expand.grid(mean = 1:5, sd = seq(0, 1, length = 10))
+p %>% purrrlyr::invoke_rows(.f = rnorm, n = 5, .collate = "cols")
+
+# p %>% plyr::mdply(rnorm, n = 5) %>% dplyr::tbl_df()
+
+# # To integrate the result as part of the data frame, use rows or
+# # cols collation:
+mtcars[1:2] %>% purrrlyr::by_row(function(x) 1:5)
+mtcars[1:2] %>% purrrlyr::by_row(function(x) 1:5, .collate = "rows")
+mtcars[1:2] %>% purrrlyr::by_row(function(x) 1:5, .collate = "cols")
+
+# # getting custom summary functions with purrr and dplyr verbs
+mtcars %>% 
+  group_by(cyl) %>% 
+  tidyr::nest() %>% 
+  mutate(model = purrr::map(data, ~lm(qsec ~ hp, .)),
+         coef  = purrr::map_dbl(model, ~coef(.)[2])) %>% 
+  tidyr::unnest(data)
+
+# # run a regression after group_by operation
+# # and save results to dataframe
+group_by(mtcars, gear) %>% do(res = residuals(lm(mpg~carb, .)))
+
+# # yet better way to capture the results -- residuals.
+# # then it can be combined with original data. 
+mtcars %>%
+  group_by(cyl) %>%
+  do(model = lm(mpg ~ wt, data=.)) %>%
+  do((function(reg_mod) {
+    data.frame(reg_res = residuals(reg_mod$model))
+  })(.))
+
+# # Custom data modeling
+# # using dplyr do() calls
+fertility <- read_csv(here::here("content", "blog", "data", "fertility.csv"))
+
+# # binding predictions to original dataframe
+fertility %>%
+  group_by(Year) %>%
+  do(data.frame(.,pred = predict(mgcv::gam(fertility ~ s(AGE), data=.))))
+
+# # same but different approach
+do.call(rbind,
+        lapply(split(fertility, fertility$Year), function(df) {
+          df$pred <- predict(mgcv::gam(fertility ~ s(AGE), data=df))
+          df
+        }))
+
+# # same using data.table library
+fertility %>%
+  data.table::data.table() %>%
+  group_by(Year) %>%
+  mutate(pred = predict(mgcv::gam(fertility ~ s(AGE))))
+
+# # this fails at last line
+# fertility %>%
+#   group_by(Year) %>%
+#   dplyr::do(model = mgcv::gam(fertility ~ s(AGE), data = .)) %>%
+#   left_join(fertility, .) %>%
+#   mutate(smoothed = predict(model, newdata = AGE))
+
+# # multiple model fitting and parameter extraction
+fitmodel <- function(d) lm(mpg ~ disp, data = mtcars)
+by_cyl <- mtcars %>% 
+  group_by(cyl) %>% 
+  tidyr::nest() %>%
+  mutate(mod = purrr::map(data, fitmodel), 
+         pars = purrr::map(mod, broom::tidy), 
+         pred = purrr::map(mod, broom::augment))
+
+pars <- by_cyl %>% tidyr::unnest(pars)
+pars
+prediction <- by_cyl %>% tidyr::unnest(pred)
+prediction
+```
+
+# Workarounds on unequal length lists
+
+```{r dealing-unequal-length}
+hareramshyam <- list(harry = c(1, 2, 3, 4, 5), ram = c(2, 3, 4, 6, 8), shyam = c(3, 4, 5, 3, 2, 4, 5, 6, 3))
+
+## binding rows for two list items of equal lengths is possible
+bind_rows(hareramshyam[1:2])
+
+# bind_rows(hareramshyam) ## this fails
+
+## so to complete the list by filling with nas to match the 
+## length of each element in list, use
+mymax <- hareramshyam %>% 
+  lapply(length) %>% 
+  unlist %>% 
+  max
+
+hareramshyam %>% 
+  lapply(function(x) c(x, rep(NA_integer_, mymax-length(x)))) %>% 
+  bind_rows()
+
+## here is a two liner that could be cause the same
+lapply(hareramshyam, `length<-`, 
+       max(lengths(hareramshyam))) %>% 
+  bind_rows()
+
+# or use plyr's binder to avoid recycling
+plyr::rbind.fill(map(hareramshyam, ~ as.data.frame(t(.x),stringsAsFactors=FALSE)))
+
+## to fill, for example above, dataframe of NAs with other
+## elements of the dataframe
+lapply(hareramshyam, `length<-`, 
+       max(lengths(hareramshyam))) %>% 
+  bind_rows() %>% 
+  mutate(harry = dplyr::coalesce(harry, shyam), 
+         ram = dplyr::coalesce(ram, shyam))
+```
+

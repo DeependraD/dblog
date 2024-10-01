@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Image Editing on Rookie site</title>
+    <link>http://localhost:4321/categories/image-editing/</link>
+    <description>Recent content in Image Editing on Rookie site</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 03 Nov 2018 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:4321/categories/image-editing/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Image and video editing hacks using ffmpeg</title>
+      <link>http://localhost:4321/blog/image-and-video-editing-hacks/</link>
+      <pubDate>Sat, 03 Nov 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/image-and-video-editing-hacks/</guid>
+      <description>&lt;h1 id=&#34;compose-a-slideshow&#34;&gt;Compose a slideshow&#xA;  &lt;a href=&#34;#compose-a-slideshow&#34;&gt;&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;This is beginner&amp;rsquo;s tutorial for starting up with open source &#xA;&lt;a href=&#34;https://www.ffmpeg.org/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;ffmpeg&lt;/a&gt; library.&lt;/p&gt;&#xA;&lt;p&gt;In the beginning, it&amp;rsquo;s shown how we can convert an image gallery to a video slideshow. For example we have a directory called &lt;code&gt;images&lt;/code&gt; filled with photos that we want to knit together to obtain a slideshow. A video, however, has an additional time/length attribute besides the attribute that controls which order the images are sawn together in. Along with these, several other features underlie a video composition, some of which will be discussed in this tutorial.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

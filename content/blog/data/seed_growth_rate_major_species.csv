@@ -1,0 +1,20 @@
+"# Page 46, Seed biology and yield of grain crops",,,,,,,
+Crop,Number of cultivars,Seed growth rate_mean (mg per seed per day),Seed growth rate_range (mg per seed per day),Effective filling period_mean (day),Effective filling period_range (day),Maximum size_mean (mg per seed),Maximum size_range (mg per seed)
+Cereals:,,,,,,,
+Wheat (Triticum aestivum L.),26,1.4,2.1-1.0,29,45-19,41,55-23
+Barley (Horedum vulgare L.),13,1.6,2.4-0.6,25,43-18,38,50-22
+Rice (Oryza sativa L.),12,1.2,2.0-0.9,24,36-12,28,50-20
+Sorghum (Sorghum bicolor (L.) Moench.),9,0.9,1.9-0.4,23,42-20,28,37-19
+Maize (Zea mays L.) (inbreds),22,7.4,9.7-3.6,31,39-23,228,322-86
+Maize (Zea mays L.) (hybrids),10,8.8,10.4-7.0,35,41-23,302,410-229
+Legumes:,,,,,,,
+Soybean (Glycine max (L.) Merr.),21,6.8,14.7-3.6,29,46-13,202,484-84
+Bean (Phaseolus vulgaris L.),20,18.9,33.1-10.2,18,24-14,345,540-190
+Pea (Pisum sativum L.),5,10.5,14.3-5.6,22,35-12,195,224-150
+Field pea (P. arvense),2,9.5,13.0-6.0,25,32-18,211,232-190
+Broad bean (Vicia faba L.),3,36.9,55.0-20.0,31,57-16,1104,2017-414
+Cowpea (Vigna unguiculata L. Walp),3,8.4,12.2-4.4,8,9.0-7.0,73,122-32
+Groundnut (Arachis hypogaea),2,12.8,14.0-11.6,44,45-43,563,626-500
+Oil seeds:,,,,,,,
+Flax (Linum usitatissimum L.),2,0.2,0.3-0.2,31,35-27,8,8.0-7.0
+Sunflower (Helianthus annuus L.),7,1.6,2.0-1.2,34,48-30,54,75-39

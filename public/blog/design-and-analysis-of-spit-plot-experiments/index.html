@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+  
+                           
+     
+
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.135.0">
+<title>Design and analysis of spit plot experiments | Rookie site</title>
+
+
+<meta property="twitter:site" content="@dd_rookie">
+<meta property="twitter:creator" content="@dd_rookie">
+
+
+
+
+
+
+
+  
+    
+  
+<meta name="description" content="">
+
+
+<meta property="og:site_name" content="Rookie site">
+<meta property="og:title" content="Design and analysis of spit plot experiments | Rookie site">
+<meta property="og:description" content="" />
+<meta property="og:type" content="page" />
+<meta property="og:url" content="http://localhost:4321/blog/design-and-analysis-of-spit-plot-experiments/" />
+<meta property="og:locale" content="en">
+
+
+
+
+    
+        <meta property="og:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+        <meta property="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+    
+    
+  
+  <meta itemprop="name" content="Design and analysis of spit plot experiments">
+  <meta itemprop="description" content="Split plot design Design and fieldbook template In a field experiment to test for effects of fungicide on crop, treatment of fungicides may be distinguised into multiple factors – based on chemical constituent, based on formulation, based on the mode of spray, etc. In a general case scenario where two former factors could be controlled, factor combinations may be organized in several different ways. When fully crossed implementation is not possible, split plot design comes to the rescue.">
+  <meta itemprop="datePublished" content="2018-11-27T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2018-11-27T00:00:00+00:00">
+  <meta itemprop="wordCount" content="961">
+  <meta itemprop="keywords" content="Agriculture,R">
+  
+  <!--[if IE]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  
+  
+  <link rel="stylesheet" href="/style.main.min.1cbac35dadc4fd962ceb58cdbe3e4bd32eb4a149ef54664a24d670fb5307d543.css" integrity="sha256-HLrDXa3E/ZYs61jNvj5L0y60oUnvVGZKJNZw&#43;1MH1UM=" media="screen">
+  
+  
+  <script src="/panelset.min.ed1ac24b6e16f4e2481e3d1d098ae66f5bc77438aef619e6e266d8ac5b00dc72.js" type="text/javascript"></script>
+  
+  
+  <script src="/main.min.36817c360165917b68a008c77f2439837c7c187a0acd3e9c92ce8f23fdc2d825.js" type="text/javascript"></script>
+</head>
+<body>
+      <div class="grid-container">
+<header class="site-header pt4 pb2 mb4 bb b--transparent ph5 headroom z-max" role="banner">
+  <nav class="site-nav db dt-l w-100" role="navigation">
+    <a class="site-brand db dtc-l v-mid link no-underline w-100 w-33-l tc tl-l" href="http://localhost:4321/" title="Home">
+      <img src="/img/blogophonic-mark-dark.png" class="dib db-l h2 w-auto" alt="Rookie site">
+    </a>
+    <div class="site-links db dtc-l v-mid w-100 w-47-l tc tr-l mt3 mt0-l ttu tracked">
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/about/" title="About Rookie">About</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 active" href="/blog/" title="Blog">Blog</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/project/" title="Project Portfolio">Projects</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/talks/" title="Talks">Talks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/academia/" title="Academia">Academia</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/tipsntricks/" title="Tips and tricks">Tips and tricks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="https://github.com/DeependraD/tex-for-beauty/releases/download/v1.06/Deependra_CV.pdf" title="CV copy">CV</a>
+      
+      
+    </div>
+  </nav>
+</header>
+
+<main class="page-main pa4" role="main">
+  <section class="page-content mw7 center">
+    <article class="post-content pa0 ph4-l">
+      <header class="post-header">
+        <h1 class="f1 lh-solid measure-narrow mb3 fw4">Design and analysis of spit plot experiments</h1>
+        
+        <p class="f6 measure lh-copy mv1">By Deependra Dhakal in <a href="http://localhost:4321/categories/agriculture">agriculture</a>  <a href="http://localhost:4321/categories/factor">factor</a>  <a href="http://localhost:4321/categories/r">R</a>  <a href="http://localhost:4321/categories/plant-breeding">Plant Breeding</a> </p>
+        <p class="f7 db mv0 ttu">November 27, 2018</p>
+
+      
+
+      </header>
+      <section class="post-body pt5 pb4">
+        <script src="/blog/design-and-analysis-of-spit-plot-experiments/index_files/kePrint/kePrint.js"></script>
+<link href="/blog/design-and-analysis-of-spit-plot-experiments/index_files/lightable/lightable.css" rel="stylesheet" />
+<script src="/blog/design-and-analysis-of-spit-plot-experiments/index_files/kePrint/kePrint.js"></script>
+<link href="/blog/design-and-analysis-of-spit-plot-experiments/index_files/lightable/lightable.css" rel="stylesheet" />
+<script src="/blog/design-and-analysis-of-spit-plot-experiments/index_files/kePrint/kePrint.js"></script>
+<link href="/blog/design-and-analysis-of-spit-plot-experiments/index_files/lightable/lightable.css" rel="stylesheet" />
+<script src="/blog/design-and-analysis-of-spit-plot-experiments/index_files/kePrint/kePrint.js"></script>
+<link href="/blog/design-and-analysis-of-spit-plot-experiments/index_files/lightable/lightable.css" rel="stylesheet" />
+
+
+
+
+<h2 id="split-plot-design">Split plot design
+  <a href="#split-plot-design"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+
+
+
+
+<h2 id="design-and-fieldbook-template">Design and fieldbook template
+  <a href="#design-and-fieldbook-template"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<p>In a field experiment to test for effects of fungicide on crop, treatment of fungicides may be distinguised into multiple factors &ndash; based on chemical constituent, based on formulation, based on the mode of spray, etc. In a general case scenario where two former factors could be controlled, factor combinations may be organized in several different ways. When fully crossed implementation is not possible, split plot design comes to the rescue.</p>
+<p>It is fair to assume that fungicide constituent is relatively difficult to allocate in highly isolated patches, so we can allocate a larger plot parcel to this factor and allocate different levels of formulation to sub-plots.</p>
+<p>The design fieldbook seems somewhat similar to that shown in Table <a href="#tab:split-fieldbook">1</a>.</p>
+<table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:split-fieldbook)Split plot design with main and subplot factors in three replication blocks</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;font-weight: bold;"> plots </th>
+   <th style="text-align:left;font-weight: bold;"> splots </th>
+   <th style="text-align:left;font-weight: bold;"> block </th>
+   <th style="text-align:left;font-weight: bold;"> trt1 </th>
+   <th style="text-align:left;font-weight: bold;"> trt2 </th>
+   <th style="text-align:left;font-weight: bold;"> mainplot </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 101 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> Mancozeb + Metalaxyl </td>
+   <td style="text-align:left;"> Seed + Foliar </td>
+   <td style="text-align:left;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 101 </td>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> Mancozeb + Metalaxyl </td>
+   <td style="text-align:left;"> Control </td>
+   <td style="text-align:left;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 101 </td>
+   <td style="text-align:left;"> 3 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> Mancozeb + Metalaxyl </td>
+   <td style="text-align:left;"> Seed Treatment </td>
+   <td style="text-align:left;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 101 </td>
+   <td style="text-align:left;"> 4 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> Mancozeb + Metalaxyl </td>
+   <td style="text-align:left;"> Foliar Spray </td>
+   <td style="text-align:left;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 102 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> Trichoderma </td>
+   <td style="text-align:left;"> Foliar Spray </td>
+   <td style="text-align:left;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 102 </td>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> Trichoderma </td>
+   <td style="text-align:left;"> Seed + Foliar </td>
+   <td style="text-align:left;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 102 </td>
+   <td style="text-align:left;"> 3 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> Trichoderma </td>
+   <td style="text-align:left;"> Seed Treatment </td>
+   <td style="text-align:left;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 102 </td>
+   <td style="text-align:left;"> 4 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> Trichoderma </td>
+   <td style="text-align:left;"> Control </td>
+   <td style="text-align:left;"> 2 </td>
+  </tr>
+</tbody>
+</table>
+
+
+
+
+<h2 id="layout-plan">Layout plan
+  <a href="#layout-plan"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<p>An example grid layout plan of the aboveshown design is shown below.</p>
+<img src="/blog/design-and-analysis-of-spit-plot-experiments/index_files/figure-html/split-layout-1.png" width="672" style="display: block; margin: auto;" />
+
+
+
+
+<h2 id="analyis-of-split-plot-design">Analyis of split plot design
+  <a href="#analyis-of-split-plot-design"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<p>Let us take a grain yield dataset. The dataset contains 48 observations. Below, (in Table <a href="#tab:split-grain-yield">2</a>) data head have been shown after import, type-conversion and factor recoding.</p>
+<table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:split-grain-yield)Split plot design with main and subplot factors in three replication blocks</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;font-weight: bold;"> rep </th>
+   <th style="text-align:left;font-weight: bold;"> density </th>
+   <th style="text-align:left;font-weight: bold;"> nitrogen </th>
+   <th style="text-align:right;font-weight: bold;"> yield </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> low </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 1503 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> medium_low </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 1866 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> medium_high </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 2469 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> high </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 3786 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:left;"> low </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 2299 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:left;"> medium_low </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 1892 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:left;"> medium_high </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 3517 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:left;"> high </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 2851 </td>
+  </tr>
+</tbody>
+</table>
+
+
+
+
+<h2 id="calculating-variance-and-setting-hypothesis-a-case-involving-single-factor">Calculating variance, and setting hypothesis: A case involving single factor
+  <a href="#calculating-variance-and-setting-hypothesis-a-case-involving-single-factor"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<p>In the most primitive scenario, manual calculation of variance components could just as easily be done. However, as the number of treatment factors rise, so does the complexity of computation.  Manual calculation of sum of squares and the test statistic could be done as shown below. This, however, only remains valid as long as no grouping factors besides <code>nitrogen</code> are present, thus making it a classical scenario of single factor variance partitioning.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>mu <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">mean</span>(grain_yld<span style="color:#000;font-weight:bold">$</span>yield) <span style="color:#998;font-style:italic"># whole sample mean</span>
+</span></span><span style="display:flex;"><span>ssto <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">sum</span>((grain_yld<span style="color:#000;font-weight:bold">$</span>yield<span style="color:#000;font-weight:bold">-</span>mu)^2) <span style="color:#998;font-style:italic"># total sum of squares</span>
+</span></span><span style="display:flex;"><span>mu.i <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">tapply</span>(grain_yld<span style="color:#000;font-weight:bold">$</span>yield, grain_yld<span style="color:#000;font-weight:bold">$</span>nitrogen, mean) <span style="color:#998;font-style:italic"># nitrogen(factor) means </span>
+</span></span><span style="display:flex;"><span>sstr <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">sum</span>(<span style="color:#900;font-weight:bold">table</span>(grain_yld<span style="color:#000;font-weight:bold">$</span>nitrogen)<span style="color:#000;font-weight:bold">*</span>(mu.i<span style="color:#000;font-weight:bold">-</span>mu)^2) <span style="color:#998;font-style:italic"># nitrogen(factor) sum of squares</span>
+</span></span><span style="display:flex;"><span>sse <span style="color:#000;font-weight:bold">&lt;-</span> ssto<span style="color:#000;font-weight:bold">-</span>sstr <span style="color:#998;font-style:italic"># error sum of squares</span>
+</span></span><span style="display:flex;"><span>fstat <span style="color:#000;font-weight:bold">&lt;-</span> (sstr<span style="color:#000;font-weight:bold">/</span><span style="color:#099">3</span>)<span style="color:#000;font-weight:bold">/</span>(sse<span style="color:#000;font-weight:bold">/</span><span style="color:#099">45</span>) <span style="color:#998;font-style:italic"># F-statistic</span>
+</span></span></code></pre></div><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Source</th>
+          <th style="text-align: left">Sums of Squares</th>
+          <th style="text-align: left">Degrees of Freedom</th>
+          <th style="text-align: left">Mean Square</th>
+          <th style="text-align: left">F-Stat</th>
+          <th style="text-align: left">p-value</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Treatment</td>
+          <td style="text-align: left">6.167\times 10^{7}</td>
+          <td style="text-align: left">3</td>
+          <td style="text-align: left">2.056\times 10^{7}</td>
+          <td style="text-align: left">18.465</td>
+          <td style="text-align: left">5.925\times 10^{-8}</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Error</td>
+          <td style="text-align: left">5.01\times 10^{7}</td>
+          <td style="text-align: left">45</td>
+          <td style="text-align: left">1.113\times 10^{6}</td>
+          <td style="text-align: left"></td>
+          <td style="text-align: left"></td>
+      </tr>
+  </tbody>
+</table>
+<p>$$
+<code>\begin{align*} H_0 &amp; : \mu_1 = \mu_2 = \mu_3    \\ H_A &amp; : \mbox{At least one pair of means not equal} \end{align*}</code>
+$$</p>
+<p>Before proceeding for an inference, It is worthwhile to be acquainted with what the distribution looks like.</p>
+<img src="/blog/design-and-analysis-of-spit-plot-experiments/index_files/figure-html/split-grain-hist-1.png" width="672" style="display: block; margin: auto;" />
+<p>Getting back to our specific split-plot design case, we develop model and generate the ANOVA table (Table <a href="#tab:split-model1">3</a>). A split plot design is modeled with main plot factor nested within replication and a sub plot factor nested within main plot factor. This essentially partitions the main effects of replication and the main plot factor.</p>
+<table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:split-model1)Model assumption 1: ANOVA of split plot design with main and subplot factors in three replication blocks</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;font-weight: bold;">   </th>
+   <th style="text-align:right;font-weight: bold;"> Df </th>
+   <th style="text-align:right;font-weight: bold;"> Sum Sq </th>
+   <th style="text-align:right;font-weight: bold;"> Mean Sq </th>
+   <th style="text-align:right;font-weight: bold;"> F value </th>
+   <th style="text-align:right;font-weight: bold;"> Pr(&gt;F) </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> rep </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 3413766 </td>
+   <td style="text-align:right;"> 1706883 </td>
+   <td style="text-align:right;"> 5.98 </td>
+   <td style="text-align:right;"> 0.008 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> density </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 21451719 </td>
+   <td style="text-align:right;"> 7150573 </td>
+   <td style="text-align:right;"> 25.05 </td>
+   <td style="text-align:right;"> 0.000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> rep:density </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 6576455 </td>
+   <td style="text-align:right;"> 1096076 </td>
+   <td style="text-align:right;"> 3.84 </td>
+   <td style="text-align:right;"> 0.008 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> density:nitrogen </td>
+   <td style="text-align:right;"> 12 </td>
+   <td style="text-align:right;"> 73482134 </td>
+   <td style="text-align:right;"> 6123511 </td>
+   <td style="text-align:right;"> 21.45 </td>
+   <td style="text-align:right;"> 0.000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Residuals </td>
+   <td style="text-align:right;"> 24 </td>
+   <td style="text-align:right;"> 6849756 </td>
+   <td style="text-align:right;"> 285406 </td>
+   <td style="text-align:right;">  </td>
+   <td style="text-align:right;">  </td>
+  </tr>
+</tbody>
+</table>
+<p>Alternatively, following model specification could be made by regarding response (yield) as a product of main plot effect and sub plot effect, wherein main plot is nested inside replication (block) (ANOVA shown in Table <a href="#tab:split-model2">4</a>).</p>
+<table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:split-model2)Model assumption 2: ANOVA of split plot design with main and subplot factors in three replication blocks</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;font-weight: bold;">   </th>
+   <th style="text-align:right;font-weight: bold;"> Df </th>
+   <th style="text-align:right;font-weight: bold;"> Sum Sq </th>
+   <th style="text-align:right;font-weight: bold;"> Mean Sq </th>
+   <th style="text-align:right;font-weight: bold;"> F value </th>
+   <th style="text-align:right;font-weight: bold;"> Pr(&gt;F) </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> density </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 21451719 </td>
+   <td style="text-align:right;"> 7150573 </td>
+   <td style="text-align:right;"> 25.05 </td>
+   <td style="text-align:right;"> 0.000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nitrogen </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 61673305 </td>
+   <td style="text-align:right;"> 20557768 </td>
+   <td style="text-align:right;"> 72.03 </td>
+   <td style="text-align:right;"> 0.000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> rep </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 3413766 </td>
+   <td style="text-align:right;"> 1706883 </td>
+   <td style="text-align:right;"> 5.98 </td>
+   <td style="text-align:right;"> 0.008 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> density:nitrogen </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 11808829 </td>
+   <td style="text-align:right;"> 1312092 </td>
+   <td style="text-align:right;"> 4.60 </td>
+   <td style="text-align:right;"> 0.001 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> density:rep </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 6576455 </td>
+   <td style="text-align:right;"> 1096076 </td>
+   <td style="text-align:right;"> 3.84 </td>
+   <td style="text-align:right;"> 0.008 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Residuals </td>
+   <td style="text-align:right;"> 24 </td>
+   <td style="text-align:right;"> 6849756 </td>
+   <td style="text-align:right;"> 285406 </td>
+   <td style="text-align:right;">  </td>
+   <td style="text-align:right;">  </td>
+  </tr>
+</tbody>
+</table>
+<p>It should be the right time, now, to use plotting libraries and generate some beautiful graphs.</p>
+<p><img src="/blog/design-and-analysis-of-spit-plot-experiments/index_files/figure-html/split-visualization-1.png" width="672" style="display: block; margin: auto;" /><img src="/blog/design-and-analysis-of-spit-plot-experiments/index_files/figure-html/split-visualization-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Best to take a look at some diagnostic plots now, just to make sure model assumptions and validity are not being flouted.</p>
+<img src="/blog/design-and-analysis-of-spit-plot-experiments/index_files/figure-html/split-diagnostic-plotting-1.png" width="768" style="display: block; margin: auto;" />
+<p>Box-Cox plots helps determine whether or not a transformation is required. To recapitulate the importance of Box-Cox plot, below is an statement quoted from 
+<a href="http://www.itl.nist.gov/div898/handbook/eda/section3/eda336.htm" target="_blank" rel="noopener">http://www.itl.nist.gov/div898/handbook/eda/section3/eda336.htm</a>, which goes:</p>
+<blockquote>
+<p>The Box-Cox normality plot shows that the maximum value of the correlation coefficient exists at λ = (x-axis value | maximum y-axis height). The histogram of the data after applying the Box-Cox transformation(were it not indicative of normal) with λ = (x-axis value | maximum y-axis height) shows a data set for which the normality assumption is reasonable. This can be verified with a normal probability plot of the transformed data.</p>
+</blockquote>
+<img src="/blog/design-and-analysis-of-spit-plot-experiments/index_files/figure-html/transformation-diagnosis-1.png" width="672" style="display: block; margin: auto;" />
+<p>Mean separation should proceed as follows.</p>
+<pre tabindex="0"><code>## 
+## Study: Duncan multiple comparison among levels of nitrogen
+## 
+## Duncan&#39;s new multiple range test
+## for yield 
+## 
+## Mean Square Error:  285406 
+## 
+## nitrogen,  means
+## 
+##   yield  std  r  Min  Max
+## 1  2384  710 12 1503 3786
+## 2  3714  757 12 2050 5281
+## 3  5021 1268 12 3317 7090
+## 4  5195 1367 12 3858 7798
+## 
+## Alpha: 0.05 ; DF Error: 24 
+## 
+## Critical Range
+##   2   3   4 
+## 450 473 487 
+## 
+## Means with the same letter are not significantly different.
+## 
+##   yield groups
+## 4  5195      a
+## 3  5021      a
+## 2  3714      b
+## 1  2384      c
+</code></pre><p>Visualize the means resulting from Duncan&rsquo;s test.</p>
+<img src="/blog/design-and-analysis-of-spit-plot-experiments/index_files/figure-html/split-mean-visualization-1.png" width="672" style="display: block; margin: auto;" />
+
+        
+        <details closed class="f6 fw7 input-reset">
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Posted on:</dt>
+    <dd class="fw5 ml0">November 27, 2018</dd>
+  </dl>
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Length:</dt>
+    <dd class="fw5 ml0">5 minute read, 961 words</dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Categories:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/categories/agriculture">agriculture</a>  <a href="http://localhost:4321/categories/factor">factor</a>  <a href="http://localhost:4321/categories/r">R</a>  <a href="http://localhost:4321/categories/plant-breeding">Plant Breeding</a> </dd>
+  </dl>
+  
+  
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Tags:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/tags/agriculture">agriculture</a>  <a href="http://localhost:4321/tags/r">R</a> </dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">See Also:</dt>
+    
+    <dd class="fw5 ml0"><a href="/blog/paste-together-multiple-columns/">Paste together multiple columns</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/logistic-regression-part-ii-varietal-adoption-dataset/">Logistic Regression: Part II - Varietal adoption dataset</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/logistic-regression-part-i-fundamentals/">Logistic Regression: Part I - Fundamentals</a></dd>
+    
+  </dl>
+</details>
+
+      </section>
+      <footer class="post-footer">
+        <div class="post-pagination dt w-100 mt4 mb2">
+  
+  
+    <a class="prev dtc pr2 tl v-top fw6"
+    href="http://localhost:4321/blog/design-and-analysis-of-alpha-lattice-experiments/">&larr; Design and analysis of alpha lattice experiments</a>
+  
+  
+  
+    <a class="next dtc pl2 tr v-top fw6"
+    href="http://localhost:4321/blog/layout-and-visualization-of-experimental-design/">Layout and visualization of experimental design &rarr;</a>
+  
+</div>
+
+      </footer>
+    </article>
+    
+      <div class="post-comments pa0 pa4-l mt4">
+  
+    
+      <script src="https://utteranc.es/client.js"
+              repo="deependrad/dblog"
+              issue-term="pathname"
+              theme="boxy-light"
+              label="comments :crystal_ball:"
+              crossorigin="anonymous"
+              async
+              type="text/javascript">
+      </script>
+    
+  
+</div>
+
+    
+  </section>
+</main>
+<footer class="site-footer pv4 bt b--transparent ph5" role="contentinfo">
+  <nav class="db dt-l w-100">
+    <p class="site-copyright f7 db dtc-l v-mid w-100 w-33-l tc tl-l pv2 pv0-l mv0 lh-copy">
+      &copy; 2024 Dblog
+      <span class="middot-divider"></span>
+      Made with <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/hugo-apero/" rel="dct:source">Hugo Apéro</a></span>.
+      <br />
+      
+Based on <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/formspree/blogophonic-hugo" rel="dct:source">Blogophonic</a></span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://formspree.io" property="cc:attributionName" rel="cc:attributionURL">Formspree</a>.
+    </p>
+    
+    <div class="site-social-links db dtc-l v-mid w-100 w-33-l tc pv2 pv0-l mv0">
+      <div class="social-icon-links" aria-hidden="true">
+  
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://github.com/deependrad/dblog" title="github" target="_blank" rel="me noopener">
+      <i class="fab fa-github fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://bsky.app/" title="bluesky" target="_blank" rel="me noopener">
+      <i class="fab fa-bluesky fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://twitter.com/dd_rookie" title="x-twitter" target="_blank" rel="me noopener">
+      <i class="fab fa-x-twitter fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://orcid.org/0000-0002-0347-7950" title="orcid" target="_blank" rel="me noopener">
+      <i class="ai ai-orcid fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="/blog/index.xml" title="rss" >
+      <i class="fas fa-rss fa-lg fa-fw"></i>
+    </a>
+  
+</div>
+
+    </div>
+    
+    <div class="site-links f6 db dtc-l v-mid w-100 w-67-l tc tr-l pv2 pv0-l mv0">
+      
+      <a class="dib pv1 ph2 link" href="/license/" title="License">License</a>
+      
+      <a class="dib pv1 ph2 link" href="/contact/" title="Contact form">Contact</a>
+      
+      <a class="dib pv1 ph2 link" href="/contributors/" title="Contributors">Contributors</a>
+      
+    </div>
+  </nav>
+  
+    <script>
+
+    var i, text, code, codes = document.getElementsByTagName('code');
+    for (let i = 0; i < codes.length;) {
+      code = codes[i];
+      if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+        text = code.textContent;
+        if (/^\$[^$]/.test(text) && /[^$]\$$/.test(text)) {
+          text = text.replace(/^\$/, '\\(').replace(/\$$/, '\\)');
+          code.textContent = text;
+        }
+        if (/^\\\((.|\s)+\\\)$/.test(text) ||
+            /^\\\[(.|\s)+\\\]$/.test(text) ||
+            /^\$(.|\s)+\$$/.test(text) ||
+            /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+          code.outerHTML = code.innerHTML;  
+          continue;
+        }
+      }
+      i++;
+    }
+</script>
+
+  
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+
+
+    
+  
+  
+</footer>
+
+      </div>
+    </body>
+</html>

@@ -1,0 +1,41 @@
+---
+title: Seed growth rate of major cultivated crops
+author: Deependra Dhakal
+date: '2019-02-03'
+slug: seed-growth-rate-of-major-cultivated-crops
+categories:
+  - agriculture
+  - Plant Breeding
+tags:
+  - agriculture
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(tidy = TRUE, cache = FALSE, echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.6, 
+                      message = FALSE, warning = FALSE, cache = TRUE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+library(tidyverse)
+```
+
+# Context
+
+
+```{r smr-vegetables}
+sgr_crops <- read_csv(here::here("content", "blog", "data", "seed_growth_rate_major_species.csv"), comment = "#", skip = 1)
+sgr_crops %>%
+  knitr::kable(caption = "Seed growth rate of common cultivated crop species", format = "html") %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12) %>%
+  kableExtra::column_spec(1, bold = TRUE) %>% 
+  kableExtra::scroll_box(width = "100%", 
+                         box_css = "border: 2px solid #22d0dd; padding: 10px; ")
+```
+
+
+# References
+
+Page 46, Seed Biology and Yield of Grain Crops, 2nd Edition

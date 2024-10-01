@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+  
+                           
+     
+
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.135.0">
+<title>Logistic Regression: Part II - Varietal adoption dataset | Rookie site</title>
+
+
+<meta property="twitter:site" content="@dd_rookie">
+<meta property="twitter:creator" content="@dd_rookie">
+
+
+
+
+
+
+
+  
+    
+  
+<meta name="description" content="">
+
+
+<meta property="og:site_name" content="Rookie site">
+<meta property="og:title" content="Logistic Regression: Part II - Varietal adoption dataset | Rookie site">
+<meta property="og:description" content="" />
+<meta property="og:type" content="page" />
+<meta property="og:url" content="http://localhost:4321/blog/logistic-regression-part-ii-varietal-adoption-dataset/" />
+<meta property="og:locale" content="en">
+
+
+
+
+    
+        <meta property="og:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+        <meta property="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+    
+    
+  
+  <meta itemprop="name" content="Logistic Regression: Part II - Varietal adoption dataset">
+  <meta itemprop="description" content="Binary classifier using categorical predictor Let’s say we have two variable – survey response of farmer to willingness to adopt improved rice variety (in YES/NO) and them having been trained earlier about agricultural input management (in trained/untrained).
+Read in the data and notice the summary.
+rice_data &lt;- readxl::read_xlsx(here::here(&#34;content&#34;, &#34;blog&#34;, &#34;data&#34;, &#34;rice_variety_adoption.xlsx&#34;)) %&gt;% mutate_if(.predicate = is.character, as.factor) rice_variety_adoption &lt;- readxl::read_xlsx(here::here(&#34;content&#34;, &#34;blog&#34;, &#34;data&#34;, &#34;rice_variety_adoption.xlsx&#34;)) %&gt;% select(improved_variety_adoption, training) %&gt;% # convert data to suitable factor type for analysis. mutate_if(is.character, as.factor) head(rice_variety_adoption) # now we have data ## # A tibble: 6 × 2## improved_variety_adoption training## &lt;fct&gt; &lt;fct&gt; ## 1 No No ## 2 Yes No ## 3 No No ## 4 Yes No ## 5 Yes No ## 6 No No As a basic descriptive, contruct one way and two way cross tabulation summary, showing count of each categories. This is because logistic regression uses count data, much like in a non-parametric model.">
+  <meta itemprop="datePublished" content="2020-08-07T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2020-08-07T12:27:48+05:45">
+  <meta itemprop="wordCount" content="2950">
+  <meta itemprop="keywords" content="R,Tidyverse">
+  
+  <!--[if IE]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  
+  
+  <link rel="stylesheet" href="/style.main.min.1cbac35dadc4fd962ceb58cdbe3e4bd32eb4a149ef54664a24d670fb5307d543.css" integrity="sha256-HLrDXa3E/ZYs61jNvj5L0y60oUnvVGZKJNZw&#43;1MH1UM=" media="screen">
+  
+  
+  <script src="/panelset.min.ed1ac24b6e16f4e2481e3d1d098ae66f5bc77438aef619e6e266d8ac5b00dc72.js" type="text/javascript"></script>
+  
+  
+  <script src="/main.min.36817c360165917b68a008c77f2439837c7c187a0acd3e9c92ce8f23fdc2d825.js" type="text/javascript"></script>
+</head>
+<body>
+      <div class="grid-container">
+<header class="site-header pt4 pb2 mb4 bb b--transparent ph5 headroom z-max" role="banner">
+  <nav class="site-nav db dt-l w-100" role="navigation">
+    <a class="site-brand db dtc-l v-mid link no-underline w-100 w-33-l tc tl-l" href="http://localhost:4321/" title="Home">
+      <img src="/img/blogophonic-mark-dark.png" class="dib db-l h2 w-auto" alt="Rookie site">
+    </a>
+    <div class="site-links db dtc-l v-mid w-100 w-47-l tc tr-l mt3 mt0-l ttu tracked">
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/about/" title="About Rookie">About</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 active" href="/blog/" title="Blog">Blog</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/project/" title="Project Portfolio">Projects</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/talks/" title="Talks">Talks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/academia/" title="Academia">Academia</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/tipsntricks/" title="Tips and tricks">Tips and tricks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="https://github.com/DeependraD/tex-for-beauty/releases/download/v1.06/Deependra_CV.pdf" title="CV copy">CV</a>
+      
+      
+    </div>
+  </nav>
+</header>
+
+<main class="page-main pa4" role="main">
+  <section class="page-content mw7 center">
+    <article class="post-content pa0 ph4-l">
+      <header class="post-header">
+        <h1 class="f1 lh-solid measure-narrow mb3 fw4">Logistic Regression: Part II - Varietal adoption dataset</h1>
+        
+        <p class="f6 measure lh-copy mv1">By Deependra Dhakal in <a href="http://localhost:4321/categories/r">R</a>  <a href="http://localhost:4321/categories/tidyverse">tidyverse</a> </p>
+        <p class="f7 db mv0 ttu">August 7, 2020</p>
+
+      
+
+      </header>
+      <section class="post-body pt5 pb4">
+        
+
+
+
+<h2 id="binary-classifier-using-categorical-predictor">Binary classifier using categorical predictor
+  <a href="#binary-classifier-using-categorical-predictor"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<p>Let&rsquo;s say we have two variable &ndash; survey response of farmer to willingness to adopt improved rice variety (in YES/NO) and them having been trained earlier about agricultural input management (in trained/untrained).</p>
+<p>Read in the data and notice the summary.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>rice_data <span style="color:#000;font-weight:bold">&lt;-</span> readxl<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">read_xlsx</span>(here<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">here</span>(<span style="color:#d14">&#34;content&#34;</span>, <span style="color:#d14">&#34;blog&#34;</span>, <span style="color:#d14">&#34;data&#34;</span>, <span style="color:#d14">&#34;rice_variety_adoption.xlsx&#34;</span>)) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate_if</span>(.predicate <span style="color:#000;font-weight:bold">=</span> is.character, as.factor)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rice_variety_adoption <span style="color:#000;font-weight:bold">&lt;-</span> readxl<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">read_xlsx</span>(here<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">here</span>(<span style="color:#d14">&#34;content&#34;</span>, <span style="color:#d14">&#34;blog&#34;</span>, <span style="color:#d14">&#34;data&#34;</span>, <span style="color:#d14">&#34;rice_variety_adoption.xlsx&#34;</span>)) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">select</span>(improved_variety_adoption, training) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic"># convert data to suitable factor type for analysis.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate_if</span>(is.character, as.factor)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">head</span>(rice_variety_adoption) <span style="color:#998;font-style:italic"># now we have data</span>
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 6 × 2
+##   improved_variety_adoption training
+##   &lt;fct&gt;                     &lt;fct&gt;   
+## 1 No                        No      
+## 2 Yes                       No      
+## 3 No                        No      
+## 4 Yes                       No      
+## 5 Yes                       No      
+## 6 No                        No
+</code></pre><p>As a basic descriptive, contruct one way and two way cross tabulation summary, showing count of each categories. This is because logistic regression uses count data, much like in a non-parametric model.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># count the data in a one way and two way tabulation</span>
+</span></span><span style="display:flex;"><span>rice_variety_adoption <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#998;font-style:italic"># fortunately there are no rare class (i.e. some class have exceptionally low frequencies)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">count</span>(improved_variety_adoption)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 2 × 2
+##   improved_variety_adoption     n
+##   &lt;fct&gt;                     &lt;int&gt;
+## 1 No                           18
+## 2 Yes                          42
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>rice_variety_adoption <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#998;font-style:italic"># fortunately there are no rare class (i.e. some class have exceptionally low frequencies)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">count</span>(training)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 2 × 2
+##   training     n
+##   &lt;fct&gt;    &lt;int&gt;
+## 1 No          43
+## 2 Yes         17
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # two way cross tabs</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># rice_variety_adoption %&gt;% </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#   count(improved_variety_adoption, training) %&gt;% </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#   tidyr::pivot_wider(id_cols = improved_variety_adoption:training, </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#                      names_from = training, values_from = n)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># two way cross tabs (confusion matrix) using yardstick</span>
+</span></span><span style="display:flex;"><span>yardstick<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">conf_mat</span>(<span style="color:#900;font-weight:bold">table</span>(rice_variety_adoption)) <span style="color:#998;font-style:italic"># class: conf_mat</span>
+</span></span></code></pre></div><pre tabindex="0"><code>##                          training
+## improved_variety_adoption No Yes
+##                       No  17   1
+##                       Yes 26  16
+</code></pre><p>The data representation quickly shows that most of the non adopters have not received training 17, compared to non-adopters that have received training 1. Similarly, the odds that a farmer will be a non adopter if he is trained versus untrained is: 1/17(too low); while the odds that a farmer will be an adopter if he is trained versus untrained is: 16/26 (relatively high).</p>
+<p>To statistically verify, we formuate a generalized linear model that uses training to predict adoption of improved variety.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>rice_glm <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">glm</span>(improved_variety_adoption <span style="color:#000;font-weight:bold">~</span> training, data <span style="color:#000;font-weight:bold">=</span> rice_variety_adoption, family <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;binomial&#34;</span>)
+</span></span><span style="display:flex;"><span>rice_glm <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#900;font-weight:bold">summary</span>()
+</span></span></code></pre></div><pre tabindex="0"><code>## 
+## Call:
+## glm(formula = improved_variety_adoption ~ training, family = &#34;binomial&#34;, 
+##     data = rice_variety_adoption)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.3804  -1.3623   0.3482   1.0031   1.0031  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)   0.4249     0.3119   1.362   0.1731  
+## trainingYes   2.3477     1.0769   2.180   0.0293 *
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 73.304  on 59  degrees of freedom
+## Residual deviance: 65.319  on 58  degrees of freedom
+## AIC: 69.319
+## 
+## Number of Fisher Scoring iterations: 5
+</code></pre><p>The intercept is the log(odds) an untrained farmer will adopt the technolgy. This is because the &ldquo;No&rdquo; is the first factor in training variable. The odds is not significant; meaning that odds that an untrained farmer will adopt technology is not different from zero. This can be directly derived as: <code>26/17</code> = 1.5294118</p>
+<p>The coefficient on training variable is significant and positive. This means that receiving training increases the odds of a farmer being an adopter significantly. Numerically, odds of being an adopter farmer are, on a log scale, 1.619 greater if the famerhas received a training. This can be directly derived as: <code>log((17/1) / (26/16))</code> = 10.4615385</p>
+<p>Now, we can calculate the overall &ldquo;Pseudo R-squared&rdquo; and its p-value. For logistic regression,</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic">## NOTE: Since we are doing logistic regression...</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">## Null devaince = 2*(0 - LogLikelihood(null model))</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">##               = -2*LogLikihood(null model)</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">## Residual deviacne = 2*(0 - LogLikelihood(proposed model))</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">##                   = -2*LogLikelihood(proposed model)</span>
+</span></span><span style="display:flex;"><span>ll.null <span style="color:#000;font-weight:bold">&lt;-</span> rice_glm<span style="color:#000;font-weight:bold">$</span>null.deviance<span style="color:#000;font-weight:bold">/</span><span style="color:#099">-2</span>
+</span></span><span style="display:flex;"><span>ll.proposed <span style="color:#000;font-weight:bold">&lt;-</span> rice_glm<span style="color:#000;font-weight:bold">$</span>deviance<span style="color:#000;font-weight:bold">/</span><span style="color:#099">-2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">## McFadden&#39;s Pseudo R^2 = [ LL(Null) - LL(Proposed) ] / LL(Null)</span>
+</span></span><span style="display:flex;"><span>(ll.null <span style="color:#000;font-weight:bold">-</span> ll.proposed) <span style="color:#000;font-weight:bold">/</span> ll.null
+</span></span></code></pre></div><pre tabindex="0"><code>## [1] 0.1089217
+</code></pre><p>Likewise based on <code>\(\chi^2\)</code> values, we can arrive at p-values.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic">## chi-square value = 2*(LL(Proposed) - LL(Null))</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">## p-value = 1 - pchisq(chi-square value, df = 2-1)</span>
+</span></span><span style="display:flex;"><span><span style="color:#099">1</span> <span style="color:#000;font-weight:bold">-</span> <span style="color:#900;font-weight:bold">pchisq</span>(<span style="color:#099">2</span><span style="color:#000;font-weight:bold">*</span>(ll.proposed <span style="color:#000;font-weight:bold">-</span> ll.null), df<span style="color:#000;font-weight:bold">=</span><span style="color:#099">1</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>## [1] 0.004718303
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#099">1</span> <span style="color:#000;font-weight:bold">-</span> <span style="color:#900;font-weight:bold">pchisq</span>((rice_glm<span style="color:#000;font-weight:bold">$</span>null.deviance <span style="color:#000;font-weight:bold">-</span> rice_glm<span style="color:#000;font-weight:bold">$</span>deviance), df<span style="color:#000;font-weight:bold">=</span><span style="color:#099">1</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>## [1] 0.004718303
+</code></pre><p>I is also informative to see in terms of what this logistic regression predicts, given that a farmer is either trained or untrained (and no other data about them).</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>rice_predicted <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">tibble</span>(
+</span></span><span style="display:flex;"><span>  probability_of_adoption<span style="color:#000;font-weight:bold">=</span>rice_glm<span style="color:#000;font-weight:bold">$</span>fitted.values,
+</span></span><span style="display:flex;"><span>  training<span style="color:#000;font-weight:bold">=</span>rice_variety_adoption<span style="color:#000;font-weight:bold">$</span>training)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">## We can plot the data...</span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">ggplot</span>(data<span style="color:#000;font-weight:bold">=</span>rice_predicted, <span style="color:#900;font-weight:bold">aes</span>(x<span style="color:#000;font-weight:bold">=</span>training, y<span style="color:#000;font-weight:bold">=</span>probability_of_adoption)) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">geom_point</span>(<span style="color:#900;font-weight:bold">aes</span>(color<span style="color:#000;font-weight:bold">=</span>training), size<span style="color:#000;font-weight:bold">=</span><span style="color:#099">5</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">xlab</span>(<span style="color:#d14">&#34;Training&#34;</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">ylab</span>(<span style="color:#d14">&#34;Predicted probability of a farmer being an adopter&#34;</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">theme_bw</span>()
+</span></span></code></pre></div><img src="/blog/logistic-regression-part-ii-varietal-adoption-dataset/index_files/figure-html/rice-prediction-1.png" width="480" />
+<p>Since there are only two probabilities of adopting/non-adopting (one for trained and one for untrained), we can use a table to summarize the predicted probabilities.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#900;font-weight:bold">xtabs</span>(<span style="color:#000;font-weight:bold">~</span> probability_of_adoption <span style="color:#000;font-weight:bold">+</span> training, data<span style="color:#000;font-weight:bold">=</span>rice_predicted)
+</span></span></code></pre></div><pre tabindex="0"><code>##                        training
+## probability_of_adoption No Yes
+##       0.604651162790698 43   0
+##       0.941176470569947  0  17
+</code></pre><p>In a similar way multiple variables can be used as regressors to predict probability of farmer being an adopter of improved variety</p>
+
+
+
+
+<h2 id="continuous-predictor">Continuous predictor
+  <a href="#continuous-predictor"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>rice_variety_adoption <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">glm</span>(improved_variety_adoption <span style="color:#000;font-weight:bold">~</span> farm_size, data <span style="color:#000;font-weight:bold">=</span> rice_data, family <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">binomial</span>())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># also note that continuous response variables may infact be resulting form composite distributions</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rice_data <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">ggplot</span>() <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">geom_boxplot</span>(<span style="color:#900;font-weight:bold">aes</span>(improved_variety_adoption, farm_size, fill <span style="color:#000;font-weight:bold">=</span> improved_variety_adoption), alpha <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0.6</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">geom_violin</span>(<span style="color:#900;font-weight:bold">aes</span>(improved_variety_adoption, farm_size, fill <span style="color:#000;font-weight:bold">=</span> improved_variety_adoption), alpha <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0.6</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">scale_fill_discrete</span>(guide <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">FALSE</span>)
+</span></span></code></pre></div><img src="/blog/logistic-regression-part-ii-varietal-adoption-dataset/index_files/figure-html/example-classification-1.png" width="480" />
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># break down globulin data into based on arbitrary value of 32</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># check if the distribution is normal ?</span>
+</span></span><span style="display:flex;"><span>rice_data <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">ggplot</span>() <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">geom_density_ridges</span>(<span style="color:#900;font-weight:bold">aes</span>(x <span style="color:#000;font-weight:bold">=</span> farm_size, y <span style="color:#000;font-weight:bold">=</span> training, fill <span style="color:#000;font-weight:bold">=</span> improved_variety_adoption), 
+</span></span><span style="display:flex;"><span>              position <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;identity&#34;</span>, 
+</span></span><span style="display:flex;"><span>              alpha <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0.6</span>, scale <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">1.1</span>, rel_min_height <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0.05</span>) <span style="color:#000;font-weight:bold">+</span> <span style="color:#998;font-style:italic"># `rel_min_height` is minimum height of density below which is ignored in display</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">scale_fill_discrete</span>(guide <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">FALSE</span>)
+</span></span></code></pre></div><img src="/blog/logistic-regression-part-ii-varietal-adoption-dataset/index_files/figure-html/example-classification-2.png" width="480" />
+<p>There is likely a presence of two peaks in the category receiving training.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>rice_freq_tab_char <span style="color:#000;font-weight:bold">&lt;-</span> rice_data <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">select_if</span>(.predicate <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">function</span>(x)<span style="color:#900;font-weight:bold">is.character</span>(x)<span style="color:#000;font-weight:bold">|</span><span style="color:#900;font-weight:bold">is.factor</span>(x))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rice_freq_tab_char <span style="color:#000;font-weight:bold">&lt;-</span> rice_freq_tab_char <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">pivot_longer</span>(household_head_gender<span style="color:#000;font-weight:bold">:</span><span style="color:#900;font-weight:bold">last_col</span>(), names_to <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#39;categorical_vars&#39;</span>, values_to <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;var_value&#34;</span>) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">group_by</span>(categorical_vars, var_value) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">count</span>(sort <span style="color:#000;font-weight:bold">=</span> <span style="color:#999">F</span>) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">ungroup</span>()
+</span></span></code></pre></div><p>Pie charts of all categorical variables.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>rice_freq_tab_split <span style="color:#000;font-weight:bold">&lt;-</span> rice_freq_tab_char <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">group_split</span>(categorical_vars) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">set_names</span>(<span style="color:#900;font-weight:bold">map</span>(., <span style="color:#000;font-weight:bold">~</span><span style="color:#900;font-weight:bold">unique</span>(.x<span style="color:#000;font-weight:bold">$</span>categorical_vars)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fpie <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">map2</span>(.x <span style="color:#000;font-weight:bold">=</span> rice_freq_tab_split,
+</span></span><span style="display:flex;"><span>             .y <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">names</span>(rice_freq_tab_split),
+</span></span><span style="display:flex;"><span>             .f <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">~</span> <span style="color:#900;font-weight:bold">ggplot</span>(.x,
+</span></span><span style="display:flex;"><span>                           <span style="color:#900;font-weight:bold">aes</span>(x<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;&#34;</span>, y<span style="color:#000;font-weight:bold">=</span>n, fill<span style="color:#000;font-weight:bold">=</span>var_value)) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#900;font-weight:bold">geom_bar</span>(stat<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;identity&#34;</span>, width<span style="color:#000;font-weight:bold">=</span><span style="color:#099">1</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#998;font-style:italic"># Convert to pie (polar coordinates) and add labels</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#900;font-weight:bold">coord_polar</span>(<span style="color:#d14">&#34;y&#34;</span>, start<span style="color:#000;font-weight:bold">=</span><span style="color:#099">0</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>               ggrepel<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">geom_text_repel</span>(<span style="color:#900;font-weight:bold">aes</span>(label <span style="color:#000;font-weight:bold">=</span> scales<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">percent</span>(<span style="color:#900;font-weight:bold">round</span>(n<span style="color:#000;font-weight:bold">/</span><span style="color:#900;font-weight:bold">sum</span>(n), <span style="color:#099">2</span>))),
+</span></span><span style="display:flex;"><span>                         position <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">position_stack</span>(vjust <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0.5</span>), size <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">4</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#998;font-style:italic"># Add color scale (hex colors)</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#998;font-style:italic"># scale_fill_manual(values=c(&#34;#55DDE0&#34;, &#34;#33658A&#34;, &#34;#2F4858&#34;,</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#998;font-style:italic">#                            &#34;#F6AE2D&#34;, &#34;#F26419&#34;)) +</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#998;font-style:italic"># use fill_viridis_d() for discrete values</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#900;font-weight:bold">scale_fill_viridis_d</span>(na.value <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;grey50&#34;</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#998;font-style:italic"># faceting will add label to individual plot at least</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#998;font-style:italic"># facet_wrap(~`Socio-economic variables`) +</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#998;font-style:italic"># Remove labels and add title</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#900;font-weight:bold">labs</span>(x <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">NULL</span>, y <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">NULL</span>,
+</span></span><span style="display:flex;"><span>                    fill <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">NULL</span>,
+</span></span><span style="display:flex;"><span>                    title <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">str_to_sentence</span>(<span style="color:#900;font-weight:bold">str_replace_all</span>(.y, <span style="color:#d14">&#34;_&#34;</span>, <span style="color:#d14">&#34; &#34;</span>))) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#998;font-style:italic"># Tidy up the theme</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#900;font-weight:bold">theme_classic</span>() <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#900;font-weight:bold">theme</span>(axis.line <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>                     axis.text <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>                     axis.ticks <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>                     plot.title <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_text</span>(hjust <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0.5</span>, color <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;#666666&#34;</span>))
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fpie
+</span></span></code></pre></div><pre tabindex="0"><code>## $age_group
+</code></pre><img src="/blog/logistic-regression-part-ii-varietal-adoption-dataset/index_files/figure-html/frequency-pie-1.png" width="384" />
+<pre tabindex="0"><code>## 
+## $education
+</code></pre><img src="/blog/logistic-regression-part-ii-varietal-adoption-dataset/index_files/figure-html/frequency-pie-2.png" width="384" />
+<pre tabindex="0"><code>## 
+## $household_head_gender
+</code></pre><img src="/blog/logistic-regression-part-ii-varietal-adoption-dataset/index_files/figure-html/frequency-pie-3.png" width="384" />
+<pre tabindex="0"><code>## 
+## $improved_variety_adoption
+</code></pre><img src="/blog/logistic-regression-part-ii-varietal-adoption-dataset/index_files/figure-html/frequency-pie-4.png" width="384" />
+<pre tabindex="0"><code>## 
+## $land_size
+</code></pre><img src="/blog/logistic-regression-part-ii-varietal-adoption-dataset/index_files/figure-html/frequency-pie-5.png" width="384" />
+<pre tabindex="0"><code>## 
+## $other_income_source
+</code></pre><img src="/blog/logistic-regression-part-ii-varietal-adoption-dataset/index_files/figure-html/frequency-pie-6.png" width="384" />
+<pre tabindex="0"><code>## 
+## $training
+</code></pre><img src="/blog/logistic-regression-part-ii-varietal-adoption-dataset/index_files/figure-html/frequency-pie-7.png" width="384" />
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # arrange pie plots in grid</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # grid.arrange(grobs = fpie, ncol = 3,</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># #              top = &#34;Percentage of response category for socio-economic variables in household samples&#34;) ## display plot</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># ggsave(filename = &#34;./socio_economic_pie.png&#34;,</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#        arrangeGrob(grobs = fpie, ncol = 3,</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#                    top = &#34;Percentage of response category for categorical variables from surveyed households&#34;),</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#        width = 18, height = 18, device = &#34;png&#34;, dpi = 300) ## save plot</span>
+</span></span></code></pre></div><p>Aggregating grouped variables for regression modeling.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># rice_data %&gt;% skimr::skim()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rice_data_na_deselected <span style="color:#000;font-weight:bold">&lt;-</span> rice_data <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">select</span>(<span style="color:#000;font-weight:bold">-</span>shared_landsize, <span style="color:#000;font-weight:bold">-</span>irrigated_land_size) <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#998;font-style:italic"># shared_landsize and irrigated_land_size both are continuous and have only 0.37, 0.67 complete</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate_if</span>(is.character, as.factor)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># collapse factors</span>
+</span></span><span style="display:flex;"><span>rice_data_na_deselected <span style="color:#000;font-weight:bold">&lt;-</span> rice_data_na_deselected <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(other_income_source <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">fct_collapse</span>(<span style="color:#900;font-weight:bold">fct_explicit_na</span>(other_income_source, na_level <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;No&#34;</span>), 
+</span></span><span style="display:flex;"><span>                                            Yes <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;Business&#34;</span>, <span style="color:#d14">&#34;Livestock&#34;</span>, <span style="color:#d14">&#34;Off-farm job&#34;</span>, <span style="color:#d14">&#34;Remittance&#34;</span>), 
+</span></span><span style="display:flex;"><span>                                            No <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;No other source&#34;</span>))) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(age_group <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">fct_collapse</span>(age_group, <span style="color:#d14">&#34;20-39&#34;</span> <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;20-29&#34;</span>, <span style="color:#d14">&#34;30-39&#34;</span>), <span style="color:#d14">&#34;&gt;=40&#34;</span> <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;40-49&#34;</span>, <span style="color:#d14">&#34;50-59&#34;</span>, <span style="color:#d14">&#34;above 60&#34;</span>))) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(land_size <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">fct_collapse</span>(land_size, <span style="color:#d14">&#34;5-15 kattha&#34;</span> <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;5-15 kattha&#34;</span>, <span style="color:#d14">&#34;5-15 Kattha&#34;</span>))) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(education <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">fct_collapse</span>(education, 
+</span></span><span style="display:flex;"><span>                                  <span style="color:#d14">&#34;Primary or informal&#34;</span> <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;primary education&#34;</span>, <span style="color:#d14">&#34;Non-formal education only&#34;</span>), 
+</span></span><span style="display:flex;"><span>                                  <span style="color:#d14">&#34;Upto 10th&#34;</span> <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;up to SLC&#34;</span>), 
+</span></span><span style="display:flex;"><span>                                  <span style="color:#d14">&#34;Intermediate or higher&#34;</span> <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;Intermediate/+2 level&#34;</span>, <span style="color:#d14">&#34;Bachelors&#34;</span>)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rice_data_na_deselected <span style="color:#000;font-weight:bold">%&gt;%</span> skimr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">skim</span>()
+</span></span></code></pre></div><p>Table: Table 1: Data summary</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left"></th>
+          <th style="text-align: left"></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Name</td>
+          <td style="text-align: left">Piped data</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Number of rows</td>
+          <td style="text-align: left">60</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Number of columns</td>
+          <td style="text-align: left">10</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">_______________________</td>
+          <td style="text-align: left"></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Column type frequency:</td>
+          <td style="text-align: left"></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">factor</td>
+          <td style="text-align: left">7</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">numeric</td>
+          <td style="text-align: left">3</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">________________________</td>
+          <td style="text-align: left"></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Group variables</td>
+          <td style="text-align: left">None</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">skim_variable</th>
+          <th style="text-align: right">n_missing</th>
+          <th style="text-align: right">complete_rate</th>
+          <th style="text-align: left">ordered</th>
+          <th style="text-align: right">n_unique</th>
+          <th style="text-align: left">top_counts</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">household_head_gender</td>
+          <td style="text-align: right">0</td>
+          <td style="text-align: right">1.00</td>
+          <td style="text-align: left">FALSE</td>
+          <td style="text-align: right">2</td>
+          <td style="text-align: left">Mal: 37, Fem: 23</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">age_group</td>
+          <td style="text-align: right">0</td>
+          <td style="text-align: right">1.00</td>
+          <td style="text-align: left">FALSE</td>
+          <td style="text-align: right">2</td>
+          <td style="text-align: left">&gt;=4: 43, 20-: 17</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">education</td>
+          <td style="text-align: right">0</td>
+          <td style="text-align: right">1.00</td>
+          <td style="text-align: left">FALSE</td>
+          <td style="text-align: right">3</td>
+          <td style="text-align: left">Pri: 34, Int: 13, Upt: 13</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">land_size</td>
+          <td style="text-align: right">2</td>
+          <td style="text-align: right">0.97</td>
+          <td style="text-align: left">FALSE</td>
+          <td style="text-align: right">4</td>
+          <td style="text-align: left">5-1: 18, abo: 14, 15-: 13, les: 13</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">other_income_source</td>
+          <td style="text-align: right">0</td>
+          <td style="text-align: right">1.00</td>
+          <td style="text-align: left">FALSE</td>
+          <td style="text-align: right">2</td>
+          <td style="text-align: left">Yes: 40, No: 20</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">improved_variety_adoption</td>
+          <td style="text-align: right">0</td>
+          <td style="text-align: right">1.00</td>
+          <td style="text-align: left">FALSE</td>
+          <td style="text-align: right">2</td>
+          <td style="text-align: left">Yes: 42, No: 18</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">training</td>
+          <td style="text-align: right">0</td>
+          <td style="text-align: right">1.00</td>
+          <td style="text-align: left">FALSE</td>
+          <td style="text-align: right">2</td>
+          <td style="text-align: left">No: 43, Yes: 17</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">skim_variable</th>
+          <th style="text-align: right">n_missing</th>
+          <th style="text-align: right">complete_rate</th>
+          <th style="text-align: right">mean</th>
+          <th style="text-align: right">sd</th>
+          <th style="text-align: right">p0</th>
+          <th style="text-align: right">p25</th>
+          <th style="text-align: right">p50</th>
+          <th style="text-align: right">p75</th>
+          <th style="text-align: right">p100</th>
+          <th style="text-align: left">hist</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">id</td>
+          <td style="text-align: right">0</td>
+          <td style="text-align: right">1</td>
+          <td style="text-align: right">30.50</td>
+          <td style="text-align: right">17.46</td>
+          <td style="text-align: right">1</td>
+          <td style="text-align: right">15.75</td>
+          <td style="text-align: right">30.5</td>
+          <td style="text-align: right">45.25</td>
+          <td style="text-align: right">60</td>
+          <td style="text-align: left">▇▇▇▇▇</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">family_size</td>
+          <td style="text-align: right">0</td>
+          <td style="text-align: right">1</td>
+          <td style="text-align: right">6.07</td>
+          <td style="text-align: right">2.11</td>
+          <td style="text-align: right">3</td>
+          <td style="text-align: right">4.00</td>
+          <td style="text-align: right">6.0</td>
+          <td style="text-align: right">7.00</td>
+          <td style="text-align: right">12</td>
+          <td style="text-align: left">▇▇▇▂▁</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">farm_size</td>
+          <td style="text-align: right">0</td>
+          <td style="text-align: right">1</td>
+          <td style="text-align: right">22.72</td>
+          <td style="text-align: right">21.46</td>
+          <td style="text-align: right">1</td>
+          <td style="text-align: right">6.00</td>
+          <td style="text-align: right">13.5</td>
+          <td style="text-align: right">38.88</td>
+          <td style="text-align: right">85</td>
+          <td style="text-align: left">▇▂▂▁▁</td>
+      </tr>
+  </tbody>
+</table>
+
+
+
+
+<h2 id="glm-fit">GLM fit
+  <a href="#glm-fit"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>rice_glm_fit <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">glm</span>(formula <span style="color:#000;font-weight:bold">=</span> improved_variety_adoption <span style="color:#000;font-weight:bold">~</span> 
+</span></span><span style="display:flex;"><span>                      household_head_gender <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      age_group <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      education <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      land_size <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      other_income_source <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      improved_variety_adoption <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      training <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      family_size <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      farm_size, 
+</span></span><span style="display:flex;"><span>                    data <span style="color:#000;font-weight:bold">=</span> rice_data_na_deselected, family <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;binomial&#34;</span>)
+</span></span><span style="display:flex;"><span>rice_glm_fit <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">summary</span>()
+</span></span></code></pre></div><pre tabindex="0"><code>## 
+## Call:
+## glm(formula = improved_variety_adoption ~ household_head_gender + 
+##     age_group + education + land_size + other_income_source + 
+##     improved_variety_adoption + training + family_size + farm_size, 
+##     family = &#34;binomial&#34;, data = rice_data_na_deselected)
+## 
+## Deviance Residuals: 
+##      Min        1Q    Median        3Q       Max  
+## -1.59547  -0.44483   0.00019   0.40119   1.66599  
+## 
+## Coefficients:
+##                                Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)                  -2.495e+00  4.214e+00  -0.592   0.5537  
+## household_head_genderMale    -1.991e+00  1.008e+00  -1.975   0.0483 *
+## age_group&gt;=40                 2.515e-01  1.170e+00   0.215   0.8298  
+## educationPrimary or informal -5.974e-01  1.405e+00  -0.425   0.6706  
+## educationUpto 10th           -1.282e-03  1.677e+00  -0.001   0.9994  
+## land_size5-15 kattha          1.639e+00  2.385e+00   0.687   0.4919  
+## land_sizeabove 30 kattha      1.352e+01  2.266e+03   0.006   0.9952  
+## land_sizeless than 5 kattha   2.581e+00  3.530e+00   0.731   0.4648  
+## other_income_sourceNo         1.021e+00  9.204e-01   1.109   0.2674  
+## trainingYes                   2.795e+00  1.319e+00   2.119   0.0341 *
+## family_size                  -6.287e-02  2.171e-01  -0.290   0.7722  
+## farm_size                     2.172e-01  1.630e-01   1.333   0.1827  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 70.169  on 57  degrees of freedom
+## Residual deviance: 38.626  on 46  degrees of freedom
+##   (2 observations deleted due to missingness)
+## AIC: 62.626
+## 
+## Number of Fisher Scoring iterations: 18
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># write summary table</span>
+</span></span><span style="display:flex;"><span>rice_glm_fit <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  broom<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">tidy</span>() <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate_if</span>(is.numeric, <span style="color:#900;font-weight:bold">list</span>(<span style="color:#000;font-weight:bold">~</span><span style="color:#900;font-weight:bold">round</span>(., <span style="color:#099">3</span>)))
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 12 × 5
+##    term                         estimate std.error statistic p.value
+##    &lt;chr&gt;                           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+##  1 (Intercept)                    -2.50      4.21     -0.592   0.554
+##  2 household_head_genderMale      -1.99      1.01     -1.98    0.048
+##  3 age_group&gt;=40                   0.251     1.17      0.215   0.83 
+##  4 educationPrimary or informal   -0.597     1.40     -0.425   0.671
+##  5 educationUpto 10th             -0.001     1.68     -0.001   0.999
+##  6 land_size5-15 kattha            1.64      2.38      0.687   0.492
+##  7 land_sizeabove 30 kattha       13.5    2266.        0.006   0.995
+##  8 land_sizeless than 5 kattha     2.58      3.53      0.731   0.465
+##  9 other_income_sourceNo           1.02      0.92      1.11    0.267
+## 10 trainingYes                     2.80      1.32      2.12    0.034
+## 11 family_size                    -0.063     0.217    -0.29    0.772
+## 12 farm_size                       0.217     0.163     1.33    0.183
+</code></pre>
+
+
+
+<h2 id="glmer-fit">GLMER fit
+  <a href="#glmer-fit"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>rice_glmer_fit <span style="color:#000;font-weight:bold">&lt;-</span> lme4<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">glmer</span>(formula <span style="color:#000;font-weight:bold">=</span> improved_variety_adoption <span style="color:#000;font-weight:bold">~</span> 
+</span></span><span style="display:flex;"><span>                      (<span style="color:#099">1</span><span style="color:#000;font-weight:bold">|</span> household_head_gender) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      (<span style="color:#099">1</span><span style="color:#000;font-weight:bold">|</span> age_group) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      (<span style="color:#099">1</span><span style="color:#000;font-weight:bold">|</span> education) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      land_size <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      other_income_source <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      improved_variety_adoption <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      training <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      family_size <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                      farm_size, 
+</span></span><span style="display:flex;"><span>                    data <span style="color:#000;font-weight:bold">=</span> rice_data_na_deselected, family <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;binomial&#34;</span>)
+</span></span><span style="display:flex;"><span>rice_glmer_fit <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">summary</span>()
+</span></span></code></pre></div><pre tabindex="0"><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
+##   Approximation) [glmerMod]
+##  Family: binomial  ( logit )
+## Formula: improved_variety_adoption ~ (1 | household_head_gender) + (1 |  
+##     age_group) + (1 | education) + land_size + other_income_source +  
+##     improved_variety_adoption + training + family_size + farm_size
+##    Data: rice_data_na_deselected
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##     65.0     87.7    -21.5     43.0       47 
+## 
+## Scaled residuals: 
+##      Min       1Q   Median       3Q      Max 
+## -1.91066 -0.47158  0.00006  0.33605  1.92300 
+## 
+## Random effects:
+##  Groups                Name        Variance  Std.Dev. 
+##  education             (Intercept) 1.171e-09 3.422e-05
+##  age_group             (Intercept) 1.114e-10 1.056e-05
+##  household_head_gender (Intercept) 4.082e-01 6.389e-01
+## Number of obs: 58, groups:  
+## education, 3; age_group, 2; household_head_gender, 2
+## 
+## Fixed effects:
+##                               Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)                   -2.21763    3.49543  -0.634   0.5258  
+## land_size5-15 kattha           0.63887    1.95442   0.327   0.7438  
+## land_sizeabove 30 kattha      15.88027 7778.07635   0.002   0.9984  
+## land_sizeless than 5 kattha    1.06652    2.77848   0.384   0.7011  
+## other_income_sourceNo          0.97918    0.85444   1.146   0.2518  
+## trainingYes                    2.69881    1.23472   2.186   0.0288 *
+## family_size                   -0.05804    0.19764  -0.294   0.7690  
+## farm_size                      0.15418    0.12654   1.218   0.2231  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##             (Intr) l_5-1k ln_30k ln_t5k oth__N trnngY fmly_s
+## lnd_sz5-15k -0.882                                          
+## lnd_szbv30k  0.000  0.000                                   
+## lnd_szlst5k -0.905  0.920  0.000                            
+## othr_ncm_sN -0.115  0.043  0.000  0.000                     
+## trainingYes -0.165  0.037  0.000  0.047  0.233              
+## family_size -0.524  0.232  0.000  0.241 -0.090  0.126       
+## farm_size   -0.879  0.838  0.000  0.908  0.113  0.112  0.176
+## optimizer (Nelder_Mead) convergence code: 0 (OK)
+## boundary (singular) fit: see help(&#39;isSingular&#39;)
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>rice_glmer_fit <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#998;font-style:italic"># this is hightly significant</span>
+</span></span><span style="display:flex;"><span>  emmeans<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">emmeans</span>(<span style="color:#d14">&#34;training&#34;</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>##  training     emmean  SE  df asymp.LCL asymp.UCL
+##  No       -8.07e+296 Inf Inf      -Inf       Inf
+##  Yes      -4.23e+302 Inf Inf      -Inf       Inf
+## 
+## Results are averaged over the levels of: land_size, other_income_source, improved_variety_adoption 
+## Results are given on the logit (not the response) scale. 
+## Confidence level used: 0.95
+</code></pre>
+
+
+
+<h2 id="contingency-chi2-for-test-of-independence-between-proportion-of-improved-variety-adopters-categories-and-other-categorial-variables">Contingency <code>\(\chi^2\)</code> for test of independence between proportion of improved variety adopters categories and other categorial variables.
+  <a href="#contingency-chi2-for-test-of-independence-between-proportion-of-improved-variety-adopters-categories-and-other-categorial-variables"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<p>For example,</p>
+<p><code>\(H_0\)</code> = The proportion of farm households who adopt improved varieties is independent of the gender of household.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>rice_factors <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">names</span>(<span style="color:#900;font-weight:bold">which</span>((rice_data_na_deselected <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#900;font-weight:bold">map_chr</span>(class)) <span style="color:#000;font-weight:bold">==</span> <span style="color:#d14">&#34;factor&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>all_factor_combination <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">crossing</span>(Group1 <span style="color:#000;font-weight:bold">=</span> rice_factors, Group2 <span style="color:#000;font-weight:bold">=</span> rice_factors) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">filter</span>(Group1 <span style="color:#000;font-weight:bold">&lt;</span> Group2)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # contingeny table chi-square calculation</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # the degrees of freedom equal (number of columns in contingency table minus one) x (number of rows in contingency table minus one) not counting the totals for rows or columns.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # for all unique combinations</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># all_factor_combination %&gt;% </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#   mutate(chi_test = map2(Group1, Group2, </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#                          ~chisq.test(rice_data_na_deselected[, .x, drop = TRUE], </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#                                      rice_data_na_deselected[, .y, drop = TRUE]))) %&gt;% </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#   mutate(chi_stat = map_dbl(chi_test, ~.x$statistic), </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#          chi_pval = map_dbl(chi_test, ~.x$p.value), </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#          chi_method = map_chr(chi_test, ~.x$method), </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#          chi_df = map_dbl(chi_test, ~.x$parameter)) %&gt;% </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#   select(-chi_test) %&gt;% </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#   mutate_if(is.numeric, function(x)round(x, 3))</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#   # write_csv(&#34;./outputs/rice_chi_square_test_for_independence.csv&#34;, &#34;&#34;)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # for improved_variety_adoption only</span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">crossing</span>(Group1 <span style="color:#000;font-weight:bold">=</span> rice_factors, Group2 <span style="color:#000;font-weight:bold">=</span> rice_factors) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">filter</span>(Group1 <span style="color:#000;font-weight:bold">==</span> <span style="color:#d14">&#34;improved_variety_adoption&#34;</span>, Group2 <span style="color:#000;font-weight:bold">!=</span> <span style="color:#d14">&#34;improved_variety_adoption&#34;</span>) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(chi_test <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">map2</span>(Group1, Group2,
+</span></span><span style="display:flex;"><span>                         <span style="color:#000;font-weight:bold">~</span><span style="color:#900;font-weight:bold">chisq.test</span>(rice_data_na_deselected[, .x, drop <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">TRUE</span>],
+</span></span><span style="display:flex;"><span>                                     rice_data_na_deselected[, .y, drop <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">TRUE</span>]))) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(chi_stat <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">map_dbl</span>(chi_test, <span style="color:#000;font-weight:bold">~</span>.x<span style="color:#000;font-weight:bold">$</span>statistic),
+</span></span><span style="display:flex;"><span>         chi_pval <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">map_dbl</span>(chi_test, <span style="color:#000;font-weight:bold">~</span>.x<span style="color:#000;font-weight:bold">$</span>p.value),
+</span></span><span style="display:flex;"><span>         chi_method <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">map_chr</span>(chi_test, <span style="color:#000;font-weight:bold">~</span>.x<span style="color:#000;font-weight:bold">$</span>method),
+</span></span><span style="display:flex;"><span>         chi_df <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">map_dbl</span>(chi_test, <span style="color:#000;font-weight:bold">~</span>.x<span style="color:#000;font-weight:bold">$</span>parameter)) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">select</span>(<span style="color:#000;font-weight:bold">-</span>chi_test) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate_if</span>(is.numeric, <span style="color:#000;font-weight:bold">function</span>(x)<span style="color:#900;font-weight:bold">round</span>(x, <span style="color:#099">3</span>))
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 6 × 6
+##   Group1                    Group2           chi_stat chi_pval chi_method chi_df
+##   &lt;chr&gt;                     &lt;chr&gt;               &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+## 1 improved_variety_adoption age_group           0        1     Pearson&#39;s…      1
+## 2 improved_variety_adoption education           2.72     0.257 Pearson&#39;s…      2
+## 3 improved_variety_adoption household_head_…    0.658    0.417 Pearson&#39;s…      1
+## 4 improved_variety_adoption land_size          12.8      0.005 Pearson&#39;s…      3
+## 5 improved_variety_adoption other_income_so…    0        1     Pearson&#39;s…      1
+## 6 improved_variety_adoption training            5.07     0.024 Pearson&#39;s…      1
+</code></pre>
+
+
+
+<h2 id="pie-chart">Pie chart
+  <a href="#pie-chart"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # store column names</span>
+</span></span><span style="display:flex;"><span>hd_df_colnames <span style="color:#000;font-weight:bold">&lt;-</span> rice_data <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">colnames</span>() <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">enframe</span>() <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  .[[<span style="color:#d14">&#34;value&#34;</span>]]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # initialize empty list</span>
+</span></span><span style="display:flex;"><span>counted_list <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">list</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # fill up the list with one way tablulation of count</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">for</span> (var <span style="color:#000;font-weight:bold">in</span> <span style="color:#900;font-weight:bold">names</span>(<span style="color:#900;font-weight:bold">which</span>(<span style="color:#900;font-weight:bold">map_lgl</span>(rice_data, <span style="color:#000;font-weight:bold">~</span><span style="color:#900;font-weight:bold">class</span>(.x) <span style="color:#000;font-weight:bold">%in%</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;character&#34;</span>, <span style="color:#d14">&#34;factor&#34;</span>))))) {
+</span></span><span style="display:flex;"><span>  counted_list[[var]] <span style="color:#000;font-weight:bold">&lt;-</span> rice_data <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#900;font-weight:bold">count</span>(.data[[var]])
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # use list to construct pie charts</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # to best filter out any useless plots manually observe long and very wide count tables and omit those</span>
+</span></span><span style="display:flex;"><span>counted_gg_list <span style="color:#000;font-weight:bold">&lt;-</span> counted_list <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">enframe</span>(name <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;variable&#34;</span>, value <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;count_data&#34;</span>) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(variable <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">str_to_title</span>(<span style="color:#900;font-weight:bold">str_replace_all</span>(variable, <span style="color:#d14">&#34;_&#34;</span>, <span style="color:#d14">&#34; &#34;</span>))) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">mutate</span>(plot_count_var <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">map2</span>(count_data <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>                                 <span style="color:#900;font-weight:bold">map</span>(<span style="color:#000;font-weight:bold">~</span>.x <span style="color:#000;font-weight:bold">%&gt;%</span> <span style="color:#900;font-weight:bold">na.omit</span>()),
+</span></span><span style="display:flex;"><span>                               variable,
+</span></span><span style="display:flex;"><span>                               <span style="color:#000;font-weight:bold">~</span> <span style="color:#900;font-weight:bold">ggplot</span>(data <span style="color:#000;font-weight:bold">=</span> .x,
+</span></span><span style="display:flex;"><span>                                        <span style="color:#900;font-weight:bold">aes_string</span>(x <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;colnames(.x)[1]&#34;</span>,
+</span></span><span style="display:flex;"><span>                                                   y <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">colnames</span>(.x)[2],
+</span></span><span style="display:flex;"><span>                                                   fill <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">colnames</span>(.x)[1])) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                                 <span style="color:#900;font-weight:bold">geom_bar</span>(stat <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;identity&#34;</span>, color <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;white&#34;</span>,
+</span></span><span style="display:flex;"><span>                                          width <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">1</span>, size <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">1</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                                 <span style="color:#900;font-weight:bold">coord_polar</span>(theta <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;y&#34;</span>, start <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                                 <span style="color:#998;font-style:italic"># scale_fill_discrete(guide = FALSE) +</span>
+</span></span><span style="display:flex;"><span>                                 <span style="color:#998;font-style:italic"># guides(fill = guide_legend(title = .y,</span>
+</span></span><span style="display:flex;"><span>                                 <span style="color:#998;font-style:italic">#                            title.position = &#34;top&#34;)) +</span>
+</span></span><span style="display:flex;"><span>                                 <span style="color:#900;font-weight:bold">labs</span>(x <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;&#34;</span>, y <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;&#34;</span>, title <span style="color:#000;font-weight:bold">=</span> .y) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                                 <span style="color:#900;font-weight:bold">theme_classic</span>() <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                                 ggrepel<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">geom_text_repel</span>(<span style="color:#900;font-weight:bold">aes</span>(label <span style="color:#000;font-weight:bold">=</span> scales<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">percent</span>(<span style="color:#900;font-weight:bold">round</span>(n<span style="color:#000;font-weight:bold">/</span><span style="color:#900;font-weight:bold">sum</span>(n),<span style="color:#099">3</span>))),
+</span></span><span style="display:flex;"><span>                                                          position <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">position_stack</span>(vjust <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0.5</span>))<span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>                                 <span style="color:#900;font-weight:bold">theme</span>(axis.line <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>                                       axis.text <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>                                       axis.ticks <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>                                       axis.text.x <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>                                       plot.title <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_text</span>(hjust <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0.5</span>, color <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;#666666&#34;</span>),
+</span></span><span style="display:flex;"><span>                                       legend.text <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_text</span>(size <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">8</span>),
+</span></span><span style="display:flex;"><span>                                       legend.title <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">element_blank</span>())
+</span></span><span style="display:flex;"><span>  )) <span style="color:#000;font-weight:bold">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  .[[<span style="color:#d14">&#34;plot_count_var&#34;</span>]]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># # save the pies in two files</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># ggsave(filename = &#34;./outputs/socio_economic_extended_pie1.png&#34;,</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#        arrangeGrob(grobs = counted_gg_list, ncol = 4,</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#                    top = &#34;Percentage of response category for categorical variables from surveyed households&#34;),</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#        width = 12, height = 12, units = &#34;in&#34;, device = &#34;png&#34;, dpi = 280) ## save plot</span>
+</span></span></code></pre></div>
+
+
+
+<h2 id="binary-classifier-using-logistic-regression">Binary classifier using logistic regression
+  <a href="#binary-classifier-using-logistic-regression"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<p>In classification problems, the goal is to predict the class membership based on predictors. Often there are two classes and one of the most popular methods for binary classification is logistic regression. The 1958 paper by D. R. Cox is likely to have set the stage for modern regression based approaches in binary output.</p>
+<p>The logistic regression, alike several variation in Generalized Linear Model family, is a class of binary regression model whereby the regressand (response variable) is related to predictors via a link function of the corresponding exponential family and by the magnitude of the variance of each measurement is allowed to be a function of its predicted value.</p>
+<p>Suppose that <code>\(y_1 \in \{0, 1\}\)</code> is a binary class indicator. The conditional response is modeled as <code>\(y | x \sim \text{Bernouli}(g_{\beta}(x))\)</code>, where</p>
+<p><code>$$g_{\beta}(x) = \frac{1}{1 + \exp^{-x^T \beta}}$$</code></p>
+<p>is the logistic function, and maximize the log-likelihood function, yielding the optimization problem</p>
+<p>$$
+\begin{array}{ll}
+\underset{\beta}{\mbox{maximize}} &amp; \sum_{i = 1}^m {
+y_i \log(g_{\beta}(x_i)) + (1-y_i)\log(1-g_{\beta}(x_i)) }.
+\end{array}
+$$</p>
+
+
+
+
+<h2 id="references">References
+  <a href="#references"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<ol>
+<li>YouTube video by CodeEmporium</li>
+<li>Break the source code of glm.fit()</li>
+</ol>
+
+        
+        <details closed class="f6 fw7 input-reset">
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Posted on:</dt>
+    <dd class="fw5 ml0">August 7, 2020</dd>
+  </dl>
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Length:</dt>
+    <dd class="fw5 ml0">14 minute read, 2950 words</dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Categories:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/categories/r">R</a>  <a href="http://localhost:4321/categories/tidyverse">tidyverse</a> </dd>
+  </dl>
+  
+  
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Tags:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/tags/r">R</a>  <a href="http://localhost:4321/tags/tidyverse">tidyverse</a> </dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">See Also:</dt>
+    
+    <dd class="fw5 ml0"><a href="/blog/cluster-dendrogram-an-introduction-and-showcase/">Cluster dendrogram: An introduction and showcase</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/paste-together-multiple-columns/">Paste together multiple columns</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/logistic-regression-part-i-fundamentals/">Logistic Regression: Part I - Fundamentals</a></dd>
+    
+  </dl>
+</details>
+
+      </section>
+      <footer class="post-footer">
+        <div class="post-pagination dt w-100 mt4 mb2">
+  
+  
+    <a class="prev dtc pr2 tl v-top fw6"
+    href="http://localhost:4321/blog/logistic-regression-part-i-fundamentals/">&larr; Logistic Regression: Part I - Fundamentals</a>
+  
+  
+  
+    <a class="next dtc pl2 tr v-top fw6"
+    href="http://localhost:4321/blog/paste-together-multiple-columns/">Paste together multiple columns &rarr;</a>
+  
+</div>
+
+      </footer>
+    </article>
+    
+      <div class="post-comments pa0 pa4-l mt4">
+  
+    
+      <script src="https://utteranc.es/client.js"
+              repo="deependrad/dblog"
+              issue-term="pathname"
+              theme="boxy-light"
+              label="comments :crystal_ball:"
+              crossorigin="anonymous"
+              async
+              type="text/javascript">
+      </script>
+    
+  
+</div>
+
+    
+  </section>
+</main>
+<footer class="site-footer pv4 bt b--transparent ph5" role="contentinfo">
+  <nav class="db dt-l w-100">
+    <p class="site-copyright f7 db dtc-l v-mid w-100 w-33-l tc tl-l pv2 pv0-l mv0 lh-copy">
+      &copy; 2024 Dblog
+      <span class="middot-divider"></span>
+      Made with <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/hugo-apero/" rel="dct:source">Hugo Apéro</a></span>.
+      <br />
+      
+Based on <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/formspree/blogophonic-hugo" rel="dct:source">Blogophonic</a></span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://formspree.io" property="cc:attributionName" rel="cc:attributionURL">Formspree</a>.
+    </p>
+    
+    <div class="site-social-links db dtc-l v-mid w-100 w-33-l tc pv2 pv0-l mv0">
+      <div class="social-icon-links" aria-hidden="true">
+  
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://github.com/deependrad/dblog" title="github" target="_blank" rel="me noopener">
+      <i class="fab fa-github fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://bsky.app/" title="bluesky" target="_blank" rel="me noopener">
+      <i class="fab fa-bluesky fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://twitter.com/dd_rookie" title="x-twitter" target="_blank" rel="me noopener">
+      <i class="fab fa-x-twitter fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://orcid.org/0000-0002-0347-7950" title="orcid" target="_blank" rel="me noopener">
+      <i class="ai ai-orcid fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="/blog/index.xml" title="rss" >
+      <i class="fas fa-rss fa-lg fa-fw"></i>
+    </a>
+  
+</div>
+
+    </div>
+    
+    <div class="site-links f6 db dtc-l v-mid w-100 w-67-l tc tr-l pv2 pv0-l mv0">
+      
+      <a class="dib pv1 ph2 link" href="/license/" title="License">License</a>
+      
+      <a class="dib pv1 ph2 link" href="/contact/" title="Contact form">Contact</a>
+      
+      <a class="dib pv1 ph2 link" href="/contributors/" title="Contributors">Contributors</a>
+      
+    </div>
+  </nav>
+  
+    <script>
+
+    var i, text, code, codes = document.getElementsByTagName('code');
+    for (let i = 0; i < codes.length;) {
+      code = codes[i];
+      if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+        text = code.textContent;
+        if (/^\$[^$]/.test(text) && /[^$]\$$/.test(text)) {
+          text = text.replace(/^\$/, '\\(').replace(/\$$/, '\\)');
+          code.textContent = text;
+        }
+        if (/^\\\((.|\s)+\\\)$/.test(text) ||
+            /^\\\[(.|\s)+\\\]$/.test(text) ||
+            /^\$(.|\s)+\$$/.test(text) ||
+            /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+          code.outerHTML = code.innerHTML;  
+          continue;
+        }
+      }
+      i++;
+    }
+</script>
+
+  
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+
+
+    
+  
+  
+</footer>
+
+      </div>
+    </body>
+</html>

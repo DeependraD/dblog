@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Timeseries on Rookie site</title>
+    <link>http://localhost:4321/categories/timeseries/</link>
+    <description>Recent content in Timeseries on Rookie site</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 31 Jul 2020 22:15:49 +0545</lastBuildDate>
+    <atom:link href="http://localhost:4321/categories/timeseries/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Time Series: Cointegration Analysis</title>
+      <link>http://localhost:4321/blog/time-series-cointegration-analysis/</link>
+      <pubDate>Fri, 31 Jul 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/time-series-cointegration-analysis/</guid>
+      <description>&lt;h2 id=&#34;cointegration&#34;&gt;Cointegration&#xA;  &lt;a href=&#34;#cointegration&#34;&gt;&lt;svg class=&#34;anchor-symbol&#34; aria-hidden=&#34;true&#34; height=&#34;26&#34; width=&#34;26&#34; viewBox=&#34;0 0 22 22&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&#xA;      &lt;path d=&#34;M0 0h24v24H0z&#34; fill=&#34;currentColor&#34;&gt;&lt;/path&gt;&#xA;      &lt;path d=&#34;M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z&#34;&gt;&lt;/path&gt;&#xA;    &lt;/svg&gt;&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Although not a new topic in finance and portfolio management, as some of the tweets below suggest, it&amp;rsquo;s application in field of Agricultural Economics and commodity market analysis is not often highlighted. A tweet relating S2F and bitcoin (BTC) trading was posted recently.&lt;/p&gt;&#xA;&lt;p&gt;In this post, I demonstrate what are the basic ingredients of the cointegration analysis. In particular, I provide some context as to how it came to being and what it&amp;rsquo;s roots are in theory. While catching along the core applications, I will use example dataset and present its features, in synology.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

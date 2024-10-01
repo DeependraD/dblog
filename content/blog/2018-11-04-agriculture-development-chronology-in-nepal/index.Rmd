@@ -1,0 +1,65 @@
+---
+title: Agriculture development chronology in Nepal
+author: Deependra Dhakal
+date: '2018-11-04'
+slug: agriculture-development-chronology-in-nepal
+categories:
+  - agriculture
+tags:
+  - Dates
+  - agriculture
+  - tidyverse
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+require(lubridate)
+theme_set(theme_bw())
+
+knitr::opts_chunk$set(tidy = TRUE, cache = TRUE, 
+                      echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, 
+                      fig.show = "hold", fig.align = "center", fig.width = 10,
+                      fig.asp = 0.8, message = FALSE, warning = FALSE)
+options(knitr.kable.NA = "", digits = 3)
+```
+
+## Toolbox for working with Unicode and Nepali fonts
+
+Here's a collection of excellent python scripts to convert back and forth among unicode and preeti font. To convert unicode text to preeti font:
+
+https://github.com/globalpolicy/UnicodeToPreeti
+
+To convert preeti font to unicode text:
+
+https://github.com/globalpolicy/PreetiToUnicode
+
+```{r development-chron}
+
+ag_dev_chron <- readr::read_csv(here::here("content", "blog", "data", "agriculture_development_chronology.csv"), col_names = T)
+# ag_dev_chron$Particular %>% enc2utf8()
+# ag_dev_chron$Title %>% unique()
+
+ggcal <- ag_dev_chron %>% 
+  filter(Title == "Establishment") %>% 
+  mutate(Particular = str_wrap(Particular, width = 25), 
+         Activity = as.factor(SN)) %>% 
+  ggplot(aes(x = Year_BS, y = Activity, label = Particular)) +
+  geom_point() +
+  ggrepel::geom_label_repel(size = 5.5, segment.alpha = .5) +
+  xlab("Year (BS)") +
+  theme_classic() +
+  theme(axis.title.y = element_blank(), 
+        axis.text.y = element_blank(),
+        text = element_text(size = 16))
+
+ggcal
+
+# ggsave("agriculture_development_chronology.png", plot = ggcal, device = "png", width = 12, height = 10, units = "in", dpi = 250)
+
+```
+

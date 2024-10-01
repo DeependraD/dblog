@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+  
+                           
+     
+
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.135.0">
+<title>Serpentine design and sorting | Rookie site</title>
+
+
+<meta property="twitter:site" content="@dd_rookie">
+<meta property="twitter:creator" content="@dd_rookie">
+
+
+
+
+
+
+
+  
+    
+  
+<meta name="description" content="">
+
+
+<meta property="og:site_name" content="Rookie site">
+<meta property="og:title" content="Serpentine design and sorting | Rookie site">
+<meta property="og:description" content="" />
+<meta property="og:type" content="page" />
+<meta property="og:url" content="http://localhost:4321/blog/serpentine-design-and-sorting/" />
+<meta property="og:locale" content="en">
+
+
+
+
+    
+        <meta property="og:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+        <meta property="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+    
+    
+  
+  <meta itemprop="name" content="Serpentine design and sorting">
+  <meta itemprop="description" content="Take a grid and serpentine it row-wise or column-wise This fn joins two matrices alternately columnwise, which is why this is the source of inspiration for generating serpentine design.
+alternate.cols &lt;- function(m1, m2) { cbind(m1, m2)[, order(c(seq(ncol(m1)), seq(ncol(m2))))] } A custom function to create a serpentine design in whatever fashion specified:
+serpentine &lt;- function(x, columnwise=TRUE){ if (columnwise) { odd &lt;- x[, seq(1, by=2, length.out = ncol(x)/2)] # odd x rev_even &lt;- x[, seq(from = 2, by=2, length.out = (ifelse((ncol(x)%%2 != 0), ((ncol(x)/2)-1), (ncol(x)/2))))][seq(dim(x)[1],1),] # or, even[rev(1:nrow(x)),] # reversed even x alternate_cbind &lt;- cbind(odd, rev_even)[, order(c(seq(ncol(odd)), seq(ncol(rev_even))))] return(alternate_cbind)} else { odd &lt;- x[seq(1, by=2, length.out = nrow(x)/2),] # odd x rev_even &lt;- x[seq(from = 2, by=2, length.out = (ifelse((nrow(x)%%2 != 0), ((nrow(x)/2)-1), (nrow(x)/2)))), ][, seq(dim(x)[2],1)] # or, even[, rev(1:ncol(x))] # reversed even x alternate_rbind &lt;- rbind(odd, rev_even)[order(c(seq(nrow(odd)), seq(nrow(rev_even)))), ] return(alternate_rbind) } } Let’s see the function in action">
+  <meta itemprop="datePublished" content="2020-09-19T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2020-09-19T12:13:33+05:45">
+  <meta itemprop="wordCount" content="514">
+  <meta itemprop="keywords" content="Doe,R">
+  
+  <!--[if IE]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  
+  
+  <link rel="stylesheet" href="/style.main.min.1cbac35dadc4fd962ceb58cdbe3e4bd32eb4a149ef54664a24d670fb5307d543.css" integrity="sha256-HLrDXa3E/ZYs61jNvj5L0y60oUnvVGZKJNZw&#43;1MH1UM=" media="screen">
+  
+  
+  <script src="/panelset.min.ed1ac24b6e16f4e2481e3d1d098ae66f5bc77438aef619e6e266d8ac5b00dc72.js" type="text/javascript"></script>
+  
+  
+  <script src="/main.min.36817c360165917b68a008c77f2439837c7c187a0acd3e9c92ce8f23fdc2d825.js" type="text/javascript"></script>
+</head>
+<body>
+      <div class="grid-container">
+<header class="site-header pt4 pb2 mb4 bb b--transparent ph5 headroom z-max" role="banner">
+  <nav class="site-nav db dt-l w-100" role="navigation">
+    <a class="site-brand db dtc-l v-mid link no-underline w-100 w-33-l tc tl-l" href="http://localhost:4321/" title="Home">
+      <img src="/img/blogophonic-mark-dark.png" class="dib db-l h2 w-auto" alt="Rookie site">
+    </a>
+    <div class="site-links db dtc-l v-mid w-100 w-47-l tc tr-l mt3 mt0-l ttu tracked">
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/about/" title="About Rookie">About</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 active" href="/blog/" title="Blog">Blog</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/project/" title="Project Portfolio">Projects</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/talks/" title="Talks">Talks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/academia/" title="Academia">Academia</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/tipsntricks/" title="Tips and tricks">Tips and tricks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="https://github.com/DeependraD/tex-for-beauty/releases/download/v1.06/Deependra_CV.pdf" title="CV copy">CV</a>
+      
+      
+    </div>
+  </nav>
+</header>
+
+<main class="page-main pa4" role="main">
+  <section class="page-content mw7 center">
+    <article class="post-content pa0 ph4-l">
+      <header class="post-header">
+        <h1 class="f1 lh-solid measure-narrow mb3 fw4">Serpentine design and sorting</h1>
+        
+        <p class="f6 measure lh-copy mv1">By Deependra Dhakal in <a href="http://localhost:4321/categories/r">R</a>  <a href="http://localhost:4321/categories/doe">doe</a> </p>
+        <p class="f7 db mv0 ttu">September 19, 2020</p>
+
+      
+
+      </header>
+      <section class="post-body pt5 pb4">
+        
+
+
+
+<h1 id="take-a-grid-and-serpentine-it-row-wise-or-column-wise">Take a grid and serpentine it row-wise or column-wise
+  <a href="#take-a-grid-and-serpentine-it-row-wise-or-column-wise"></a>
+</h1>
+<p>This fn joins two matrices alternately columnwise, which is why this is the source of inspiration for generating serpentine design.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>alternate.cols <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#000;font-weight:bold">function</span>(m1, m2) {
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">cbind</span>(m1, m2)[, <span style="color:#900;font-weight:bold">order</span>(<span style="color:#900;font-weight:bold">c</span>(<span style="color:#900;font-weight:bold">seq</span>(<span style="color:#900;font-weight:bold">ncol</span>(m1)), <span style="color:#900;font-weight:bold">seq</span>(<span style="color:#900;font-weight:bold">ncol</span>(m2))))]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>A custom function to create a serpentine design in whatever fashion specified:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>serpentine <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#000;font-weight:bold">function</span>(x, columnwise<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">TRUE</span>){
+</span></span><span style="display:flex;"><span>  <span style="color:#000;font-weight:bold">if</span> (columnwise) {
+</span></span><span style="display:flex;"><span>    odd <span style="color:#000;font-weight:bold">&lt;-</span> x[, <span style="color:#900;font-weight:bold">seq</span>(<span style="color:#099">1</span>, by<span style="color:#000;font-weight:bold">=</span><span style="color:#099">2</span>, length.out <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">ncol</span>(x)<span style="color:#000;font-weight:bold">/</span><span style="color:#099">2</span>)] <span style="color:#998;font-style:italic"># odd x</span>
+</span></span><span style="display:flex;"><span>    rev_even <span style="color:#000;font-weight:bold">&lt;-</span> x[, <span style="color:#900;font-weight:bold">seq</span>(from <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">2</span>, 
+</span></span><span style="display:flex;"><span>                        by<span style="color:#000;font-weight:bold">=</span><span style="color:#099">2</span>, 
+</span></span><span style="display:flex;"><span>                        length.out <span style="color:#000;font-weight:bold">=</span> (<span style="color:#900;font-weight:bold">ifelse</span>((<span style="color:#900;font-weight:bold">ncol</span>(x)<span style="color:#000;font-weight:bold">%%</span><span style="color:#099">2</span> <span style="color:#000;font-weight:bold">!=</span> <span style="color:#099">0</span>), 
+</span></span><span style="display:flex;"><span>                                             ((<span style="color:#900;font-weight:bold">ncol</span>(x)<span style="color:#000;font-weight:bold">/</span><span style="color:#099">2</span>)<span style="color:#099">-1</span>), 
+</span></span><span style="display:flex;"><span>                                             (<span style="color:#900;font-weight:bold">ncol</span>(x)<span style="color:#000;font-weight:bold">/</span><span style="color:#099">2</span>))))]<span style="color:#900;font-weight:bold">[seq</span>(<span style="color:#900;font-weight:bold">dim</span>(x)[1],<span style="color:#099">1</span>),] <span style="color:#998;font-style:italic"># or, even[rev(1:nrow(x)),] # reversed even x</span>
+</span></span><span style="display:flex;"><span>    alternate_cbind <span style="color:#000;font-weight:bold">&lt;-</span>  <span style="color:#900;font-weight:bold">cbind</span>(odd, rev_even)[, <span style="color:#900;font-weight:bold">order</span>(<span style="color:#900;font-weight:bold">c</span>(<span style="color:#900;font-weight:bold">seq</span>(<span style="color:#900;font-weight:bold">ncol</span>(odd)), 
+</span></span><span style="display:flex;"><span>                                                       <span style="color:#900;font-weight:bold">seq</span>(<span style="color:#900;font-weight:bold">ncol</span>(rev_even))))]
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">return</span>(alternate_cbind)}
+</span></span><span style="display:flex;"><span>  <span style="color:#000;font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>    odd <span style="color:#000;font-weight:bold">&lt;-</span> x<span style="color:#900;font-weight:bold">[seq</span>(<span style="color:#099">1</span>, by<span style="color:#000;font-weight:bold">=</span><span style="color:#099">2</span>, length.out <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">nrow</span>(x)<span style="color:#000;font-weight:bold">/</span><span style="color:#099">2</span>),] <span style="color:#998;font-style:italic"># odd x</span>
+</span></span><span style="display:flex;"><span>    rev_even <span style="color:#000;font-weight:bold">&lt;-</span> x<span style="color:#900;font-weight:bold">[seq</span>(from <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">2</span>, by<span style="color:#000;font-weight:bold">=</span><span style="color:#099">2</span>, length.out <span style="color:#000;font-weight:bold">=</span> (<span style="color:#900;font-weight:bold">ifelse</span>((<span style="color:#900;font-weight:bold">nrow</span>(x)<span style="color:#000;font-weight:bold">%%</span><span style="color:#099">2</span> <span style="color:#000;font-weight:bold">!=</span> <span style="color:#099">0</span>), 
+</span></span><span style="display:flex;"><span>                                                           ((<span style="color:#900;font-weight:bold">nrow</span>(x)<span style="color:#000;font-weight:bold">/</span><span style="color:#099">2</span>)<span style="color:#099">-1</span>), 
+</span></span><span style="display:flex;"><span>                                                           (<span style="color:#900;font-weight:bold">nrow</span>(x)<span style="color:#000;font-weight:bold">/</span><span style="color:#099">2</span>)))), ][, <span style="color:#900;font-weight:bold">seq</span>(<span style="color:#900;font-weight:bold">dim</span>(x)[2],<span style="color:#099">1</span>)] <span style="color:#998;font-style:italic"># or, even[, rev(1:ncol(x))] # reversed even x</span>
+</span></span><span style="display:flex;"><span>    alternate_rbind <span style="color:#000;font-weight:bold">&lt;-</span>  <span style="color:#900;font-weight:bold">rbind</span>(odd, rev_even)<span style="color:#900;font-weight:bold">[order</span>(<span style="color:#900;font-weight:bold">c</span>(<span style="color:#900;font-weight:bold">seq</span>(<span style="color:#900;font-weight:bold">nrow</span>(odd)), 
+</span></span><span style="display:flex;"><span>                                                     <span style="color:#900;font-weight:bold">seq</span>(<span style="color:#900;font-weight:bold">nrow</span>(rev_even)))), ]
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">return</span>(alternate_rbind)
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Let&rsquo;s see the function in action</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>grid <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">matrix</span>(<span style="color:#900;font-weight:bold">seq</span>(from <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">1</span>, by <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">1</span>, length.out <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">6</span><span style="color:#000;font-weight:bold">*</span><span style="color:#099">7</span>), nrow <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">6</span>, byrow <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">TRUE</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">serpentine</span>(grid, columnwise <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">TRUE</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7]
+## [1,]    1   37    3   39    5   41    7
+## [2,]    8   30   10   32   12   34   14
+## [3,]   15   23   17   25   19   27   21
+## [4,]   22   16   24   18   26   20   28
+## [5,]   29    9   31   11   33   13   35
+## [6,]   36    2   38    4   40    6   42
+</code></pre><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#900;font-weight:bold">serpentine</span>(grid, columnwise <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">FALSE</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7]
+## [1,]    1    2    3    4    5    6    7
+## [2,]   14   13   12   11   10    9    8
+## [3,]   15   16   17   18   19   20   21
+## [4,]   28   27   26   25   24   23   22
+## [5,]   29   30   31   32   33   34   35
+## [6,]   42   41   40   39   38   37   36
+</code></pre><p>Test it with any design matrix, such as one below:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>design_mat <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">data.frame</span>(row <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#900;font-weight:bold">rep</span>(<span style="color:#000;font-weight:bold">letters</span>[1<span style="color:#000;font-weight:bold">:</span><span style="color:#099">4</span>], each <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">5</span>)), col <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#900;font-weight:bold">rep</span>(<span style="color:#000;font-weight:bold">letters</span>[22<span style="color:#000;font-weight:bold">:</span><span style="color:#099">26</span>], times <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">4</span>)))
+</span></span></code></pre></div><p><code>serpentine_sorter()</code> requires <code>serpentine()</code> to be available in the namespace to work.</p>
+<p>Given a row-col ordering of a design, this function will convert any vector of that order to serpentine sorted order.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>serpentine_sorter <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#000;font-weight:bold">function</span>(x, ncols, byrow <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">FALSE</span>, columnwise <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">FALSE</span>){
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic"># Arguments</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic"># x   vector which will be re-ordered</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic"># ncols   An integer specifying number of columns in design matrix where x belongs to</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic"># byrow   Logical: is the design matrix order filled column-level wise(_first_) and row-level wise(_second_)?</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic">#         Note that here, the name of argument is somewhat misleading. Look [sorting](./sorting.R) example</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic">#         to learn how sorting is done with multiple column specifications.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#998;font-style:italic"># columnwise  Logical: Should the serpentine generation be done column wise or row wise?</span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">as.vector</span>(<span style="color:#900;font-weight:bold">t</span>(<span style="color:#900;font-weight:bold">serpentine</span>(<span style="color:#900;font-weight:bold">matrix</span>(<span style="color:#900;font-weight:bold">rev</span>(x), ncol <span style="color:#000;font-weight:bold">=</span> ncols, 
+</span></span><span style="display:flex;"><span>                                byrow <span style="color:#000;font-weight:bold">=</span> byrow)[, ncols<span style="color:#000;font-weight:bold">:</span><span style="color:#099">1</span>],
+</span></span><span style="display:flex;"><span>                         columnwise <span style="color:#000;font-weight:bold">=</span> columnwise)))
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Test with a vector <code>x</code> in a row-col design matrix with 20 columns ordered column-level wise(<em>first</em>) followed by row-level wise(<em>second</em>).</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic">## or the following will generate necessary length of index</span>
+</span></span><span style="display:flex;"><span>row_a <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#099">1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">20</span>
+</span></span><span style="display:flex;"><span>col_b <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#099">1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#099">12</span>
+</span></span><span style="display:flex;"><span>addition <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">rep</span>(<span style="color:#900;font-weight:bold">seq</span>(<span style="color:#099">0</span>, by <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">length</span>(row_a), length.out <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">length</span>(col_b)), each <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">length</span>(row_a))
+</span></span><span style="display:flex;"><span>revved <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">rep</span>(<span style="color:#900;font-weight:bold">c</span>(row_a, <span style="color:#900;font-weight:bold">rev</span>(row_a)), times <span style="color:#000;font-weight:bold">=</span> <span style="color:#900;font-weight:bold">length</span>(col_b)<span style="color:#000;font-weight:bold">/</span><span style="color:#099">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>alternating <span style="color:#000;font-weight:bold">&lt;-</span> addition <span style="color:#000;font-weight:bold">+</span> revved
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">length</span>(alternating)
+</span></span></code></pre></div><pre tabindex="0"><code>## [1] 240
+</code></pre>
+        
+        <details closed class="f6 fw7 input-reset">
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Posted on:</dt>
+    <dd class="fw5 ml0">September 19, 2020</dd>
+  </dl>
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Length:</dt>
+    <dd class="fw5 ml0">3 minute read, 514 words</dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Categories:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/categories/r">R</a>  <a href="http://localhost:4321/categories/doe">doe</a> </dd>
+  </dl>
+  
+  
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Tags:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/tags/doe">doe</a>  <a href="http://localhost:4321/tags/r">R</a> </dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">See Also:</dt>
+    
+    <dd class="fw5 ml0"><a href="/blog/color-formatting-of-correlation-table/">Color formatting of correlation table</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/paste-together-multiple-columns/">Paste together multiple columns</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/logistic-regression-part-ii-varietal-adoption-dataset/">Logistic Regression: Part II - Varietal adoption dataset</a></dd>
+    
+  </dl>
+</details>
+
+      </section>
+      <footer class="post-footer">
+        <div class="post-pagination dt w-100 mt4 mb2">
+  
+  
+    <a class="prev dtc pr2 tl v-top fw6"
+    href="http://localhost:4321/blog/color-formatting-of-correlation-table/">&larr; Color formatting of correlation table</a>
+  
+  
+  
+    <a class="next dtc pl2 tr v-top fw6"
+    href="http://localhost:4321/blog/cluster-dendrogram-an-introduction-and-showcase/">Cluster dendrogram: An introduction and showcase &rarr;</a>
+  
+</div>
+
+      </footer>
+    </article>
+    
+      <div class="post-comments pa0 pa4-l mt4">
+  
+    
+      <script src="https://utteranc.es/client.js"
+              repo="deependrad/dblog"
+              issue-term="pathname"
+              theme="boxy-light"
+              label="comments :crystal_ball:"
+              crossorigin="anonymous"
+              async
+              type="text/javascript">
+      </script>
+    
+  
+</div>
+
+    
+  </section>
+</main>
+<footer class="site-footer pv4 bt b--transparent ph5" role="contentinfo">
+  <nav class="db dt-l w-100">
+    <p class="site-copyright f7 db dtc-l v-mid w-100 w-33-l tc tl-l pv2 pv0-l mv0 lh-copy">
+      &copy; 2024 Dblog
+      <span class="middot-divider"></span>
+      Made with <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/hugo-apero/" rel="dct:source">Hugo Apéro</a></span>.
+      <br />
+      
+Based on <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/formspree/blogophonic-hugo" rel="dct:source">Blogophonic</a></span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://formspree.io" property="cc:attributionName" rel="cc:attributionURL">Formspree</a>.
+    </p>
+    
+    <div class="site-social-links db dtc-l v-mid w-100 w-33-l tc pv2 pv0-l mv0">
+      <div class="social-icon-links" aria-hidden="true">
+  
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://github.com/deependrad/dblog" title="github" target="_blank" rel="me noopener">
+      <i class="fab fa-github fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://bsky.app/" title="bluesky" target="_blank" rel="me noopener">
+      <i class="fab fa-bluesky fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://twitter.com/dd_rookie" title="x-twitter" target="_blank" rel="me noopener">
+      <i class="fab fa-x-twitter fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://orcid.org/0000-0002-0347-7950" title="orcid" target="_blank" rel="me noopener">
+      <i class="ai ai-orcid fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="/blog/index.xml" title="rss" >
+      <i class="fas fa-rss fa-lg fa-fw"></i>
+    </a>
+  
+</div>
+
+    </div>
+    
+    <div class="site-links f6 db dtc-l v-mid w-100 w-67-l tc tr-l pv2 pv0-l mv0">
+      
+      <a class="dib pv1 ph2 link" href="/license/" title="License">License</a>
+      
+      <a class="dib pv1 ph2 link" href="/contact/" title="Contact form">Contact</a>
+      
+      <a class="dib pv1 ph2 link" href="/contributors/" title="Contributors">Contributors</a>
+      
+    </div>
+  </nav>
+  
+    <script>
+
+    var i, text, code, codes = document.getElementsByTagName('code');
+    for (let i = 0; i < codes.length;) {
+      code = codes[i];
+      if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+        text = code.textContent;
+        if (/^\$[^$]/.test(text) && /[^$]\$$/.test(text)) {
+          text = text.replace(/^\$/, '\\(').replace(/\$$/, '\\)');
+          code.textContent = text;
+        }
+        if (/^\\\((.|\s)+\\\)$/.test(text) ||
+            /^\\\[(.|\s)+\\\]$/.test(text) ||
+            /^\$(.|\s)+\$$/.test(text) ||
+            /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+          code.outerHTML = code.innerHTML;  
+          continue;
+        }
+      }
+      i++;
+    }
+</script>
+
+  
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+
+
+    
+  
+  
+</footer>
+
+      </div>
+    </body>
+</html>

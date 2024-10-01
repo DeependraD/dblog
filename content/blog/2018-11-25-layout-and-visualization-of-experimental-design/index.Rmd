@@ -1,0 +1,98 @@
+---
+title: Layout and visualization of experimental design
+author: Deependra Dhakal
+date: '2018-11-25'
+slug: layout-and-visualization-of-experimental-design
+categories:
+  - agriculture
+  - Plant Breeding
+  - R
+tags:
+  - agriculture
+  - R
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(tidy = TRUE, cache = TRUE, 
+                      echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, 
+                      fig.show = "hold", fig.pos = "H",
+                      fig.align = "center", 
+                      fig.asp = 0.8, message = FALSE, warning = FALSE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+library(xts)
+library(scales)
+library(tidyverse)
+library(desplot)
+library(gridExtra)
+```
+
+# Functional approach to creating and combing multiple plots
+
+This approach highlights features of `gridExtra` package that allows combining multiple grob plots using function calls.
+We explicitly use lapply/split or similar class of `purrr` functions to really scale the graphics. 
+
+We load a Hybrid maize trial dataset, with fieldbook generated using `agricolae::design.rcbd()`. The dataset looks as shown in Table \@ref(tab:rcbd-maize-fieldbook), after type conversion and cleaning.
+
+```{r rcbd-maize-fieldbook}
+
+ihyb_multiple <- read_csv(here::here("content", "blog", "data", "ihyb_2018.csv")) %>% 
+  mutate_at(c("Rep", "Block", "Plot", "Entry", "col", "row"), as.factor) %>% 
+  mutate(`Plant height` = rowMeans(select(., contains("Plant height")), na.rm = TRUE)) %>% 
+  select(which(!str_detect(colnames(.), "height\\d")))
+
+ihyb_multiple %>% 
+  head(n = 8) %>% 
+  knitr::kable(caption = "Intermediate maturing hybrids with 50 entries each in 3 replicated blocks") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 12, full_width = TRUE) %>% 
+  kableExtra::row_spec(0, bold = TRUE)
+```
+
+For the given dataset, we can draw on the information that `Rep` variable was used as field level blocking factor (Although separate, `Block`, variable exists, it was nested inside the `Rep`.) Therefore, to begin with, we ignore other spatial grouping variable. Now, since the grid graphics only requires two way represenation of plotting data, we have `row` and `col` information feeding for that.
+
+<!-- ## Plotting function -->
+
+```{r plotting-function}
+myplots <- lapply(split(ihyb_multiple, ihyb_multiple$Rep), function(x){
+  p1 <- ggplot(x, aes(col, row, fill = `Plant height`)) + 
+    geom_tile(colour="white", size=1.5, stat="identity") + 
+    scale_fill_gradient(low = "white", high = "red") +
+    geom_text(aes(col, row, label = Entry), 
+              color="black", size=rel(2.5)) +
+    labs(title=unique(x$Rep)) +
+    theme_bw() +
+    theme(legend.position="none") # removes all legend
+}
+)
+```
+
+## Plotting call
+
+```{r plotting-call, fig.width=10}
+do.call(grid.arrange,c(myplots, ncol=3))
+```
+
+# Lattice graphics approach
+
+Using built-in function `desplot()` in desplot package, we can generate similar field design layout. In the plot below, individual entries (a factor variable) are highlighted as cell features. The process follows as shown below. In addition to default plotting, we can also generate serpentine design layout using simple mutating trick. Plus, block grouping has also been added to show the nested factor component.
+
+**Note**: In order to plot in required layout, just specify: `layout = c(number_of_rows, number_of_columns)` argument (Thanks to [Kevin Wright](https://github.com/kwstat) for helping me figure this out.)
+
+```{r desplot-layout, warning=FALSE, fig.width=10}
+ihyb_multiple <- ihyb_multiple %>% 
+  mutate(row_new = if_else(col == 2, rev(row), row))
+
+desplot(Entry ~ col*row_new|Rep, layout = c(3, 1),
+        data = ihyb_multiple, aspect=12/8,
+        text = Entry, out1 = Block, 
+        midpoint = "midrange",
+        out2 = row_new, show.key = FALSE, 
+        main = "Intermediate maturing hybrid varieties (Trial, 2018)", 
+        cex = 0.8, shorten = FALSE)
+```
+

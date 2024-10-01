@@ -1,0 +1,309 @@
+---
+title: Making Summary Tables in R
+author: Deependra Dhakal
+date: '2020-08-04'
+slug: making-summary-tables-in-r
+output:
+  blogdown::html_page:
+    toc: yes
+categories:
+  - tidyverse
+  - R
+tags:
+  - R
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-08-04T06:38:33+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+```{r setup, include=FALSE, echo=FALSE, eval=TRUE}
+require(tidyverse)
+require(agridat) # for williams.trees dataset
+require(qwraps2)
+require(magrittr)
+knitr::opts_chunk$set(fig.width=12, fig.height=8, 
+                      echo=FALSE, warning=FALSE, message=FALSE)
+```
+
+## Background
+
+Table output of R is one of the richest and satisfying to use feature. Rmarkdown format provides loads of package support to create, format, and present tables beautifully. This is on one aspect extremely useful while on the other end it could very well be daunting as to choose between various package options to use while formating your table. I have a bunch of suggestions and enlistments here to help get off that dilemma.
+
+Once in a while someone writes a blog post and addressess these issues. This is true for this topic too. https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/ has wonderfully curated list of several such options. My intnet too is to supplement the information included in the post.
+
+## General purpose tables
+
+Here goes the list of packages:
+
+1. Table output (or in general, dataframe printing) is a more general idea for Rmarkdown documents. It can be set with a print option set in the YAML header.
+
+```
+title: Some good amount of table
+output:
+  html_document:
+    df_print: paged 
+```
+
+The df_print option can take other values such as default, kable and tibble. More on this at https://bookdown.org/yihui/rmarkdown/html-document.html#data-frame-printing.
+
+2. gt package
+3. kable + kableExtra.
+
+Here are a bunch of appealing examples that surely entice you into using this combination of packages.
+
+```
+vignette(package = "kableExtra", topic = "awesome_table_in_pdf")
+```
+Sharla Gelfand also has whole repository maintained for sharing examples on use of kableExtra. Check that out at: https://github.com/sharlagelfand/kableExtra-cookbook
+
+Additionally, I have forked the repo and tried to contribute some of my own hacks (not exactly my own, but learnt elsewhere on the internet) to the bookdown project.
+
+4. [formattable](https://renkun-ken.github.io/formattable/)
+5. DT. More at: https://rstudio.github.io/DT/
+6. reactable. A demonstration of use at: https://projects.fivethirtyeight.com/2019-womens-world-cup-predictions/
+7. flextable: https://davidgohel.github.io/flextable/index.html
+8. huxtable. https://hughjonesd.github.io/huxtable/ 
+9. rhandsontable. This extremely helpful package in case if you have dirty data and data representation. This lets you manually edit the data like working in a spreadsheet software. More on: https://jrowen.github.io/rhandsontable/
+10. pixiedust. https://github.com/nutterb/pixiedust
+
+## Summary tables
+
+### rtables package
+
+For the time of creating this post, the package rtable was available only as github project of G. Becker. In particular, specific branch was used to compile a package. However, as he mentions [here](https://www.youtube.com/watch?v=CBQzZ8ZhXLA), the project has a long history of being released as open-source well after being using as proprietary for some time. 
+
+We start by installing and loading essential libraries.
+
+```{r}
+if(!require(rtables)){
+  remotes::install_github("Roche/rtables", ref = "gabe_tabletree_work")
+}
+
+require(rtables)
+```
+
+Throughout, `williams.trees` dataset from the agridat package will be used. Apart from already existing factors and numeric variables, an additional factor is generated from random process because pre-existing `gen` (genotype information) variable is nested in structure. Nested variable means that summary for that is available only for specific grouping and not for overall use.
+
+```{r william-import}
+williams_tree <- agridat::williams.trees %>% 
+  mutate(replicate = sample(c("B", "C", "D"), size = nrow(.), 
+                            replace = T, prob = rep(1/3, 3))) %>% 
+  mutate(gen_generated = sample(c("gen1", "gen2", "gen3", "gen4", "gen5"), size = nrow(.), replace = T))
+
+```
+
+Using `rtable::split_cols_by`, we split the analysis variable into multiple columns formed by a grouping variable.
+
+```{r split-col}
+mean_williams <- basic_table() %>% 
+  split_cols_by("env") %>% 
+  split_cols_by("replicate") %>% 
+  analyze("height", afun = mean, format = "xx.x") %>% 
+  build_table(williams_tree)
+
+mean_williams
+# as_html(mean_williams, width = "80%")
+```
+  
+Row splitting can also be done as shown.
+
+```{r}
+mean_williams_row_split <- basic_table() %>% 
+  split_cols_by("env") %>% 
+  # split_rows_by("gen") %>% 
+  split_rows_by("replicate") %>%
+  summarize_row_groups() %>% 
+  # analyze("height", afun = mean, format = "xx.x") %>% 
+  analyze("height", afun = function(x) {
+    list(
+      "mean" = rcell(mean(x, na.rm = TRUE), format = "xx.xx"), 
+      "sd" = rcell(sd(x, na.rm = TRUE), format = "xx.xx"), 
+      "range" = rcell(diff(range(x)), format = "xx.xx"), 
+      "max" = rcell(max(x), format = "xx.xx"), 
+      "min" = rcell(min(x), format = "xx.xx")
+      )
+  }) %>% 
+  build_table(williams_tree)
+
+mean_williams_row_split
+# as_html(mean_williams_row_split, width = "80%")
+```
+
+In the previous table we used custom function for summarizing. However, we can use pre-existing helper functions of R like the `summary` function.
+
+```{r}
+# use readymade function
+williams_summary <- basic_table() %>% 
+  split_cols_by("env") %>% 
+  split_rows_by("replicate") %>%
+  summarize_row_groups() %>% 
+  add_colcounts() %>% 
+  analyze(c("height"), afun = simple_analysis, format = "xx.xx") %>% 
+  build_table(williams_tree)
+
+williams_summary
+# as_html(williams_summary, width = "80%")
+```
+
+In earlier functions, we used variable as data parameter. But dataset entirely can also be provided as a data parameter if summary involves multiple variables.
+
+```{r custom-fun-data}
+
+williams_custom <- basic_table() %>% 
+  split_cols_by("env") %>% 
+  split_rows_by("replicate") %>%
+  summarize_row_groups() %>% 
+  add_colcounts() %>% 
+  analyze(c("gen_generated"), afun = function(df, .N_col, lblstr = NULL){
+    x <- df[["gen_generated"]]
+    in_rows(
+      "Total genotypes" = rcell(length(x), format = "xx"),
+      "Unique genotypes" = rcell(length(unique(x)), format = "xx"),
+      "Genotypes with > 1 records" = rcell((length(x)-length(unique(x))) * c(1, 1/.N_col), format = "xx.xx (xx.xx%)") 
+      # note that .N_col refers to total number of columns not individual category in a row split
+    )
+  }) %>% 
+  build_table(williams_tree)
+# williams_tree %>% count(env, replicate)
+
+williams_custom
+# as_html(williams_custom, width = "80%")
+```
+
+
+<!-- Also, insted of letting automatic counting from the given analysis variable, we could  manually supply the column aggregate summary by initially populating the columns counts. This is done using `tapply` or `map` functions. -->
+
+<!-- ```{r custom-summary-fun} -->
+<!-- tunique_env <- tapply(williams_tree$gen_generated, williams_tree$env, function(x)length(x)) -->
+
+<!-- stylizer_events <- basic_table() %>% -->
+<!--   split_cols_by("env") %>%  -->
+<!--   split_rows_by("replicate") %>% -->
+<!--   summarize_row_groups() %>%  -->
+<!--   add_colcounts() %>%  -->
+<!--   analyze(c("gen_generated"), afun = function(df, .N_col, lblstr = NULL){ -->
+<!--     x <- df[["gen_generated"]] -->
+<!--     in_rows( -->
+<!--       "Total genotypes" = rcell(length(x), format = "xx"), -->
+<!--       "Unique genotypes" = rcell(length(unique(x)), format = "xx"), -->
+<!--       "Genotypes with > 1 records" = rcell((length(x)-length(unique(x))) * c(1, 1/.N_col), format = "xx.xx (xx.xx%)")  -->
+<!--       # note that .N_col refers to total number of columns not individual category in a row split -->
+<!--     ) -->
+<!--   }) -->
+
+<!-- williams_stylizer_custom_table <- build_table(stylizer_events, williams_tree, tunique_env) -->
+
+<!-- williams_stylizer_custom_table -->
+<!-- ``` -->
+
+<!-- Here are some of the handy utility functions that can be used on the go. -->
+
+<!-- ```{r} -->
+<!-- # for boolean variable indicate Yes or No -->
+<!-- yn_as_bool <- function(f) { -->
+<!--   function(x, .N_col) { -->
+<!--     f(x == "Y", .N_col) -->
+<!--   } -->
+<!-- } -->
+
+<!-- # provide  a percentage format alongside count in a cell -->
+<!-- s_count_perc <- function(x, .N_col) { -->
+<!--   rcell(sum(!is.na(x)) * c(1, 1/.N_col), format = "xx (xx.xx%)") -->
+<!-- } -->
+
+<!-- # remove all na rows in summary output. -->
+<!-- trim_zero_rows <- function(tbl) { -->
+<!--  rows = collect_leaves(tbl, TRUE, TRUE) -->
+<!--  torn = vapply(rows, function(x){ -->
+<!--    identical(unname(unlist(row_values(x))), c(0L, 0L, 0L)) -->
+<!--  }, NA, USE.NAMES = FALSE) -->
+<!--  tbl[!tron, ] -->
+<!-- } -->
+
+<!-- ``` -->
+
+### qwraps2 package
+
+For constructing simple whole sample or subsample summary tables, qwarps package have simple interface. It provides a richly showcased [vignette](https://cran.r-project.org/web/packages/qwraps2/vignettes/summary-statistics.html) using mtcars dataset.
+
+It requires markup language to be set early on in code chunk to render proper format. 
+
+```{r qwraps-mtcars, results='asis'}
+options(qwraps2_markup = "markdown")
+# options(qwraps2_markup = "latex")
+
+## change `cyl` to factor and character variables
+mtcars2 <-
+  dplyr::mutate(mtcars,
+                cyl_factor = factor(cyl,
+                                    levels = c(6, 4, 8),
+                                    labels = paste(c(6, 4, 8), "cylinders")),
+                cyl_character = paste(cyl, "cylinders"))
+
+# ## major summaries
+# our_summary1 <-
+#   list("Miles Per Gallon" =
+#        list("min" = ~ min(.data$mpg),
+#             "max" = ~ max(.data$mpg),
+#             "mean (sd)" = ~ qwraps2::mean_sd(.data$mpg)),
+#        "Displacement" =
+#        list("min" = ~ min(.data$disp),
+#             "median" = ~ median(.data$disp),
+#             "max" = ~ max(.data$disp),
+#             "mean (sd)" = ~ qwraps2::mean_sd(.data$disp)),
+#        "Weight (1000 lbs)" =
+#        list("min" = ~ min(.data$wt),
+#             "max" = ~ max(.data$wt),
+#             "mean (sd)" = ~ qwraps2::mean_sd(.data$wt)),
+#        "Forward Gears" =
+#        list("Three" = ~ qwraps2::n_perc0(.data$gear == 3),
+#             "Four"  = ~ qwraps2::n_perc0(.data$gear == 4),
+#             "Five"  = ~ qwraps2::n_perc0(.data$gear == 5))
+#        )
+# 
+# ## Overall
+# whole <- summary_table(mtcars2, our_summary1)
+# 
+# ## By number of cylinders
+# by_cyl <- summary_table(dplyr::group_by(mtcars2, cyl_factor), our_summary1)
+# 
+# ## table with both the whole sample summary and conditional columns together
+# both <- cbind(whole, by_cyl)
+# 
+# ## difference in means
+# mpvals <-
+#   list(lm(mpg ~ cyl_factor,  data = mtcars2),
+#        lm(disp ~ cyl_factor, data = mtcars2),
+#        lm(wt ~ cyl_factor,   data = mtcars2)) %>%
+#   lapply(aov) %>%
+#   lapply(summary) %>%
+#   lapply(function(x) x[[1]][["Pr(>F)"]][1]) %>%
+#   lapply(frmtp) %>%
+#   do.call(c, .)
+# 
+# ## fisher test
+# fpval <- frmtp(fisher.test(table(mtcars2$gear, mtcars2$cyl_factor))$p.value)
+# 
+# ## adding p-values column
+# both <- cbind(both, "P-value" = "")
+# both[grepl("mean \\(sd\\)", rownames(both)), "P-value"] <- mpvals
+# a <- capture.output(print(both))
+# a[grepl("Forward Gears", a)] %<>% sub("&nbsp;&nbsp;\\ \\|$", paste(fpval, "|"), .)
+# 
+# ## table output
+# cat(a, sep = "\n")
+```
+
+Alternatively, row group name can be used for informing p-value. This is exemplified in the vignette for package.
+
+### gtsummary package
+
+This package is a recent development but has a lot more preview ready examples as vignette. It is richer and more easily extensible in feature because it draws upon the `gt` package. Check vignettes out at cran repo for the package: https://cran.r-project.org/web/packages/gtsummary/index.html.
+

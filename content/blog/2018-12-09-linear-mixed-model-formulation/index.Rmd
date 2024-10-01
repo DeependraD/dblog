@@ -1,0 +1,60 @@
+---
+title: Linear mixed model formulation
+author: Deependra Dhakal
+date: '2018-12-09'
+slug: linear-mixed-model-formulation
+categories:
+  - R
+  - Plant Breeding
+tags:
+  - R
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(tidy = TRUE, cache = FALSE, echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.6, 
+                      message = FALSE, warning = FALSE, cache = TRUE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+library(tidyverse)
+set.seed(453)
+```
+
+## Introduction
+
+Mixed models are quite tricky, in that, while being very powerful extensions of linear models, they are somewhat difficult to conceptualize and otherwise to specify. Mixed models have, in addition to usual fixed effect combination of factors, random effects structure. These structure need to be specified in the model formula in `R`. While formula specification of a model is unique in it's own respect, the formuala expression too leads to an object with differnt properties than a regular `R` object. Although, the complexity of formula syntax can arbitrary (constrained by classess and methods working on that), a general guideline is applicable for most of the mixed modeling utilities. These include: `lme4`, `nlme`, `glmmADMB` and `glmmTMB`.
+
+Here, I steal a very useful tabulation, published in [Mixed Models FAQ](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#model-specification) by Ben Bolker, of different patterns in model formula specification.
+
+### Interpretation of model formula
+
+```{r model-formula-interpret}
+model_formula_interpret <- tibble::tribble(
+  ~Formula, ~Meaning,
+  "(1|group)", "random group intercept",
+  "(x|group) = (1+x|group)",	"random slope of x within group with correlated intercept",
+  "(0+x|group) = (-1+x|group)",	"random slope of x within group: no variation in intercept",
+  "(1|group) + (0+x|group)",	"uncorrelated random intercept and random slope within group",
+  "(1|site/block) = (1|site)+(1|site:block)",	"intercept varying among sites and among blocks within sites (nested random effects)",
+  "site+(1|site:block)",	"fixed effect of sites plus random variation in intercept among blocks within sites",
+  "(x|site/block) = (x|site)+(x|site:block) =  (1 + x|site)+(1+x|site:block)",	"slope and intercept varying among sites and among blocks within sites",
+  "(x1|site)+(x2|block)",	"two different effects, varying at different levels",
+  "x*site+(x|site:block)",	"fixed effect variation of slope and intercept varying among sites and random variation of slope and intercept among blocks within sites",
+  "(1|group1)+(1|group2)",	"intercept varying among crossed random effects (e.g. site, year)"
+)
+
+code_v <- Vectorize(function(x){as.character(htmltools::code(x))})
+
+model_formula_interpret %>%
+  mutate(Formula = Formula %>%
+           str_split("=") %>%
+           map(str_trim) %>%
+           map(code_v) %>%
+           map_chr(paste, collapse = " = ")) %>%
+  knitr::kable(caption = "Model formula and it's interpretation", escape = F) %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 12, full_width = TRUE)
+```
+

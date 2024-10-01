@@ -1,0 +1,64 @@
+---
+title: World production and grain composition of major cultivated species
+author: Deependra Dhakal
+date: '2019-02-03'
+slug: world-production-and-grain-composition-of-major-cultivated-species
+categories:
+  - agriculture
+  - Plant Breeding
+tags:
+  - agriculture
+  - plant breeding
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(tidy = TRUE, cache = FALSE, echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.6, 
+                      message = FALSE, warning = FALSE, cache = TRUE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+library(tidyverse)
+```
+
+# Context
+
+Out of crops raised for their seed/grains (listed under 35 species, by FAO; FAOSTAT, 2014), only 22 species are produced in substantial amounts. Species of graminae and leguminosae families alone account for about 85 percent of the total grain production. As presented here in Table \@ref(tab:world-production).
+
+```{r world-production-major-species}
+prod_comp <- read_csv(here::here("content", "blog", "data", "world_production_major_species.csv"), skip = 2)
+```
+
+
+## Production
+
+```{r world-production}
+prod_comp %>% 
+  select(Crop, `Crop species`, `World production^[Average of 2011 to 2014, FAOSTAT (2016)] (1000 t)`) %>% 
+  knitr::kable(caption = "Global production of major cultivated crops", format = "html") %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12) %>%
+  kableExtra::column_spec(1, bold = TRUE) %>% 
+  kableExtra::scroll_box(width = "100%", 
+                         box_css = "border: 2px solid #22d0dd; padding: 10px; ")
+```
+
+## Grain composition
+
+```{r grain-comp}
+prod_comp %>% 
+  select(-`World production^[Average of 2011 to 2014, FAOSTAT (2016)] (1000 t)`) %>% 
+  knitr::kable(caption = "Global production of major cultivated crops", format = "html") %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12) %>%
+  kableExtra::column_spec(1, bold = TRUE) %>% 
+  kableExtra::scroll_box(width = "100%", 
+                         box_css = "border: 2px solid #22d0dd; padding: 10px; ")
+```
+
+
+# References
+
+Page 3 and 4, Seed Biology and Yield of Grain Crops, 2nd Edition
+
+Seed composition data from Bewley et.al. (2013), Sinclair and de Wit (1975), Langer and Hill (1991), Hulse et.al. (1980), and Alberta Agriculture and Forestry (2015)

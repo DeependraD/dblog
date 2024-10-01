@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Optimization on Rookie site</title>
+    <link>http://localhost:4321/tags/optimization/</link>
+    <description>Recent content in Optimization on Rookie site</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 12 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:4321/tags/optimization/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Seed Business: Process Management Guide</title>
+      <link>http://localhost:4321/blog/seed-business-process-management-guide/</link>
+      <pubDate>Sat, 12 Jan 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/seed-business-process-management-guide/</guid>
+      <description>&lt;h2 id=&#34;the-problem&#34;&gt;The problem&#xA;  &lt;a href=&#34;#the-problem&#34;&gt;&lt;svg class=&#34;anchor-symbol&#34; aria-hidden=&#34;true&#34; height=&#34;26&#34; width=&#34;26&#34; viewBox=&#34;0 0 22 22&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&#xA;      &lt;path d=&#34;M0 0h24v24H0z&#34; fill=&#34;currentColor&#34;&gt;&lt;/path&gt;&#xA;      &lt;path d=&#34;M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z&#34;&gt;&lt;/path&gt;&#xA;    &lt;/svg&gt;&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Seed business is a multifaceted undertake. Although most businesses suffer strong feedback effects, seed business are more markedly left with those than most others. Let us refer to a simple case description to recapitulate just how pronounced it can be, and we are talking about the success in a long term venture.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Resource optimization</title>
+      <link>http://localhost:4321/blog/optimization/</link>
+      <pubDate>Sun, 12 Aug 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/optimization/</guid>
+      <description>&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#900;font-weight:bold&#34;&gt;library&lt;/span&gt;(lpSolve)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#900;font-weight:bold&#34;&gt;library&lt;/span&gt;(tidyverse)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&#xA;&#xA;&#xA;&#xA;&lt;h2 id=&#34;issue&#34;&gt;Issue&#xA;  &lt;a href=&#34;#issue&#34;&gt;&lt;svg class=&#34;anchor-symbol&#34; aria-hidden=&#34;true&#34; height=&#34;26&#34; width=&#34;26&#34; viewBox=&#34;0 0 22 22&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;&#xA;      &lt;path d=&#34;M0 0h24v24H0z&#34; fill=&#34;currentColor&#34;&gt;&lt;/path&gt;&#xA;      &lt;path d=&#34;M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z&#34;&gt;&lt;/path&gt;&#xA;    &lt;/svg&gt;&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;A farmer has 600 katthas of land under his authority. Each of his katthas of land will either be sown with Rice or with Maize during the current season. Each kattha planted with Maize will yield Rs 1000, requires 2 workers and 20 kg of fertilizer. Each kattha planted with Rice will yield Rs 2000, requires 4 workers and 25 kg of fertilizers. There are currently 1200 workers and 11000 kg of fertilizer available.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

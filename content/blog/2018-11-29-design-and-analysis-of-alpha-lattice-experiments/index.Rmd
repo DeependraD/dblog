@@ -1,0 +1,62 @@
+---
+title: Design and analysis of alpha lattice experiments
+author: Deependra Dhakal
+date: '2018-11-29'
+slug: design-and-analysis-of-alpha-lattice-experiments
+draft: true
+categories:
+  - agriculture
+  - R
+  - Plant Breeding
+tags:
+  - agriculture
+  - R
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(tidy = TRUE, cache = FALSE, echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.6, 
+                      message = FALSE, warning = FALSE, cache = TRUE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+library(tidyverse)
+library(agricolae)
+library(car)
+library(lattice)
+library(plantbreeding)
+require(agridat)
+require(desplot)
+set.seed(453)
+```
+
+
+```{r eval = FALSE}
+require(agricolae)
+require(tidyverse)
+
+john_alpha <- (agridat::john.alpha)
+yield = john_alpha$yield
+model_agricolae <- PBIB.test(k = 12, trt = john_alpha$gen, 
+          replication = john_alpha$rep, block = john_alpha$block, y = yield, 
+          test = "lsd", alpha = 0.05, group = T, console = T)
+
+# # df
+# rep = 2
+# block = 5
+# gen = 23
+# treatment(unadj.) = 24
+# intrablock error = 96
+# treatment(adj.) = 24
+# effective error = 96
+
+model1 = lme4::lmer(data = john_alpha, yield ~ gen + (1|rep) + (1|rep/block))
+anova(model1)
+plot(model1)
+
+model_agricolae
+
+```
+

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R Markdown on Rookie site</title>
+    <link>http://localhost:4321/tags/r-markdown/</link>
+    <description>Recent content in R Markdown on Rookie site</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 30 May 2017 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:4321/tags/r-markdown/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Thanking the farmers</title>
+      <link>http://localhost:4321/blog/2017-05-30-thanking-the-farmers/</link>
+      <pubDate>Tue, 30 May 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/2017-05-30-thanking-the-farmers/</guid>
+      <description>&lt;p&gt;Everybody has their own secret mantra which they find useful and will eventually apply for their unique set of problems. As a rummaging wanna-be &lt;code&gt;R&lt;/code&gt; programmer, almost daily I shovel through rich contents of web in lookout for gurus. It&amp;rsquo;s a bit puzzling to know that most of them come faceless, nevertheless amazing are the quality of the contents the offer.&lt;/p&gt;&#xA;&lt;p&gt;Either of the creating, editing or deploying a website has never been easy, to me especially. In fact, It&amp;rsquo;s just been a few weeks, not more than a month that I deployed my first website. I can&amp;rsquo;t thank enough the &#xA;&lt;a href=&#34;https://bookdown.org/yihui/blogdown/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;blogdown&lt;/a&gt; project by Yihui Xie that, at the first place, inspired me to make this personalized website of my own, showing how seemlessly can the technicalities be overcome. Before this I haven&amp;rsquo;t for once attempted to write an html code for a website as such.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>An encounter with blogdown</title>
+      <link>http://localhost:4321/blog/2017-05-01-an-encounter-with-blogdown/</link>
+      <pubDate>Mon, 01 May 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/2017-05-01-an-encounter-with-blogdown/</guid>
+      <description>&lt;p&gt;An encounter with web content related to R, although for me it is usually random, is in general welcoming. The &#xA;&lt;a href=&#34;http://kbroman.org/blog/2017/05/01/caching-blogdown/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;link&lt;/a&gt; to this amazing feature building on the fact that using a markdown language is rather a pleasant way to write a blog post in a fully costumizable website all by yourself is enticing, to me at least. I started weaving thoughts right at the moment.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

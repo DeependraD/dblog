@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Rookie site</title>
+    <link>http://localhost:4321/categories/</link>
+    <description>Recent content in Categories on Rookie site</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 12 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:4321/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Training</title>
+      <link>http://localhost:4321/categories/training/</link>
+      <pubDate>Tue, 12 Jan 2021 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/training/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>R</title>
+      <link>http://localhost:4321/categories/r/</link>
+      <pubDate>Sun, 03 Jan 2021 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/r/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Theme Features</title>
+      <link>http://localhost:4321/categories/theme-features/</link>
+      <pubDate>Sun, 03 Jan 2021 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/theme-features/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Epidemiology</title>
+      <link>http://localhost:4321/categories/epidemiology/</link>
+      <pubDate>Fri, 07 Aug 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/epidemiology/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Statistics</title>
+      <link>http://localhost:4321/categories/statistics/</link>
+      <pubDate>Fri, 07 Aug 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/statistics/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Tidyverse</title>
+      <link>http://localhost:4321/categories/tidyverse/</link>
+      <pubDate>Fri, 07 Aug 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/tidyverse/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Flag</title>
+      <link>http://localhost:4321/categories/flag/</link>
+      <pubDate>Thu, 06 Aug 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/flag/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Graphics</title>
+      <link>http://localhost:4321/categories/graphics/</link>
+      <pubDate>Thu, 06 Aug 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/graphics/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Timeseries</title>
+      <link>http://localhost:4321/categories/timeseries/</link>
+      <pubDate>Fri, 31 Jul 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/timeseries/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Agriculture</title>
+      <link>http://localhost:4321/categories/agriculture/</link>
+      <pubDate>Thu, 04 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/agriculture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Economics</title>
+      <link>http://localhost:4321/categories/economics/</link>
+      <pubDate>Thu, 04 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/economics/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Productivity</title>
+      <link>http://localhost:4321/categories/productivity/</link>
+      <pubDate>Thu, 28 May 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/productivity/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Package</title>
+      <link>http://localhost:4321/categories/package/</link>
+      <pubDate>Wed, 03 Jul 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/package/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Plant Breeding</title>
+      <link>http://localhost:4321/categories/plant-breeding/</link>
+      <pubDate>Tue, 26 Feb 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/plant-breeding/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Maize</title>
+      <link>http://localhost:4321/categories/maize/</link>
+      <pubDate>Thu, 17 Jan 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/maize/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Factor</title>
+      <link>http://localhost:4321/categories/factor/</link>
+      <pubDate>Tue, 27 Nov 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/factor/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Image Editing</title>
+      <link>http://localhost:4321/categories/image-editing/</link>
+      <pubDate>Sat, 03 Nov 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/image-editing/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Hybrid</title>
+      <link>http://localhost:4321/categories/hybrid/</link>
+      <pubDate>Sun, 05 Aug 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/hybrid/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Blog</title>
+      <link>http://localhost:4321/categories/blog/</link>
+      <pubDate>Thu, 18 May 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/categories/blog/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,47 @@
+SN,Trait,Descriptor category
+1,100 Seed weight in grams,Production
+2,Days to flower,Phenology
+3,Growth habit,Growth
+4,Plant Height,Growth
+5,Pod maturity,Phenology
+6,Yield kg/ha On Seed Produced,Production
+7,Basal node branching,Morphology
+8,Botrytris,Disease
+9,Branching,Morphology
+10,Days to maturity,Phenology
+11,Flower ground color,Morphology
+12,Flowers per inflorescence,Morphology
+13,Higher node bracnhing,Morphology
+14,Hilum color,Morphology
+15,Intensity of streaks,Morphology
+16,Leaflet per leaf,Morphology
+17,Leaflet shape,Morphology
+18,Leaflet size,Morphology
+19,Lodging resistance,Stress
+20,Ovules per pod,Morphology
+21,Plant Width,Morphology
+22,Pod angle,Morphology
+23,Pod color,Morphology
+24,Pod distribution,Morphology
+25,Pod height,Morphology
+26,Pod length,Morphology
+27,Pod shape,Morphology
+28,Pod shatter,Morphology
+29,Pod surface,Morphology
+30,Pod width,Morphology
+31,Podding nodes,Morphology
+32,Pods per flowering node,Morphology
+33,Pods per node,Morphology
+34,Pods per plant,Morphology
+35,Seed ground color,Morphology
+36,Seed pattern,Morphology
+37,Seed shape,Morphology
+38,Seed size,Morphology
+39,Seeds per plant,Morphology
+40,Seeds per pod,Morphology
+41,Stem branching,Morphology
+42,Stem color,Morphology
+43,Stem pigmentation,Morphology
+44,Stem thickness,Morphology
+45,Stipule spot pigmentation,Morphology
+46,Wing petal color,Morphology

@@ -1,0 +1,225 @@
+---
+title: Variance component based parameter estimation of incomplete block designs
+author: Deependra Dhakal
+date: '2018-12-12'
+slug: variance-component-based-parameter-estimation
+categories: 
+  - R
+tags: 
+  - R
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(tidy = TRUE, cache = FALSE, echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.6, 
+                      message = FALSE, warning = FALSE, cache = TRUE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+library(tidyverse)
+library(agricolae)
+set.seed(453)
+```
+
+
+## Introduction
+
+Variance component models are also suited for analysis of incomplete block designs, besides complete block designs. This post aims to demonstrate exactly that. Using a dataset generated from alpha lattice design, I show how the design can be properly modeled and fit using OLS regression having various fixed model components. This system of model fitting is analogous to classical ANOVA based technique of estimating parameters.
+
+## The dataset
+
+The data is same as introduced earlier in "Design and analysis of balanced randomized complete block (RCBD) experiment" [post](https://rookie.rbind.io/post/design-and-analysis-of-balanced/). It comprises of plant height trait for the maize recorded in multiple replication units, only difference from the earlier post being that the arrangement of observation plots into blocks which are themselves nested within replication will be accounted for. This is the objective of this post: to account for effects of incomplete blocks which was incorporated in the design.
+
+An overview of how the data looks like is shown in Table \@ref(tab:ihyb-height).
+
+```{r ihyb-height}
+ihyb_multiple <- read_csv(here::here("content", "blog", "data", "ihyb_2018.csv")) %>% 
+  mutate_at(c("Rep", "Block", "Plot", "Entry", "col", "row"), as.factor) %>% 
+  mutate(`Plant height` = rowMeans(select(., contains("Plant height")), na.rm = TRUE)) %>% 
+  select(which(!str_detect(colnames(.), "height\\d")), -tillering, -moisture1, -moisture2, -`Ear count`, -row, -col) %>% 
+  rename(Plant_height = `Plant height`)
+
+ihyb_multiple %>% 
+  head(n = 8) %>% 
+  knitr::kable(caption = "Intermediate maturing hybrids with 50 entries each in 3 replicated blocks") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10, full_width = TRUE) %>% 
+  kableExtra::row_spec(0, bold = TRUE)
+```
+
+## Model formulation
+
+```{r model-formulation, echo=TRUE}
+model_pht <- lm(formula(paste("Plant_height", "~ Rep + Entry + Block%in%Rep")), 
+            data = ihyb_multiple)
+ANOVA_pht <- anova(model_pht) # model anova
+```
+
+```{r anova-print}
+# print anova
+ANOVA_pht %>% 
+  knitr::kable(caption = "ANOVA of fixed effects factors with block nested within replication") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10, full_width = TRUE) %>% 
+  kableExtra::row_spec(0, bold = TRUE)
+```
+
+
+```{r model-fitting}
+# parameter initialization
+obs <- nrow(ihyb_multiple) # number of observations
+ntr <- nlevels(ihyb_multiple$Entry) # number of entries
+nrep <- nlevels(ihyb_multiple$Rep) # number of replications
+nblock <- nlevels(ihyb_multiple$Block) # number of blocks
+trt <- ihyb_multiple$Entry # entry vector
+replication <- ihyb_multiple$Rep # replication vector
+block <- ihyb_multiple$Block # block vector
+y <- ihyb_multiple$Plant_height # response vector
+sblock <- obs/nblock # size of block
+glt <- ntr-1
+s <- ntr/sblock # number of blocks per replication
+b <- s * nrep
+
+mean_pht <- mean(ihyb_multiple$Plant_height, na.rm = TRUE) # mean of response
+df_resid_pht <- df.residual(model_pht) # residual degrees of freedom
+SCt <- anova(model_pht)[2, 2] # sum of squares of treatment 
+Ee <- deviance(model_pht)/df_resid_pht # mean sum of square of error
+Eb <- anova(model_pht)[3, 3] # mean sum of square of rep:block 
+X <- rep(0, obs * ntr) # initialize matrix of 0 values for matrix of entry/treatment
+dim(X) <- c(obs, ntr) # change dimension of matrix to generate model matrix for entry/treatment
+for (i in 1:obs) { # design of model matrix for entry/treatment
+  tr <- trt[i]
+  X[i, tr] <- 1
+}
+R <- rep(0, obs * nrep) # initialize matrix of 0 values for matrix of replication
+dim(R) <- c(obs, nrep) # change dimension of matrix to generate model matrix for replication
+for (i in 1:obs) { # design of model matrix for replication
+  rp <- replication[i]
+  R[i, rp] <- 1
+}
+Z <- rep(0, obs * nblock) # initialize matrix of 0 values for matrix of blocks
+dim(Z) <- c(obs, nblock) # change dimension of matrix to generate model matrix of blocks
+for (i in 1:obs) { # design of model matrix for blocks
+  rb <- block[i]
+  Z[i, rb] <- 1
+}
+N <- t(X) %*% Z # matrix multiplication of treatment structure-matrix with block structure-matrix
+In <- diag(1, obs) # diagonal matrix of observation structure (150 x 150)
+c0 <- t(Z) %*% (In - (1/nrep) * X %*% t(X)) %*% y # column vector of 30 x 1 dim
+Js <- diag(s) # blocks per replication diagonal matrix
+Ir <- diag(nrep) # replication diagonal matrix
+Jr <- matrix(1, nrep, nrep) # unity matrix of 3 x 3 dimension
+Js <- matrix(1, s, s) # unity matrix of 10 x 10 dim
+Ib <- diag(b) # block diagonal matrix
+Iv <- diag(ntr) # treatment diagonal matrix
+q <- sblock - floor(sblock/s) * s 
+
+if (q <= s/2) {g <- floor(sblock/s)}
+if (q > s/2) {g <- floor(sblock/s) + 1}
+
+phi <- nrep * (Eb - Ee)/((nrep - 1) * Ee)
+lambda <- 1/(nrep * sblock * (1/phi + 1) - sblock)
+W <- t(N) %*% N - sblock * Ib - g * kronecker((Jr - Ir), Js)
+# (t(N) %*% N) %>% dim # matrix of dimension 30 x 30
+# (sblock * Ib) %>% dim # matrix of dimension 30 x 30
+# (kronecker((Jr-Ir), Js)) %>% dim # matrix of dimension 30 x 30
+
+inversa <- MASS::ginv(Ib - lambda * W)
+tauIntra <- t(X) %*% y/nrep - lambda * N %*% inversa %*% c0
+vartau <- (Ee/nrep) * (Iv + lambda * N %*% inversa %*% t(N))
+dvar <- sqrt(diag(vartau))
+```
+
+
+```{r vc-model-results}
+# set parameters to omit na values and get common statistics
+ntr0 <- ncol(vartau)
+if (ntr0 < ntr) {
+  ntr <- ntr0
+  nrep <- na.omit(nrep) # na omitted levels of replication
+}
+
+# difference ???
+vardif <- matrix(0, ntr, ntr)
+for (i in 1:(ntr - 1)) {
+  for (j in (i + 1):ntr) {
+    vardif[i, j] <- vartau[i, i] + vartau[j, j] - 2 * vartau[i, j]
+    vardif[j, i] <- vardif[i, j]
+  }
+}
+
+comb <- utils::combn(ntr, 2)
+nn <- ncol(comb)
+dif <- rep(0, nn)
+stdt <- rep(0, nn) # initialize standard error
+pvalue <- rep(0, nn)
+
+# compute p-value and standard error for significance of difference between two treatment means
+for (k in 1:nn) {
+  i <- comb[1, k]
+  j <- comb[2, k]
+  dif[k] <- tauIntra[i] - tauIntra[j]
+  stdt[k] <- sqrt(vartau[i, i] + vartau[j, j] - 2 * vartau[i,j]) # standard error
+  tc <- abs(dif[k])/stdt[k]
+  pvalue[k] <- 2 * round(1 - pt(tc, df_resid_pht), 4) # lsd test
+  # pvalue[k] <- round(1 - ptukey(tc, ntr, df_resid_pht),4) # tukey test
+}
+
+# pvalue values' vector
+tr.i <- comb[1, ]
+tr.j <- comb[2, ]
+Q <- matrix(1, ncol = ntr, nrow = ntr)
+p <- pvalue
+
+# probability values' matrix
+k <- 0
+for (i in 1:(ntr - 1)) {
+  for (j in (i + 1):ntr) {
+    k <- k + 1
+    Q[i, j] <- p[k]
+    Q[j, i] <- p[k]
+  }
+}
+
+```
+
+
+```{r overall-mean-and-model-cv, echo=TRUE}
+mean_pht # overall mean
+
+Fstat <- data.frame("Fit Statistics" = c(AIC = AIC(model_pht), BIC = BIC(model_pht)))
+Fstat # fit statistics
+
+E <- (ntr - 1) * (nrep - 1)/((ntr - 1) * (nrep - 1) + nrep * (s - 1)) 
+# ntr = number of treatments, 
+# nrep = number of replications
+# s = number of blocks per replication 
+E # efficiency factor
+
+CV <- sqrt(Ee) * 100/mean_pht # where, Ee = deviance(model_pht)/df_resid_pht 
+CV # model CV 
+```
+
+
+```{r model-means-and-group}
+# mean and groups of treatments
+groups <- agricolae::orderPvalue(treatment = 1:ntr, means = tauIntra, alpha = 0.05, pvalue = Q, console = FALSE)
+groups <- groups %>% rownames_to_column("treatment")
+
+# print mean and group
+groups %>% 
+  head(n = 15) %>% 
+  knitr::kable(caption = "Treatment means and groups for the response variable") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10, full_width = TRUE) %>% 
+  kableExtra::row_spec(0, bold = TRUE)
+```
+
+
+Alternatively, analysis and results from analysis could be obtained via agricolae function `PBIB.test()`. 
+
+```{r verify-agricolae, echo=TRUE}
+# vc_model_alpha <- agricolae::PBIB.test(block = block, trt = trt, replication = replication, 
+#                      k = sblock, y = y, method = "VC", console = TRUE)
+# vc_model_alpha$groups
+```
+

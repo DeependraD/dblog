@@ -1,0 +1,114 @@
+---
+title: 'Tidytuesday: Claremont Run, X-men Characters'
+author: Deependra Dhakal
+date: '2020-08-04'
+slug: tidytuesday-tour-de-france
+categories:
+  - tidyverse
+  - R
+tags:
+  - R
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-08-04T11:13:48+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+```{r setup, include=FALSE, echo=FALSE, eval=TRUE}
+require(tidyverse)
+require(broom)
+require(tidyr)
+library(janitor)
+library(cowplot)
+library(here)
+#library(skimr)
+
+knitr::opts_chunk$set(fig.width=12, fig.height=8, 
+                      echo=FALSE, warning=FALSE, message=FALSE, 
+                      cache = TRUE)
+```
+
+
+## X men characters
+
+```{r load-xmen-characters-data}
+# comic_bechdel <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-30/comic_bechdel.csv')
+# 
+# character_visualization <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-30/character_visualization.csv')
+# 
+# characters <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-30/characters.csv')
+# 
+# xmen_bechdel <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-30/xmen_bechdel.csv')
+# 
+# covers <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-30/covers.csv')
+# 
+# issue_collaborators <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-30/issue_collaborators.csv')
+# 
+# locations <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-30/locations.csv')
+
+load(here::here("content", "blog", "data", "x-men_characters.RData"))
+```
+
+### Data dictionary explore
+
+```{r}
+comic_bechdel %>% skimr::skim()
+```
+
+## Exploratory visualization
+
+Source: https://jmablog.com/post/which-x-men-character-had-it-worst/
+
+```{r}
+
+# summarise total instances the state occurred on each character across run
+char_states_totals <- characters %>%
+  select(-issue) %>%
+  group_by(character) %>%
+  summarise(across(is.numeric, sum)) %>%
+  ungroup() %>%
+  select(1:4, 6, 8) %>%
+  janitor::adorn_totals("col", name = "total") %>%
+  janitor::untabyl() %>%
+  slice_max(total, n = 10) %>%
+  select(character, total, everything()) %>%
+  pivot_longer(3:7, names_to="state", values_to = "count") %>%
+  separate(character, sep = " = ", into = c("codename", "name")) %>% 
+  mutate(codename = case_when(codename == "Ariel/Sprite/Shadowcat" ~ "Shadowcat",
+                              codename == "Marvel Girl/Phoenix" ~ "Jean Grey",
+                              TRUE ~ codename))
+
+# create stacked column plot
+plot <- char_states_totals %>%
+  mutate(state = str_replace_all(state, "_", " "),
+         state = str_replace_all(state, "subject", "subjected"),
+         state = str_to_sentence(state)) %>%
+  mutate(state = fct_reorder(state, count),
+         codename = fct_reorder(codename, total)) %>%
+  ggplot(aes(codename, count, fill = state)) +
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Which X-Men character had it worst?",
+       subtitle = "During Chris Claremont's 1975-1991 run on Uncanny X-Men",
+       x = "",
+       y = "No. of Occurrences",
+       fill = "")
+
+# add storm image to plot
+cowplot::ggdraw(plot)
+
+```
+
+## Tidybayes modeling
+
+https://joshuacook.netlify.app/post/uncanny-x-men-bayesian-analysis/
+
+## Bechdel testing
+
+https://juliasilge.com/blog/uncanny-xmen/

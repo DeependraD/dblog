@@ -1,0 +1,56 @@
+---
+title: Flowering phenology of Rice genotypes in irrigated tropical condition of Nepal
+author: Deependra Dhakal
+date: '2018-10-17'
+slug: flowering-phenology-of-rice-genotypes
+categories:
+  - Plant Breeding
+  - agriculture
+tags:
+  - agriculture
+  - research-review
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = FALSE, echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.8, 
+                      message = FALSE, warning = FALSE)
+options(knitr.kable.NA = "", digits = 3)
+library(tidyverse)
+```
+
+Dhangadhi of Kailali, Nepal remains relatively hotter during summer season with respect to average condition of terai agro-ecology. A regime of high day temperature with bright sunshine and cool night temperature along with plenty of seasonal rain during larger part of rice growing season favors good growth of rice crop in the region.
+
+Based on a range of cultivation sowings carried out in the summer/rainy season of 2018, flowering dates were recorded for each plot of varieties, and the duration since planting to flowering was determined. Here, flowering time is ascribed to the period when approximately 50% of the anthers in each plots could be promptly seen as extruding. I summarize the resulting days to flowering period in the bar chart shown in Figure \@ref(fig:rice-dtf).
+
+```{r rice-dtf, fig.cap="Days to flowering of various rice genotypes to the day of sowing"}
+dtf_2075 <- read_csv(here::here("content", "blog", "data", "days_to_flowering_rice_2075.csv"))
+
+dtf_2075 <- dtf_2075 %>% 
+  filter(!is.na(`Days to flowering`)) %>% 
+  mutate(DTF = as.Date(`Days to flowering`, format = "%m, %d, %Y") - as.Date(`Date sown`, format = "%m, %d, %Y"))
+
+dtf_2075plot <- dtf_2075 %>% 
+  group_by(Variety) %>% 
+  summarise_at("DTF", function(x)mean(x, na.rm = TRUE)) %>% 
+  ggplot(aes(x = Variety, y = DTF)) +
+  geom_col(na.rm = TRUE, show.legend = TRUE, inherit.aes = TRUE, alpha = 0.6) +
+  scale_x_discrete(limits = dtf_2075 %>% 
+                     group_by(Variety) %>% 
+                     summarise_at("DTF", function(x)mean(x, na.rm = TRUE)) %>% 
+                     arrange(-`DTF`) %>% pull("Variety")) +
+  scale_y_continuous(breaks = seq(0, 150, by = 10), 
+                     minor_breaks = seq(0, 150, by = 5), 
+                     name = "Days to flowering") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.6),
+        text = element_text(size = 14))
+
+dtf_2075plot
+# ggsave("dtf_2075.png", dtf_2075plot, device = "png", width = 10, height = 10, units = "in", dpi = 200)
+```
+

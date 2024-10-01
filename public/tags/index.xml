@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Rookie site</title>
+    <link>http://localhost:4321/tags/</link>
+    <description>Recent content in Tags on Rookie site</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 03 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:4321/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hugo-Site</title>
+      <link>http://localhost:4321/tags/hugo-site/</link>
+      <pubDate>Sun, 03 Jan 2021 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/hugo-site/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Tidyverse</title>
+      <link>http://localhost:4321/tags/tidyverse/</link>
+      <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/tidyverse/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Epidemiology</title>
+      <link>http://localhost:4321/tags/epidemiology/</link>
+      <pubDate>Fri, 07 Aug 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/epidemiology/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Gganimate</title>
+      <link>http://localhost:4321/tags/gganimate/</link>
+      <pubDate>Fri, 07 Aug 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/gganimate/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>R</title>
+      <link>http://localhost:4321/tags/r/</link>
+      <pubDate>Fri, 07 Aug 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/r/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Timeseries</title>
+      <link>http://localhost:4321/tags/timeseries/</link>
+      <pubDate>Thu, 04 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/timeseries/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Academic</title>
+      <link>http://localhost:4321/tags/academic/</link>
+      <pubDate>Thu, 28 May 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/academic/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Plant Breeding</title>
+      <link>http://localhost:4321/tags/plant-breeding/</link>
+      <pubDate>Thu, 21 Mar 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/plant-breeding/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Agriculture</title>
+      <link>http://localhost:4321/tags/agriculture/</link>
+      <pubDate>Tue, 19 Mar 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/agriculture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Productivity</title>
+      <link>http://localhost:4321/tags/productivity/</link>
+      <pubDate>Tue, 26 Feb 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/productivity/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Color Charts</title>
+      <link>http://localhost:4321/tags/color-charts/</link>
+      <pubDate>Wed, 23 Jan 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/color-charts/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Phenotyping</title>
+      <link>http://localhost:4321/tags/phenotyping/</link>
+      <pubDate>Wed, 23 Jan 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/phenotyping/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Optimization</title>
+      <link>http://localhost:4321/tags/optimization/</link>
+      <pubDate>Sat, 12 Jan 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/optimization/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Dates</title>
+      <link>http://localhost:4321/tags/dates/</link>
+      <pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/dates/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Research-Review</title>
+      <link>http://localhost:4321/tags/research-review/</link>
+      <pubDate>Wed, 17 Oct 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/research-review/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Hybrid</title>
+      <link>http://localhost:4321/tags/hybrid/</link>
+      <pubDate>Sun, 05 Aug 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/hybrid/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>R Markdown</title>
+      <link>http://localhost:4321/tags/r-markdown/</link>
+      <pubDate>Tue, 30 May 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/r-markdown/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Factors</title>
+      <link>http://localhost:4321/tags/factors/</link>
+      <pubDate>Thu, 18 May 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/tags/factors/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

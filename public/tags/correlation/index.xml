@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Correlation on Rookie site</title>
+    <link>http://localhost:4321/tags/correlation/</link>
+    <description>Recent content in Correlation on Rookie site</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 19 Sep 2020 08:39:45 +0545</lastBuildDate>
+    <atom:link href="http://localhost:4321/tags/correlation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Color formatting of correlation table</title>
+      <link>http://localhost:4321/blog/color-formatting-of-correlation-table/</link>
+      <pubDate>Sat, 19 Sep 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/color-formatting-of-correlation-table/</guid>
+      <description>&lt;script src=&#34;http://localhost:4321/blog/color-formatting-of-correlation-table/index_files/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;&#xD;&#xA;&lt;link href=&#34;http://localhost:4321/blog/color-formatting-of-correlation-table/index_files/lightable/lightable.css&#34; rel=&#34;stylesheet&#34; /&gt;&#xD;&#xA;&#xA;&#xA;&#xA;&#xA;&lt;h1 id=&#34;correlation&#34;&gt;Correlation&#xA;  &lt;a href=&#34;#correlation&#34;&gt;&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;Correlation is a bivariate summary statistic. It basically talks of direction and magnitidue of association of two variables. Besides formatting with significance stars, color coding correlation coefficient table might be helpful to pick patterns out in a quick glimpse.&lt;/p&gt;&#xA;&lt;p&gt;Table &lt;a href=&#34;#tab:correlation-with-color&#34;&gt;1&lt;/a&gt; presents correlation matrix of yield and yield component traits (a blue &lt;code&gt;\(\rightarrow\)&lt;/code&gt; red color profile represents increasing magnitude of positive correlation between traits). Following code is helpful if somebody provides a correlation table with stars in it and tells you to prettify it. Note that lower or upper halves only cannot be used to determine the discrete color values so full column is required.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

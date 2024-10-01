@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+  
+                           
+     
+
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.135.0">
+<title>Cluster dendrogram: An introduction and showcase | Rookie site</title>
+
+
+<meta property="twitter:site" content="@dd_rookie">
+<meta property="twitter:creator" content="@dd_rookie">
+
+
+
+
+
+
+
+  
+    
+  
+<meta name="description" content="">
+
+
+<meta property="og:site_name" content="Rookie site">
+<meta property="og:title" content="Cluster dendrogram: An introduction and showcase | Rookie site">
+<meta property="og:description" content="" />
+<meta property="og:type" content="page" />
+<meta property="og:url" content="http://localhost:4321/blog/cluster-dendrogram-an-introduction-and-showcase/" />
+<meta property="og:locale" content="en">
+
+
+
+
+    
+        <meta property="og:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+        <meta property="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+    
+    
+  
+  <meta itemprop="name" content="Cluster dendrogram: An introduction and showcase">
+  <meta itemprop="description" content="A cluster analysis is a classification problem. It is dealt in several ways, one of which is hierarchial agglomeration. The method allows for easy presentation of high dimensional data, more of so when the number of observations is readily fitted into a visualization.
+Here’s I deal with a case of clustering typically seen in agriculture and field research where a researcher tests typically a large number of genotypes and seeks to see them organized into distinguishable clusters using dendrogram. Data concerns observations on disease incidence in rice genotypes of various stages – germinating seed to maturity nearing crop. Following provides a descriptive summary of the observation variables.">
+  <meta itemprop="datePublished" content="2020-09-07T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2020-09-07T22:12:28+05:45">
+  <meta itemprop="wordCount" content="413">
+  <meta itemprop="keywords" content="Tidyverse">
+  
+  <!--[if IE]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  
+  
+  <link rel="stylesheet" href="/style.main.min.1cbac35dadc4fd962ceb58cdbe3e4bd32eb4a149ef54664a24d670fb5307d543.css" integrity="sha256-HLrDXa3E/ZYs61jNvj5L0y60oUnvVGZKJNZw&#43;1MH1UM=" media="screen">
+  
+  
+  <script src="/panelset.min.ed1ac24b6e16f4e2481e3d1d098ae66f5bc77438aef619e6e266d8ac5b00dc72.js" type="text/javascript"></script>
+  
+  
+  <script src="/main.min.36817c360165917b68a008c77f2439837c7c187a0acd3e9c92ce8f23fdc2d825.js" type="text/javascript"></script>
+</head>
+<body>
+      <div class="grid-container">
+<header class="site-header pt4 pb2 mb4 bb b--transparent ph5 headroom z-max" role="banner">
+  <nav class="site-nav db dt-l w-100" role="navigation">
+    <a class="site-brand db dtc-l v-mid link no-underline w-100 w-33-l tc tl-l" href="http://localhost:4321/" title="Home">
+      <img src="/img/blogophonic-mark-dark.png" class="dib db-l h2 w-auto" alt="Rookie site">
+    </a>
+    <div class="site-links db dtc-l v-mid w-100 w-47-l tc tr-l mt3 mt0-l ttu tracked">
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/about/" title="About Rookie">About</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 active" href="/blog/" title="Blog">Blog</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/project/" title="Project Portfolio">Projects</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/talks/" title="Talks">Talks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/academia/" title="Academia">Academia</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/tipsntricks/" title="Tips and tricks">Tips and tricks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="https://github.com/DeependraD/tex-for-beauty/releases/download/v1.06/Deependra_CV.pdf" title="CV copy">CV</a>
+      
+      
+    </div>
+  </nav>
+</header>
+
+<main class="page-main pa4" role="main">
+  <section class="page-content mw7 center">
+    <article class="post-content pa0 ph4-l">
+      <header class="post-header">
+        <h1 class="f1 lh-solid measure-narrow mb3 fw4">Cluster dendrogram: An introduction and showcase</h1>
+        
+        <p class="f6 measure lh-copy mv1">By Deependra Dhakal in <a href="http://localhost:4321/categories/r">R</a> </p>
+        <p class="f7 db mv0 ttu">September 7, 2020</p>
+
+      
+
+      </header>
+      <section class="post-body pt5 pb4">
+        <p>A cluster analysis is a classification problem. It is dealt in several ways, one of which is hierarchial agglomeration. The method allows for easy presentation of high dimensional data, more of so when the number of observations is readily fitted into a visualization.</p>
+<p>Here&rsquo;s I deal with a case of clustering typically seen in agriculture and field research where a researcher tests typically a large number of genotypes and seeks to see them organized into distinguishable clusters using dendrogram. Data concerns observations on disease incidence in rice genotypes of various stages &ndash; germinating seed to maturity nearing crop. Following provides a descriptive summary of the observation variables.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>rice_path <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">read_csv</span>(here<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">here</span>(<span style="color:#d14">&#34;content&#34;</span>, <span style="color:#d14">&#34;blog&#34;</span>, <span style="color:#d14">&#34;data&#34;</span>, <span style="color:#d14">&#34;rice_genotypes_blight_pathology_disease.csv&#34;</span>))
+</span></span><span style="display:flex;"><span>landraces <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">read_csv</span>(here<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">here</span>(<span style="color:#d14">&#34;content&#34;</span>, <span style="color:#d14">&#34;blog&#34;</span>, <span style="color:#d14">&#34;data&#34;</span>, <span style="color:#d14">&#34;rice_genotypes_blight_pathology_landraces.csv&#34;</span>))
+</span></span><span style="display:flex;"><span>skimr<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">skim</span>(rice_path)
+</span></span></code></pre></div><p>Table: Table 1: Data summary</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left"></th>
+          <th style="text-align: left"></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Name</td>
+          <td style="text-align: left">rice_path</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Number of rows</td>
+          <td style="text-align: left">60</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Number of columns</td>
+          <td style="text-align: left">3</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">_______________________</td>
+          <td style="text-align: left"></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Column type frequency:</td>
+          <td style="text-align: left"></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">numeric</td>
+          <td style="text-align: left">3</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">________________________</td>
+          <td style="text-align: left"></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Group variables</td>
+          <td style="text-align: left">None</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">skim_variable</th>
+          <th style="text-align: right">n_missing</th>
+          <th style="text-align: right">complete_rate</th>
+          <th style="text-align: right">mean</th>
+          <th style="text-align: right">sd</th>
+          <th style="text-align: right">p0</th>
+          <th style="text-align: right">p25</th>
+          <th style="text-align: right">p50</th>
+          <th style="text-align: right">p75</th>
+          <th style="text-align: right">p100</th>
+          <th style="text-align: left">hist</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">severity_percent</td>
+          <td style="text-align: right">0</td>
+          <td style="text-align: right">1</td>
+          <td style="text-align: right">58.79</td>
+          <td style="text-align: right">10.34</td>
+          <td style="text-align: right">33.33</td>
+          <td style="text-align: right">51.86</td>
+          <td style="text-align: right">59.26</td>
+          <td style="text-align: right">66.67</td>
+          <td style="text-align: right">81.49</td>
+          <td style="text-align: left">▂▅▇▇▂</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">mean_audpc</td>
+          <td style="text-align: right">0</td>
+          <td style="text-align: right">1</td>
+          <td style="text-align: right">239.55</td>
+          <td style="text-align: right">38.59</td>
+          <td style="text-align: right">134.26</td>
+          <td style="text-align: right">216.88</td>
+          <td style="text-align: right">243.06</td>
+          <td style="text-align: right">263.89</td>
+          <td style="text-align: right">305.56</td>
+          <td style="text-align: left">▁▃▆▇▅</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">final_seed_incidence</td>
+          <td style="text-align: right">0</td>
+          <td style="text-align: right">1</td>
+          <td style="text-align: right">51.70</td>
+          <td style="text-align: right">8.67</td>
+          <td style="text-align: right">30.00</td>
+          <td style="text-align: right">46.00</td>
+          <td style="text-align: right">52.67</td>
+          <td style="text-align: right">58.00</td>
+          <td style="text-align: right">69.33</td>
+          <td style="text-align: left">▂▃▇▇▃</td>
+      </tr>
+  </tbody>
+</table>
+<p>Scaling the data in all columns avoids the trouble with interpretation, particularly with all the different units of measurement in each variable.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># scale data and prepare</span>
+</span></span><span style="display:flex;"><span>rice_path_disease <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">scale</span>(rice_path)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># distance and clustering</span>
+</span></span><span style="display:flex;"><span>dist_euclidean <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">dist</span>(rice_path_disease, <span style="color:#d14">&#34;euclidean&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># hclust_ave &lt;- hclust(dist_euclidean, method = &#34;ave&#34;)</span>
+</span></span><span style="display:flex;"><span>hclust_ave <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">hclust</span>(dist_euclidean, method <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;ward.D2&#34;</span>) <span style="color:#998;font-style:italic"># ward has high clustering power</span>
+</span></span><span style="display:flex;"><span>hclust_ave<span style="color:#000;font-weight:bold">$</span>labels <span style="color:#000;font-weight:bold">&lt;-</span> landraces<span style="color:#000;font-weight:bold">$</span>landraces[1<span style="color:#000;font-weight:bold">:</span><span style="color:#099">60</span>][hclust_ave<span style="color:#000;font-weight:bold">$</span>order]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># extract data</span>
+</span></span><span style="display:flex;"><span>hclust_ave_data <span style="color:#000;font-weight:bold">&lt;-</span> ggdendro<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">dendro_data</span>(hclust_ave, type <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;rectangle&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># determine number of clusters</span>
+</span></span><span style="display:flex;"><span>clust_five <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">cutree</span>(hclust_ave, k<span style="color:#000;font-weight:bold">=</span><span style="color:#099">5</span>)
+</span></span><span style="display:flex;"><span>clust_df <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">tibble</span>(label<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">names</span>(clust_five), cluster<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">factor</span>(clust_five))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># merge the labels, with clust.df</span>
+</span></span><span style="display:flex;"><span>hclust_ave_data[[<span style="color:#d14">&#34;labels&#34;</span>]] <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">merge</span>(hclust_ave_data[[<span style="color:#d14">&#34;labels&#34;</span>]], clust_df, by<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;label&#34;</span>)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>clustering_dendrogram <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">ggplot</span>() <span style="color:#000;font-weight:bold">+</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">geom_segment</span>(data<span style="color:#000;font-weight:bold">=</span>hclust_ave_data[[<span style="color:#d14">&#34;segments&#34;</span>]], <span style="color:#900;font-weight:bold">aes</span>(x<span style="color:#000;font-weight:bold">=</span>x, y<span style="color:#000;font-weight:bold">=</span>y, xend<span style="color:#000;font-weight:bold">=</span>xend, 
+</span></span><span style="display:flex;"><span>                                        yend<span style="color:#000;font-weight:bold">=</span>yend)) <span style="color:#000;font-weight:bold">+</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">geom_text</span>(data<span style="color:#000;font-weight:bold">=</span>hclust_ave_data[[<span style="color:#d14">&#34;labels&#34;</span>]], <span style="color:#900;font-weight:bold">aes</span>(x, y, label<span style="color:#000;font-weight:bold">=</span>label, hjust<span style="color:#000;font-weight:bold">=</span><span style="color:#099">0</span>, color<span style="color:#000;font-weight:bold">=</span>cluster), 
+</span></span><span style="display:flex;"><span>            size<span style="color:#000;font-weight:bold">=</span><span style="color:#099">2.2</span>) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">coord_flip</span>() <span style="color:#000;font-weight:bold">+</span> <span style="color:#900;font-weight:bold">scale_y_reverse</span>(expand<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">c</span>(<span style="color:#099">0.2</span>, <span style="color:#099">0</span>)) <span style="color:#000;font-weight:bold">+</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">theme</span>(axis.line.y<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>        axis.ticks.y<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>        axis.text.y<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>        axis.title.y<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">element_blank</span>(),
+</span></span><span style="display:flex;"><span>        panel.background<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">element_rect</span>(fill<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;white&#34;</span>),
+</span></span><span style="display:flex;"><span>        panel.grid<span style="color:#000;font-weight:bold">=</span><span style="color:#900;font-weight:bold">element_blank</span>()) <span style="color:#000;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">labs</span>(caption <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;Hierarchical clustering using euclidean distance and \nward&#39;s method for agglomeration and \nshowing five clusters in dendrogram&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># ggsave(&#34;./clustering_dendrogram.png&#34;, plot = clustering_dendrogram, device = &#34;png&#34;, </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#          width = 8, height = 6, units = &#34;in&#34;, dpi = 240)</span>
+</span></span></code></pre></div><p>While we use certain method in clustering, its efficacy as a classifer can be checked with <code>cluster::agnes()</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># methods to assess</span>
+</span></span><span style="display:flex;"><span>m <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;average&#34;</span>, <span style="color:#d14">&#34;single&#34;</span>, <span style="color:#d14">&#34;complete&#34;</span>, <span style="color:#d14">&#34;ward&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">names</span>(m) <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#900;font-weight:bold">c</span>(<span style="color:#d14">&#34;average&#34;</span>, <span style="color:#d14">&#34;single&#34;</span>, <span style="color:#d14">&#34;complete&#34;</span>, <span style="color:#d14">&#34;ward&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># function to compute coefficient</span>
+</span></span><span style="display:flex;"><span>ac <span style="color:#000;font-weight:bold">&lt;-</span> <span style="color:#000;font-weight:bold">function</span>(x) {
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">agnes</span>(rice_path_disease, method <span style="color:#000;font-weight:bold">=</span> x)<span style="color:#000;font-weight:bold">$</span>ac
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">map_dbl</span>(m, ac)
+</span></span></code></pre></div><pre tabindex="0"><code>##   average    single  complete      ward 
+## 0.8171988 0.7323511 0.8932563 0.9257491
+</code></pre>
+        
+        <details closed class="f6 fw7 input-reset">
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Posted on:</dt>
+    <dd class="fw5 ml0">September 7, 2020</dd>
+  </dl>
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Length:</dt>
+    <dd class="fw5 ml0">2 minute read, 413 words</dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Categories:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/categories/r">R</a> </dd>
+  </dl>
+  
+  
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Tags:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/tags/tidyverse">tidyverse</a> </dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">See Also:</dt>
+    
+    <dd class="fw5 ml0"><a href="/blog/logistic-regression-part-ii-varietal-adoption-dataset/">Logistic Regression: Part II - Varietal adoption dataset</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/logistic-regression-part-i-fundamentals/">Logistic Regression: Part I - Fundamentals</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/linear-model-fitting-for-regression-basics-and-variation/">Linear model fitting for regression: Basics and Variation</a></dd>
+    
+  </dl>
+</details>
+
+      </section>
+      <footer class="post-footer">
+        <div class="post-pagination dt w-100 mt4 mb2">
+  
+  
+    <a class="prev dtc pr2 tl v-top fw6"
+    href="http://localhost:4321/blog/bundled-seedling/">&larr; Using panelsets</a>
+  
+  
+  
+    <a class="next dtc pl2 tr v-top fw6"
+    href="http://localhost:4321/blog/disease-epidemiology-a-simulation-scenario-of-infectious-viral-disease-covid-19/">Disease epidemiology: A simulation scenario of infectious viral disease (COVID-19) &rarr;</a>
+  
+</div>
+
+      </footer>
+    </article>
+    
+      <div class="post-comments pa0 pa4-l mt4">
+  
+    
+      <script src="https://utteranc.es/client.js"
+              repo="deependrad/dblog"
+              issue-term="pathname"
+              theme="boxy-light"
+              label="comments :crystal_ball:"
+              crossorigin="anonymous"
+              async
+              type="text/javascript">
+      </script>
+    
+  
+</div>
+
+    
+  </section>
+</main>
+<footer class="site-footer pv4 bt b--transparent ph5" role="contentinfo">
+  <nav class="db dt-l w-100">
+    <p class="site-copyright f7 db dtc-l v-mid w-100 w-33-l tc tl-l pv2 pv0-l mv0 lh-copy">
+      &copy; 2024 Dblog
+      <span class="middot-divider"></span>
+      Made with <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/hugo-apero/" rel="dct:source">Hugo Apéro</a></span>.
+      <br />
+      
+Based on <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/formspree/blogophonic-hugo" rel="dct:source">Blogophonic</a></span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://formspree.io" property="cc:attributionName" rel="cc:attributionURL">Formspree</a>.
+    </p>
+    
+    <div class="site-social-links db dtc-l v-mid w-100 w-33-l tc pv2 pv0-l mv0">
+      <div class="social-icon-links" aria-hidden="true">
+  
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://github.com/deependrad/dblog" title="github" target="_blank" rel="me noopener">
+      <i class="fab fa-github fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://bsky.app/" title="bluesky" target="_blank" rel="me noopener">
+      <i class="fab fa-bluesky fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://twitter.com/dd_rookie" title="x-twitter" target="_blank" rel="me noopener">
+      <i class="fab fa-x-twitter fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://orcid.org/0000-0002-0347-7950" title="orcid" target="_blank" rel="me noopener">
+      <i class="ai ai-orcid fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="/blog/index.xml" title="rss" >
+      <i class="fas fa-rss fa-lg fa-fw"></i>
+    </a>
+  
+</div>
+
+    </div>
+    
+    <div class="site-links f6 db dtc-l v-mid w-100 w-67-l tc tr-l pv2 pv0-l mv0">
+      
+      <a class="dib pv1 ph2 link" href="/license/" title="License">License</a>
+      
+      <a class="dib pv1 ph2 link" href="/contact/" title="Contact form">Contact</a>
+      
+      <a class="dib pv1 ph2 link" href="/contributors/" title="Contributors">Contributors</a>
+      
+    </div>
+  </nav>
+  
+    <script>
+
+    var i, text, code, codes = document.getElementsByTagName('code');
+    for (let i = 0; i < codes.length;) {
+      code = codes[i];
+      if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+        text = code.textContent;
+        if (/^\$[^$]/.test(text) && /[^$]\$$/.test(text)) {
+          text = text.replace(/^\$/, '\\(').replace(/\$$/, '\\)');
+          code.textContent = text;
+        }
+        if (/^\\\((.|\s)+\\\)$/.test(text) ||
+            /^\\\[(.|\s)+\\\]$/.test(text) ||
+            /^\$(.|\s)+\$$/.test(text) ||
+            /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+          code.outerHTML = code.innerHTML;  
+          continue;
+        }
+      }
+      i++;
+    }
+</script>
+
+  
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+
+
+    
+  
+  
+</footer>
+
+      </div>
+    </body>
+</html>

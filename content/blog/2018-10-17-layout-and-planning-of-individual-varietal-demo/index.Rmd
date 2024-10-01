@@ -1,0 +1,59 @@
+---
+title: Layout and planning of individual varietal demonstrations in small areas
+author: Deependra Dhakal
+date: '2018-10-17'
+slug: layout-and-planning-of-individual-varietal-demo
+categories:
+  - Plant Breeding
+  - agriculture
+  - R
+tags:
+  - agriculture
+  - R
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(cache = TRUE, echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.show = "hold", fig.pos = "H",
+                      fig.align = "center", 
+                      fig.asp = 0.8, message = FALSE, warning = FALSE)
+options(knitr.kable.NA = "", digits = 3)
+```
+
+# Design and layout plan
+
+```{r grid-displaying, fig.cap="Grid layout design of varietal demonstration for small number of plots"}
+fourplot_grid <- tribble(
+  ~row, ~col, ~Entry, ~ttype,
+  1, 1, "Maize1", "8x8",
+  1, 2, "Maize2", "8x8",
+  2, 1, "Maize3", "8x8",
+  2, 2, "Maize4", "8x8"
+)
+
+sixplot_grid <- tribble(
+  ~row, ~col, ~Entry, ~ttype,
+  1, 1, "Maize1", "10x10",
+  1, 2, "Maize2", "10x10",
+  2, 1, "Maize3", "10x10",
+  2, 2, "Maize4", "10x10",
+  3, 1, "Maize5", "10x10",
+  3, 2, "Maize6", "10x10"
+)
+
+desplot::desplot(Entry ~ row*col, data = fourplot_grid, 
+        out1 = row, out2 = col, 
+        main = "Four plot grid layout of Maize varietal demonstration", 
+        text = ttype, cex = 0.9, shorten = FALSE, show.key = FALSE)
+
+desplot::desplot(Entry ~ row*col, data = sixplot_grid, 
+        out1 = row, out2 = col, 
+        main = "Six plot grid layout of Maize varietal demonstration", 
+        text = ttype, cex = 0.9, shorten = FALSE, show.key = FALSE)
+
+```

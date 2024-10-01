@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+  
+                           
+     
+
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.135.0">
+<title> | Rookie site</title>
+
+
+<meta property="twitter:site" content="@dd_rookie">
+<meta property="twitter:creator" content="@dd_rookie">
+
+
+
+
+
+
+
+  
+    
+  
+<meta name="description" content="">
+
+
+<meta property="og:site_name" content="Rookie site">
+<meta property="og:title" content=" | Rookie site">
+<meta property="og:description" content="" />
+<meta property="og:type" content="page" />
+<meta property="og:url" content="http://localhost:4321/blog/2018-08-14-stability-analysis-how-to-guide/" />
+<meta property="og:locale" content="en">
+
+
+
+
+    
+        <meta property="og:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+        <meta property="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+    
+    
+  
+  <meta itemprop="name" content="Rookie site">
+  <meta itemprop="description" content="Meaning of stabilityIntroductionPrinciples of Biplot analysisBiplot and its Inner-product PropertySingular value decomposition and partitioningColumn-metric preserving and associated interpretationsRow-metric preserving and associated interpretationsData centering prior to SVDData scaling prior to SVDFour questions to be asked before trying to interpret a biplotSimplest case of biplot analysisMultienvironment trial dataAMMI AnalysisReferencesMeaning of stabilityComparison of treatments may also imply cross comparison of their stability across multiple environments, especially when a study constitutes a series of trials that are each conducted at different locations and/or at different periods in time (henceforth referred to as MET; Multi-Environment Trial). Several situations exist where only mean based performance analysis are regarded inconclusive.">
+  <meta itemprop="wordCount" content="1391">
+  
+  <!--[if IE]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  
+  
+  <link rel="stylesheet" href="/style.main.min.1cbac35dadc4fd962ceb58cdbe3e4bd32eb4a149ef54664a24d670fb5307d543.css" integrity="sha256-HLrDXa3E/ZYs61jNvj5L0y60oUnvVGZKJNZw&#43;1MH1UM=" media="screen">
+  
+  
+  <script src="/panelset.min.ed1ac24b6e16f4e2481e3d1d098ae66f5bc77438aef619e6e266d8ac5b00dc72.js" type="text/javascript"></script>
+  
+  
+  <script src="/main.min.36817c360165917b68a008c77f2439837c7c187a0acd3e9c92ce8f23fdc2d825.js" type="text/javascript"></script>
+</head>
+<body>
+      <div class="grid-container">
+<header class="site-header pt4 pb2 mb4 bb b--transparent ph5 headroom z-max" role="banner">
+  <nav class="site-nav db dt-l w-100" role="navigation">
+    <a class="site-brand db dtc-l v-mid link no-underline w-100 w-33-l tc tl-l" href="http://localhost:4321/" title="Home">
+      <img src="/img/blogophonic-mark-dark.png" class="dib db-l h2 w-auto" alt="Rookie site">
+    </a>
+    <div class="site-links db dtc-l v-mid w-100 w-47-l tc tr-l mt3 mt0-l ttu tracked">
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/about/" title="About Rookie">About</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 active" href="/blog/" title="Blog">Blog</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/project/" title="Project Portfolio">Projects</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/talks/" title="Talks">Talks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/academia/" title="Academia">Academia</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/tipsntricks/" title="Tips and tricks">Tips and tricks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="https://github.com/DeependraD/tex-for-beauty/releases/download/v1.06/Deependra_CV.pdf" title="CV copy">CV</a>
+      
+      
+    </div>
+  </nav>
+</header>
+
+<main class="page-main pa4" role="main">
+  <section class="page-content mw7 center">
+    <article class="post-content pa0 ph4-l">
+      <header class="post-header">
+        <h1 class="f1 lh-solid measure-narrow mb3 fw4"></h1>
+        
+        <p class="f6 measure lh-copy mv1">By Deependra Dhakal</p>
+        <p class="f7 db mv0 ttu">January 1, 0001</p>
+
+      
+
+      </header>
+      <section class="post-body pt5 pb4">
+        
+<div id="TOC">
+<ul>
+<li><a href="#meaning-of-stability" id="toc-meaning-of-stability">Meaning of stability</a></li>
+<li><a href="#introduction" id="toc-introduction">Introduction</a></li>
+<li><a href="#principles-of-biplot-analysis" id="toc-principles-of-biplot-analysis">Principles of Biplot analysis</a>
+<ul>
+<li><a href="#biplot-and-its-inner-product-property" id="toc-biplot-and-its-inner-product-property">Biplot and its Inner-product Property</a></li>
+<li><a href="#singular-value-decomposition-and-partitioning" id="toc-singular-value-decomposition-and-partitioning">Singular value decomposition and partitioning</a></li>
+<li><a href="#column-metric-preserving-and-associated-interpretations" id="toc-column-metric-preserving-and-associated-interpretations">Column-metric preserving and associated interpretations</a></li>
+<li><a href="#row-metric-preserving-and-associated-interpretations" id="toc-row-metric-preserving-and-associated-interpretations">Row-metric preserving and associated interpretations</a></li>
+<li><a href="#data-centering-prior-to-svd" id="toc-data-centering-prior-to-svd">Data centering prior to SVD</a></li>
+<li><a href="#data-scaling-prior-to-svd" id="toc-data-scaling-prior-to-svd">Data scaling prior to SVD</a></li>
+</ul></li>
+<li><a href="#four-questions-to-be-asked-before-trying-to-interpret-a-biplot" id="toc-four-questions-to-be-asked-before-trying-to-interpret-a-biplot">Four questions to be asked before trying to interpret a biplot</a></li>
+<li><a href="#simplest-case-of-biplot-analysis" id="toc-simplest-case-of-biplot-analysis">Simplest case of biplot analysis</a></li>
+<li><a href="#multienvironment-trial-data" id="toc-multienvironment-trial-data">Multienvironment trial data</a></li>
+<li><a href="#ammi-analysis" id="toc-ammi-analysis">AMMI Analysis</a></li>
+<li><a href="#references" id="toc-references">References</a></li>
+</ul>
+</div>
+
+<div id="meaning-of-stability" class="section level1">
+<h1>Meaning of stability</h1>
+<p>Comparison of treatments may also imply cross comparison of their stability across multiple environments, especially when a study constitutes a series of trials that are each conducted at different locations and/or at different periods in time (henceforth referred to as MET; <strong>M</strong>ulti-<strong>E</strong>nvironment <strong>T</strong>rial). Several situations exist where only mean based performance analysis are regarded inconclusive.</p>
+<p>For example, in varietal release process the authorizing body seeks record of consistent trait performace of certain crop genotype. The imperative is: a variety needs to be stably exhibit it’s characters in the proposed domain of cultivation, which generally is a wide area, throughout a long duration of cultivation cycles. This pre-condition of stable character inheritance is more relevant to crops constituting a homogenous and homozygous population. Either of the location, time period or combination of both, more commonly framed as year in field researches, could be assumed to present an unique environment that treatment entries are tested in. Thus, for results to be widely applicable, performance measures across environments should be more or less stable. To the contrary, the concept of utilizing differential character expression across different environments is often explored when interaction between genotypes and environments result in more desirable character.</p>
+<p>In MET trials, it is also of interest whether the same treatments perform well or poorly in all locations, or are there as-yet-unknown subpopulations such that some treatments perform optimally at certain types of locations whereas other treatments are better suited for other locations<span class="citation">(<a href="#ref-littell2007sas" role="doc-biblioref">Littell et al. 2007</a>)</span>. By assessing the simple effects of treatments at each location using the BLUPs demonstrated in this example, the stability issue can be addressed using mixed model methods.</p>
+</div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>GE has been a research focus among biometricians and quantitative geneticists since the early 1900s. With the notion that GE is undesirable and/or that it confounds genotype evaluation, much work has been devoted to developing stability indices to quantify and select against GE. Many stability indices have been proposed, as reviewed in Lin and Binns (1994) and more recently in Yan and Kang (2003). Several books and symposium proceedings have been published to document the advances in the study of GE (Byth and Montgomery1981; Kang, 1990, 2003; Gauch 1992; Imrie and Hacker 1993; Kang and Gauch 1996; Cooper and Hammer 1996) and most earlier research on GE can be traced from these publications.[copied]</p>
+<p>Two concepts exist that aim to explain the stability – static/biological stability and dynamic/agronomic stability. The concept of static stability maintains that the genotypic response of a trait remains unchanged over environment, i.e. a genotype has equally same response across all environments. This concept is defines stability in absolute stringent terms, which actually is never the case when dealing with natural components.The other concept, dynamic stability, attempts to associate stability with predictive performance. It highlights the importance of statistical agreement between the predicted performance and the observed performance.</p>
+</div>
+<div id="principles-of-biplot-analysis" class="section level1">
+<h1>Principles of Biplot analysis</h1>
+<p>A biplot is a scatter plot that approximates and graphically displays a two-way table by both its row and column factors such that relationships among the row factors, relationships among the column factors, and the underlying interactions between the row and column factors can be visualized simultaneously. Since its first report by Gabriel (1971), biplots have been used in visual data analysis by scientists of all disciplines, from economics, sociology, business, medicine, to ecology, genetics, and agronomy. The first application of biplots to agricultural data analysis was Bradu and Gabriel (1978), who used data from a cotton performance trial to illustrate the diagnostic role of biplots for model selection.</p>
+<p>A common misconception is that biplot analysis is equivalent to principle component analysis (PCA). While both biplot analysis and PCA use Singular Value Decomposition (SVD) (Pearson 1901) as a key mathematical technique, biplot analysis is a fuller use of SVD to allow two interacting factors to be visualized simultaneously.</p>
+<div id="biplot-and-its-inner-product-property" class="section level2">
+<h2>Biplot and its Inner-product Property</h2>
+<p>Mathematically, a biplot may be regarded as a graphical display of matrix multiplication. Given a matrix <span class="math inline">\(G\)</span> with <span class="math inline">\(m\)</span> rows and <span class="math inline">\(r\)</span> columns, and a matrix <span class="math inline">\(E\)</span> with <span class="math inline">\(r\)</span> rows and <span class="math inline">\(n\)</span> columns, they can be multiplied to give a third matrix <span class="math inline">\(P\)</span> with <span class="math inline">\(m\)</span> rows and <span class="math inline">\(n\)</span> columns. If <strong>r = 2</strong>, then matrix <span class="math inline">\(G\)</span> can be displayed as <span class="math inline">\(m\)</span> points in a 2-D plot, with the 1st column as the abscissa (<span class="math inline">\(x\)</span>-axis) and 2nd column the ordinate (<span class="math inline">\(y\)</span>-axis). Similarly, matrix <span class="math inline">\(E\)</span> can be displayed as <span class="math inline">\(n\)</span> points in a 2-D plot, with the 1st row as the abscissa and 2nd row the ordinate. A 2-D biplot is formed if the two plots are superimposed, which would contain <span class="math inline">\(m + n\)</span> points. An interesting property of this biplot is that it not only displays matrices <span class="math inline">\(G\)</span> and <span class="math inline">\(E\)</span>, but also implicitly displays the <span class="math inline">\(m \times n\)</span> values of matrix <span class="math inline">\(P\)</span>, because each element of <span class="math inline">\(P\)</span> can be visualized as:</p>
+<p><span class="math display">\[
+p_{ij} = x_ix^\prime_j + y_iy^\prime_j = \vec{g_i}\vec{e_i} = |g_i||e_j|\cos\theta_{ij}
+\]</span></p>
+<p>where <span class="math inline">\((x_i, y_i)\)</span> are the coordinates for row <span class="math inline">\(i\)</span> and <span class="math inline">\((x\prime_j, y\prime_j)\)</span> are the coordinates for column j. <span class="math inline">\(\vec{g_i}\)</span> is the vector for row <span class="math inline">\(i\)</span> and <span class="math inline">\(\vec{e_i}\)</span> is the vector for column <span class="math inline">\(j\)</span>. <span class="math inline">\(|g_i|\)</span> is the vector length for row i and <span class="math inline">\(|e_j|\)</span> is the vector length for column j. <span class="math inline">\(\theta_{ij}\)</span> is the angle between the vectors of row <span class="math inline">\(i\)</span> and column <span class="math inline">\(j\)</span>.</p>
+<p>The founder of biplot (Gabriel 1971) summarizes biplot analysis as any two-way table can be graphically analyzed using a 2-D biplot as soon as it can be sufficiently approximated by a rank-2 (i.e., <span class="math inline">\(r\)</span> = 2) matrix.</p>
+<p><strong>Example: 1</strong></p>
+<p>Let us consider two matrices, matrix <span class="math inline">\(G\)</span> and matrix <span class="math inline">\(E\)</span> as shown below:</p>
+<p><span class="math display">\[
+G = \left[
+\begin{matrix}
+2 &amp; 4 \\
+2 &amp; 3 \\
+4 &amp; -3 \\
+-2 &amp; -1 \\
+\end{matrix}
+\right]
+;\
+E = \left[
+\begin{matrix}
+6 &amp; 5 &amp; -4 \\
+3 &amp; -1 &amp; -2 \\
+\end{matrix}
+\right]
+\]</span></p>
+<p>Now by cross multiplying (vector multiplication) of <span class="math inline">\(G\)</span> and <span class="math inline">\(E\)</span>, we get <span class="math inline">\(P\)</span> matrix:</p>
+<p><span class="math display">\[
+P =
+\left[
+\begin{matrix}
+24 &amp; 6 &amp; -16 \\
+21 &amp; 7 &amp; -14 \\
+15 &amp; 23 &amp; -10 \\
+-15 &amp; -9 &amp; 10 \\
+\end{matrix}
+\right]
+\]</span></p>
+<p>The matrix is a “rank 2” matrix. Taking a graphical approach, we can visualize the above two matrices; we can overlay the plottings of matrices in a way stated above to obtain a graph of <span class="math inline">\(m+n\)</span> points where, <span class="math inline">\(m\)</span> = number of rows in <span class="math inline">\(G\)</span> matrix and <span class="math inline">\(n\)</span> = number of columns in <span class="math inline">\(E\)</span> matrix.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:example-matrices-plot"></span>
+<img src="index_files/figure-html/example-matrices-plot-1.png" alt="Biplot of G and E matrices with m+n=7 points" width="576" />
+<p class="caption">
+Figure 1: Biplot of G and E matrices with m+n=7 points
+</p>
+</div>
+<p>The proof about approximation of <span class="math inline">\(P\)</span> matrix can be shown geometrically, i.e.:</p>
+<p><span class="math display">\[
+P_{ij} = \vec{R_i}cos\alpha_{ij}\vec{C_j};\\
+\vec{R_i} = \sqrt{x^2_{R_i} + y^2_{R_i}},~\vec{C_j} = \sqrt{x^2_{C_j} + y^2_{C_j}}
+\]</span></p>
+<p>First, to determine the segment length, we compute the distance between the corresponding point and the centre.</p>
+<pre><code>## [1] 4.47 3.61 5.00 2.24</code></pre>
+<pre><code>## [1] 6.71 5.10 4.47</code></pre>
+<p>Calculate clockwise angle between row and column segments connected by the origin.</p>
+<p>As an example, two segments: G_R1 and E_C1, are joined illustrating the angle between them.</p>
+<p><img src="index_files/figure-html/segment-r1c1-angle-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>From the above equation, first element of matrix <span class="math inline">\(P\)</span> (<span class="math inline">\(P_{ij}\)</span>) is:</p>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+P_{11} &amp; = \vec{R_1}cos\alpha_{11}\vec{C_1} \\
+&amp; = 4.46\ cos(36.9)\ 6.71 \\
+&amp; = 24
+\end{split}
+\end{equation}\]</span></p>
+<p>Similarly, to obtain the column vector <span class="math inline">\(P_{i1}\)</span>, we have following four elements resulting from the vector product.</p>
+<pre><code>## [1]  24  21  15 -15</code></pre>
+<p>Kronecker solution to matrix binding</p>
+</div>
+<div id="singular-value-decomposition-and-partitioning" class="section level2">
+<h2>Singular value decomposition and partitioning</h2>
+</div>
+<div id="column-metric-preserving-and-associated-interpretations" class="section level2">
+<h2>Column-metric preserving and associated interpretations</h2>
+</div>
+<div id="row-metric-preserving-and-associated-interpretations" class="section level2">
+<h2>Row-metric preserving and associated interpretations</h2>
+</div>
+<div id="data-centering-prior-to-svd" class="section level2">
+<h2>Data centering prior to SVD</h2>
+</div>
+<div id="data-scaling-prior-to-svd" class="section level2">
+<h2>Data scaling prior to SVD</h2>
+</div>
+</div>
+<div id="four-questions-to-be-asked-before-trying-to-interpret-a-biplot" class="section level1">
+<h1>Four questions to be asked before trying to interpret a biplot</h1>
+<ol style="list-style-type: decimal">
+<li>What is the model on which the biplot is generated?</li>
+<li>How are the singular values partitioned?</li>
+<li>What is the goodness of fit of the biplot for the table that is to be visualized?</li>
+<li>Are the axes drawn to scale?</li>
+</ol>
+</div>
+<div id="simplest-case-of-biplot-analysis" class="section level1">
+<h1>Simplest case of biplot analysis</h1>
+</div>
+<div id="multienvironment-trial-data" class="section level1">
+<h1>Multienvironment trial data</h1>
+</div>
+<div id="ammi-analysis" class="section level1">
+<h1>AMMI Analysis</h1>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-littell2007sas" class="csl-entry">
+Littell, Ramon C, George A Milliken, Walter W Stroup, Russell D Wolfinger, and Oliver Schabenberger. 2007. <em>SAS for Mixed Models</em>. SAS institute.
+</div>
+</div>
+</div>
+
+        
+        <details closed class="f6 fw7 input-reset">
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Posted on:</dt>
+    <dd class="fw5 ml0">January 1, 0001</dd>
+  </dl>
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Length:</dt>
+    <dd class="fw5 ml0">7 minute read, 1391 words</dd>
+  </dl>
+  
+  
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">See Also:</dt>
+    
+  </dl>
+</details>
+
+      </section>
+      <footer class="post-footer">
+        <div class="post-pagination dt w-100 mt4 mb2">
+  
+  
+    <a class="prev dtc pr2 tl v-top fw6"
+    href="http://localhost:4321/blog/2017-05-01-an-encounter-with-blogdown/">&larr; An encounter with blogdown</a>
+  
+  
+  
+    <a class="next dtc pl2 tr v-top fw6"
+    href="http://localhost:4321/blog/2018-09-15-diallel-cross-analysis/"> &rarr;</a>
+  
+</div>
+
+      </footer>
+    </article>
+    
+      <div class="post-comments pa0 pa4-l mt4">
+  
+    
+      <script src="https://utteranc.es/client.js"
+              repo="deependrad/dblog"
+              issue-term="pathname"
+              theme="boxy-light"
+              label="comments :crystal_ball:"
+              crossorigin="anonymous"
+              async
+              type="text/javascript">
+      </script>
+    
+  
+</div>
+
+    
+  </section>
+</main>
+<footer class="site-footer pv4 bt b--transparent ph5" role="contentinfo">
+  <nav class="db dt-l w-100">
+    <p class="site-copyright f7 db dtc-l v-mid w-100 w-33-l tc tl-l pv2 pv0-l mv0 lh-copy">
+      &copy; 2024 Dblog
+      <span class="middot-divider"></span>
+      Made with <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/hugo-apero/" rel="dct:source">Hugo Apéro</a></span>.
+      <br />
+      
+Based on <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/formspree/blogophonic-hugo" rel="dct:source">Blogophonic</a></span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://formspree.io" property="cc:attributionName" rel="cc:attributionURL">Formspree</a>.
+    </p>
+    
+    <div class="site-social-links db dtc-l v-mid w-100 w-33-l tc pv2 pv0-l mv0">
+      <div class="social-icon-links" aria-hidden="true">
+  
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://github.com/deependrad/dblog" title="github" target="_blank" rel="me noopener">
+      <i class="fab fa-github fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://bsky.app/" title="bluesky" target="_blank" rel="me noopener">
+      <i class="fab fa-bluesky fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://twitter.com/dd_rookie" title="x-twitter" target="_blank" rel="me noopener">
+      <i class="fab fa-x-twitter fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://orcid.org/0000-0002-0347-7950" title="orcid" target="_blank" rel="me noopener">
+      <i class="ai ai-orcid fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="/blog/index.xml" title="rss" >
+      <i class="fas fa-rss fa-lg fa-fw"></i>
+    </a>
+  
+</div>
+
+    </div>
+    
+    <div class="site-links f6 db dtc-l v-mid w-100 w-67-l tc tr-l pv2 pv0-l mv0">
+      
+      <a class="dib pv1 ph2 link" href="/license/" title="License">License</a>
+      
+      <a class="dib pv1 ph2 link" href="/contact/" title="Contact form">Contact</a>
+      
+      <a class="dib pv1 ph2 link" href="/contributors/" title="Contributors">Contributors</a>
+      
+    </div>
+  </nav>
+  
+    <script>
+
+    var i, text, code, codes = document.getElementsByTagName('code');
+    for (let i = 0; i < codes.length;) {
+      code = codes[i];
+      if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+        text = code.textContent;
+        if (/^\$[^$]/.test(text) && /[^$]\$$/.test(text)) {
+          text = text.replace(/^\$/, '\\(').replace(/\$$/, '\\)');
+          code.textContent = text;
+        }
+        if (/^\\\((.|\s)+\\\)$/.test(text) ||
+            /^\\\[(.|\s)+\\\]$/.test(text) ||
+            /^\$(.|\s)+\$$/.test(text) ||
+            /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+          code.outerHTML = code.innerHTML;  
+          continue;
+        }
+      }
+      i++;
+    }
+</script>
+
+  
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+
+
+    
+  
+  
+</footer>
+
+      </div>
+    </body>
+</html>

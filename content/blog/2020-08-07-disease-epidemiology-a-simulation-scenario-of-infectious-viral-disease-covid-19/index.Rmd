@@ -1,0 +1,85 @@
+---
+title: 'Disease epidemiology: A simulation scenario of infectious viral disease (COVID-19)'
+author: Deependra Dhakal
+date: '2020-08-07'
+slug: disease-epidemiology-a-simulation-scenario-of-infectious-viral-disease-covid-19
+categories:
+  - R
+  - epidemiology
+tags:
+  - R
+  - epidemiology
+  - gganimate
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-08-07T09:07:35+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+```{r setup, include=FALSE, echo=FALSE, eval=TRUE}
+require(tidyverse)
+# require(gganimate)
+# require(glue)
+# require(gifski)
+# require(av)
+knitr::opts_chunk$set(fig.width=6, fig.height=5, 
+                      echo=FALSE, warning=FALSE, message=FALSE)
+theme_set(theme_light())
+```
+
+## SIR model of COVID-19 epidemiology
+
+```{r covid-sim}
+beta <- seq(3.2, 0.5, by = -0.05) # transmission rate
+gamma <- 0.2 # recovery rate
+mapped_sir_covid19 <- map_dfr(.x = beta, 
+                              ~EpiDynamics::SIR(pars = c(beta = .x, gamma = gamma), 
+                                                time = seq(0, 50, by = 0.5), 
+                                                init = c(S = 0.7, I = 0.02, R = 0.01))[["results"]] %>% 
+                                as_tibble() %>% 
+                                add_column(beta_value = .x), 
+                              .id = "beta_id")
+
+
+mapped_sir_covid19
+```
+
+
+```{r covid-sir-graph}
+mapped_sir_covid19 %>%
+  pivot_longer(cols = c(S, I, R), names_to = "initialization", values_to = "values") %>%
+  filter(beta_value == 0.75) %>% # at transmission rate 0.75
+  ggplot(aes(x = time, y = values, group = initialization)) +
+  geom_line(aes(color = initialization), linewidth = 1.2) +
+  scale_color_discrete(name = "Initialization") +
+  labs(y = "Proportion of total population",
+       caption = "https://rookie.rbind.io") +
+  ggtitle('Disease epidemiology of transmissible disease',
+          subtitle = 'Recovery rate: 0.2 and Transmission rate: 0.75') +
+  theme_bw()
+```
+
+
+```{r covid-animation}
+# # EpiDynamics::PlotMods(model_sir_covid19)
+# mapped_sir_covid19_gganim <- mapped_sir_covid19 %>% 
+#   pivot_longer(cols = c(S, I, R), names_to = "initialization", values_to = "values") %>% 
+#   ggplot(aes(x = time, y = values, group = initialization)) +
+#   geom_line(aes(color = initialization), size = 1.2) +
+#   scale_color_discrete(name = "Initialization") +
+#   labs(y = "Proportion of total population", 
+#        caption = "https://rookie.rbind.io") +
+#   transition_time(-beta_value) +
+#   ggtitle('Disease epidemiology of transmissible disease', 
+#           subtitle = 'Recovery rate: 0.2 and Transmission rate: {round(-frame_time, 2)} ') +
+#   theme_bw()
+
+# # mapped_sir_covid19_gganim %>% animate(nframes = 200, renderer = gifski_renderer())
+# # save_animation(last_animation(), "~/Desktop/covid19_flatten_the_curve.gif")
+```

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+  
+                           
+     
+
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.135.0">
+<title>Resource optimization | Rookie site</title>
+
+
+<meta property="twitter:site" content="@dd_rookie">
+<meta property="twitter:creator" content="@dd_rookie">
+
+
+
+
+
+
+
+  
+    
+  
+<meta name="description" content="A practical solution">
+
+
+<meta property="og:site_name" content="Rookie site">
+<meta property="og:title" content="Resource optimization | Rookie site">
+<meta property="og:description" content="A practical solution" />
+<meta property="og:type" content="page" />
+<meta property="og:url" content="http://localhost:4321/blog/optimization/" />
+<meta property="og:locale" content="en">
+
+
+
+
+    
+        <meta property="og:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+        <meta property="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+    
+    
+  
+  <meta itemprop="name" content="Resource optimization">
+  <meta itemprop="description" content="library(lpSolve) library(tidyverse) Issue A farmer has 600 katthas of land under his authority. Each of his katthas of land will either be sown with Rice or with Maize during the current season. Each kattha planted with Maize will yield Rs 1000, requires 2 workers and 20 kg of fertilizer. Each kattha planted with Rice will yield Rs 2000, requires 4 workers and 25 kg of fertilizers. There are currently 1200 workers and 11000 kg of fertilizer available.">
+  <meta itemprop="datePublished" content="2018-08-12T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2018-08-12T00:00:00+00:00">
+  <meta itemprop="wordCount" content="360">
+  <meta itemprop="keywords" content="Agriculture,Optimization,R">
+  
+  <!--[if IE]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  
+  
+  <link rel="stylesheet" href="/style.main.min.1cbac35dadc4fd962ceb58cdbe3e4bd32eb4a149ef54664a24d670fb5307d543.css" integrity="sha256-HLrDXa3E/ZYs61jNvj5L0y60oUnvVGZKJNZw&#43;1MH1UM=" media="screen">
+  
+  
+  <script src="/panelset.min.ed1ac24b6e16f4e2481e3d1d098ae66f5bc77438aef619e6e266d8ac5b00dc72.js" type="text/javascript"></script>
+  
+  
+  <script src="/main.min.36817c360165917b68a008c77f2439837c7c187a0acd3e9c92ce8f23fdc2d825.js" type="text/javascript"></script>
+</head>
+<body>
+      <div class="grid-container">
+<header class="site-header pt4 pb2 mb4 bb b--transparent ph5 headroom z-max" role="banner">
+  <nav class="site-nav db dt-l w-100" role="navigation">
+    <a class="site-brand db dtc-l v-mid link no-underline w-100 w-33-l tc tl-l" href="http://localhost:4321/" title="Home">
+      <img src="/img/blogophonic-mark-dark.png" class="dib db-l h2 w-auto" alt="Rookie site">
+    </a>
+    <div class="site-links db dtc-l v-mid w-100 w-47-l tc tr-l mt3 mt0-l ttu tracked">
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/about/" title="About Rookie">About</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 active" href="/blog/" title="Blog">Blog</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/project/" title="Project Portfolio">Projects</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/talks/" title="Talks">Talks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/academia/" title="Academia">Academia</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/tipsntricks/" title="Tips and tricks">Tips and tricks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="https://github.com/DeependraD/tex-for-beauty/releases/download/v1.06/Deependra_CV.pdf" title="CV copy">CV</a>
+      
+      
+    </div>
+  </nav>
+</header>
+
+<main class="page-main pa4" role="main">
+  <section class="page-content mw7 center">
+    <article class="post-content pa0 ph4-l">
+      <header class="post-header">
+        <h1 class="f1 lh-solid measure-narrow mb3 fw4">Resource optimization</h1>
+        <h4 class="f4 mt0 mb4 lh-title measure">A practical solution</h4>
+        <p class="f6 measure lh-copy mv1">By Deependra Dhakal in <a href="http://localhost:4321/categories/agriculture">agriculture</a> </p>
+        <p class="f7 db mv0 ttu">August 12, 2018</p>
+
+      
+
+      </header>
+      <section class="post-body pt5 pb4">
+        <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#900;font-weight:bold">library</span>(lpSolve)
+</span></span><span style="display:flex;"><span><span style="color:#900;font-weight:bold">library</span>(tidyverse)
+</span></span></code></pre></div>
+
+
+
+<h2 id="issue">Issue
+  <a href="#issue"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<p>A farmer has 600 katthas of land under his authority. Each of his katthas of land will either be sown with Rice or with Maize during the current season. Each kattha planted with Maize will yield Rs 1000, requires 2 workers and 20 kg of fertilizer. Each kattha planted with Rice will yield Rs 2000, requires 4 workers and 25 kg of fertilizers. There are currently 1200 workers and 11000 kg of fertilizer available.</p>
+
+
+
+
+<h2 id="solution">Solution
+  <a href="#solution"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<p>So, the problem is how can he/she allocate his parcel of land for reaping maximum profit while also staying within the limits of input availability.</p>
+<p>The problem can be formulated as an optimization problem with following notation:</p>
+<p><code>\(X_1\)</code> = katthas of Maize
+<code>\(X_2\)</code> = katthas of Rice</p>
+<p>The objective function is:</p>
+<p>$$
+max(1000X_1+2000X_2)
+$$</p>
+<p>Now let&rsquo;s construct a matrix defining the constraints.</p>
+<p>[
+\begin{bmatrix}
+Worker\
+Fertilizer
+\end{bmatrix}=
+\begin{bmatrix}
+2X_1 + 4X_2 \leq 1200\
+20X_1 + 25X_2 \leq 11000
+\end{bmatrix}
+]</p>
+<p>Define objective function to be optimized.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>objective.in <span style="color:#000;font-weight:bold">&lt;-</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">c</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#099">1000</span>, <span style="color:#998;font-style:italic"># maize</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#099">2000</span> <span style="color:#998;font-style:italic"># rice</span>
+</span></span><span style="display:flex;"><span>  )
+</span></span></code></pre></div><p>Define constraint matrix with variables in the left hand side.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>const.mat <span style="color:#000;font-weight:bold">&lt;-</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">matrix</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">c</span>(
+</span></span><span style="display:flex;"><span>      <span style="color:#099">2</span>, <span style="color:#099">4</span>, <span style="color:#998;font-style:italic"># maize</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#099">20</span>, <span style="color:#099">25</span>
+</span></span><span style="display:flex;"><span>    ),
+</span></span><span style="display:flex;"><span>    nrow <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">2</span>,
+</span></span><span style="display:flex;"><span>    byrow <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">TRUE</span>
+</span></span><span style="display:flex;"><span>  )
+</span></span></code></pre></div><p>Define direction of constraints.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>const.dir <span style="color:#000;font-weight:bold">&lt;-</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">rep</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;&lt;=&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#099">2</span>
+</span></span><span style="display:flex;"><span>  )
+</span></span></code></pre></div><p>Define constraint limits as values in the right hand side.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>const.rhs <span style="color:#000;font-weight:bold">&lt;-</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">c</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#099">1200</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#099">11000</span>
+</span></span><span style="display:flex;"><span>  )
+</span></span></code></pre></div><p>The structure of linear optimization problem.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>const.mat <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">cbind</span>(const.dir) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">cbind</span>(const.rhs) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">rbind</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#900;font-weight:bold">c</span>(
+</span></span><span style="display:flex;"><span>      objective.in,
+</span></span><span style="display:flex;"><span>      <span style="color:#d14">&#34; &lt;--- &#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#d14">&#34;max fun to left&#34;</span>
+</span></span><span style="display:flex;"><span>    ),
+</span></span><span style="display:flex;"><span>    .
+</span></span><span style="display:flex;"><span>  ) <span style="color:#000;font-weight:bold">%&gt;%</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">noquote</span>()
+</span></span></code></pre></div><pre tabindex="0"><code>##                const.dir const.rhs      
+## [1,] 1000 2000  &lt;---     max fun to left
+## [2,] 2    4    &lt;=        1200           
+## [3,] 20   25   &lt;=        11000
+</code></pre><p>Linear programming syntax and solution search.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>solution <span style="color:#000;font-weight:bold">&lt;-</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#900;font-weight:bold">lp</span>(
+</span></span><span style="display:flex;"><span>    direction <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;max&#34;</span>,
+</span></span><span style="display:flex;"><span>    objective.in <span style="color:#000;font-weight:bold">=</span> objective.in,
+</span></span><span style="display:flex;"><span>    const.mat <span style="color:#000;font-weight:bold">=</span> const.mat,
+</span></span><span style="display:flex;"><span>    const.dir <span style="color:#000;font-weight:bold">=</span> const.dir,
+</span></span><span style="display:flex;"><span>    const.rhs <span style="color:#000;font-weight:bold">=</span> const.rhs
+</span></span><span style="display:flex;"><span>  )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>scales<span style="color:#000;font-weight:bold">::</span><span style="color:#900;font-weight:bold">dollar</span>(objective.in <span style="color:#000;font-weight:bold">%*%</span> solution<span style="color:#000;font-weight:bold">$</span>solution, prefix <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;Rs. &#34;</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>## [1] &#34;Rs. 600,000&#34;
+</code></pre><p>Solution to variables value <code>\(X_1\)</code> and <code>\(X_2\)</code> can also be found.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>solution<span style="color:#000;font-weight:bold">$</span>solution
+</span></span></code></pre></div><pre tabindex="0"><code>## [1]   0 300
+</code></pre><p>Whole problem and solution domain can be summarized in a graph. This is an added effort for some other day&hellip;</p>
+<!-- ```{r question-answer} -->
+<!-- plot(0, 0,  -->
+<!--      xlim = c(0, 600), ylim = c(0, 600),  -->
+<!--      xlab = "Maize", ylab = "Rice",  -->
+<!--      main = "Maize versus Rice: Plant more of which?") -->
+<!-- polygon(c(0, 1000/3, 0), c(500, 0, 0), col = "skyblue", density = 30) -->
+<!-- polygon(c(0, 1200/2, 0), c(1200/4, 0), col = "red", density = 20) -->
+<!-- abline(h = 200, v = 200) -->
+<!-- ``` -->
+<p>This post is thanks to 
+<a href="https://www.youtube.com/watch?v=61Kwaab8CoU" target="_blank" rel="noopener">Freddy Drennan&rsquo;s youtube video</a></p>
+
+        
+        <details closed class="f6 fw7 input-reset">
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Posted on:</dt>
+    <dd class="fw5 ml0">August 12, 2018</dd>
+  </dl>
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Length:</dt>
+    <dd class="fw5 ml0">2 minute read, 360 words</dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Categories:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/categories/agriculture">agriculture</a> </dd>
+  </dl>
+  
+  
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Tags:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/tags/agriculture">agriculture</a>  <a href="http://localhost:4321/tags/optimization">optimization</a>  <a href="http://localhost:4321/tags/r">R</a> </dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">See Also:</dt>
+    
+    <dd class="fw5 ml0"><a href="/blog/internals-of-mixed-models/">Internals of Mixed Models</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/serpentine-design-and-sorting/">Serpentine design and sorting</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/color-formatting-of-correlation-table/">Color formatting of correlation table</a></dd>
+    
+  </dl>
+</details>
+
+      </section>
+      <footer class="post-footer">
+        <div class="post-pagination dt w-100 mt4 mb2">
+  
+  
+    <a class="prev dtc pr2 tl v-top fw6"
+    href="http://localhost:4321/blog/stability-analysis-how-to-guide/">&larr; Stability analysis: how to guide</a>
+  
+  
+  
+    <a class="next dtc pl2 tr v-top fw6"
+    href="http://localhost:4321/blog/2018-08-05-hybrid-maize-history-prospect-practice/">Hybrid Maize: History, Prospect and Practice &rarr;</a>
+  
+</div>
+
+      </footer>
+    </article>
+    
+      <div class="post-comments pa0 pa4-l mt4">
+  
+    
+      <script src="https://utteranc.es/client.js"
+              repo="deependrad/dblog"
+              issue-term="pathname"
+              theme="boxy-light"
+              label="comments :crystal_ball:"
+              crossorigin="anonymous"
+              async
+              type="text/javascript">
+      </script>
+    
+  
+</div>
+
+    
+  </section>
+</main>
+<footer class="site-footer pv4 bt b--transparent ph5" role="contentinfo">
+  <nav class="db dt-l w-100">
+    <p class="site-copyright f7 db dtc-l v-mid w-100 w-33-l tc tl-l pv2 pv0-l mv0 lh-copy">
+      &copy; 2024 Dblog
+      <span class="middot-divider"></span>
+      Made with <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/hugo-apero/" rel="dct:source">Hugo Apéro</a></span>.
+      <br />
+      
+Based on <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/formspree/blogophonic-hugo" rel="dct:source">Blogophonic</a></span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://formspree.io" property="cc:attributionName" rel="cc:attributionURL">Formspree</a>.
+    </p>
+    
+    <div class="site-social-links db dtc-l v-mid w-100 w-33-l tc pv2 pv0-l mv0">
+      <div class="social-icon-links" aria-hidden="true">
+  
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://github.com/deependrad/dblog" title="github" target="_blank" rel="me noopener">
+      <i class="fab fa-github fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://bsky.app/" title="bluesky" target="_blank" rel="me noopener">
+      <i class="fab fa-bluesky fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://twitter.com/dd_rookie" title="x-twitter" target="_blank" rel="me noopener">
+      <i class="fab fa-x-twitter fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://orcid.org/0000-0002-0347-7950" title="orcid" target="_blank" rel="me noopener">
+      <i class="ai ai-orcid fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="/blog/index.xml" title="rss" >
+      <i class="fas fa-rss fa-lg fa-fw"></i>
+    </a>
+  
+</div>
+
+    </div>
+    
+    <div class="site-links f6 db dtc-l v-mid w-100 w-67-l tc tr-l pv2 pv0-l mv0">
+      
+      <a class="dib pv1 ph2 link" href="/license/" title="License">License</a>
+      
+      <a class="dib pv1 ph2 link" href="/contact/" title="Contact form">Contact</a>
+      
+      <a class="dib pv1 ph2 link" href="/contributors/" title="Contributors">Contributors</a>
+      
+    </div>
+  </nav>
+  
+    <script>
+
+    var i, text, code, codes = document.getElementsByTagName('code');
+    for (let i = 0; i < codes.length;) {
+      code = codes[i];
+      if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+        text = code.textContent;
+        if (/^\$[^$]/.test(text) && /[^$]\$$/.test(text)) {
+          text = text.replace(/^\$/, '\\(').replace(/\$$/, '\\)');
+          code.textContent = text;
+        }
+        if (/^\\\((.|\s)+\\\)$/.test(text) ||
+            /^\\\[(.|\s)+\\\]$/.test(text) ||
+            /^\$(.|\s)+\$$/.test(text) ||
+            /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+          code.outerHTML = code.innerHTML;  
+          continue;
+        }
+      }
+      i++;
+    }
+</script>
+
+  
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+
+
+    
+  
+  
+</footer>
+
+      </div>
+    </body>
+</html>

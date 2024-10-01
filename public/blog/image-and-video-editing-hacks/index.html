@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+  
+                           
+     
+
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.135.0">
+<title>Image and video editing hacks using ffmpeg | Rookie site</title>
+
+
+<meta property="twitter:site" content="@dd_rookie">
+<meta property="twitter:creator" content="@dd_rookie">
+
+
+
+
+
+
+
+  
+    
+  
+<meta name="description" content="">
+
+
+<meta property="og:site_name" content="Rookie site">
+<meta property="og:title" content="Image and video editing hacks using ffmpeg | Rookie site">
+<meta property="og:description" content="" />
+<meta property="og:type" content="page" />
+<meta property="og:url" content="http://localhost:4321/blog/image-and-video-editing-hacks/" />
+<meta property="og:locale" content="en">
+
+
+
+
+    
+        <meta property="og:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+        <meta property="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+    
+    
+  
+  <meta itemprop="name" content="Image and video editing hacks using ffmpeg">
+  <meta itemprop="description" content="Compose a slideshow This is beginner’s tutorial for starting up with open source ffmpeg library.
+In the beginning, it’s shown how we can convert an image gallery to a video slideshow. For example we have a directory called images filled with photos that we want to knit together to obtain a slideshow. A video, however, has an additional time/length attribute besides the attribute that controls which order the images are sawn together in. Along with these, several other features underlie a video composition, some of which will be discussed in this tutorial.">
+  <meta itemprop="datePublished" content="2018-11-03T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2018-11-03T00:00:00+00:00">
+  <meta itemprop="wordCount" content="990">
+  <meta itemprop="keywords" content="Image Editing">
+  
+  <!--[if IE]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  
+  
+  <link rel="stylesheet" href="/style.main.min.1cbac35dadc4fd962ceb58cdbe3e4bd32eb4a149ef54664a24d670fb5307d543.css" integrity="sha256-HLrDXa3E/ZYs61jNvj5L0y60oUnvVGZKJNZw&#43;1MH1UM=" media="screen">
+  
+  
+  <script src="/panelset.min.ed1ac24b6e16f4e2481e3d1d098ae66f5bc77438aef619e6e266d8ac5b00dc72.js" type="text/javascript"></script>
+  
+  
+  <script src="/main.min.36817c360165917b68a008c77f2439837c7c187a0acd3e9c92ce8f23fdc2d825.js" type="text/javascript"></script>
+</head>
+<body>
+      <div class="grid-container">
+<header class="site-header pt4 pb2 mb4 bb b--transparent ph5 headroom z-max" role="banner">
+  <nav class="site-nav db dt-l w-100" role="navigation">
+    <a class="site-brand db dtc-l v-mid link no-underline w-100 w-33-l tc tl-l" href="http://localhost:4321/" title="Home">
+      <img src="/img/blogophonic-mark-dark.png" class="dib db-l h2 w-auto" alt="Rookie site">
+    </a>
+    <div class="site-links db dtc-l v-mid w-100 w-47-l tc tr-l mt3 mt0-l ttu tracked">
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/about/" title="About Rookie">About</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 active" href="/blog/" title="Blog">Blog</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/project/" title="Project Portfolio">Projects</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/talks/" title="Talks">Talks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/academia/" title="Academia">Academia</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/tipsntricks/" title="Tips and tricks">Tips and tricks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="https://github.com/DeependraD/tex-for-beauty/releases/download/v1.06/Deependra_CV.pdf" title="CV copy">CV</a>
+      
+      
+    </div>
+  </nav>
+</header>
+
+<main class="page-main pa4" role="main">
+  <section class="page-content mw7 center">
+    <article class="post-content pa0 ph4-l">
+      <header class="post-header">
+        <h1 class="f1 lh-solid measure-narrow mb3 fw4">Image and video editing hacks using ffmpeg</h1>
+        
+        <p class="f6 measure lh-copy mv1">By Deependra Dhakal in <a href="http://localhost:4321/categories/image-editing">image editing</a> </p>
+        <p class="f7 db mv0 ttu">November 3, 2018</p>
+
+      
+
+      </header>
+      <section class="post-body pt5 pb4">
+        
+
+
+
+<h1 id="compose-a-slideshow">Compose a slideshow
+  <a href="#compose-a-slideshow"></a>
+</h1>
+<p>This is beginner&rsquo;s tutorial for starting up with open source 
+<a href="https://www.ffmpeg.org/" target="_blank" rel="noopener">ffmpeg</a> library.</p>
+<p>In the beginning, it&rsquo;s shown how we can convert an image gallery to a video slideshow. For example we have a directory called <code>images</code> filled with photos that we want to knit together to obtain a slideshow. A video, however, has an additional time/length attribute besides the attribute that controls which order the images are sawn together in. Along with these, several other features underlie a video composition, some of which will be discussed in this tutorial.</p>
+<p>In an ideal scenario we start off at the directory of images (<code>images</code>).</p>
+<p>In windows machine,</p>
+<pre tabindex="0"><code>cd images\
+</code></pre><p>In <code>r</code> interface</p>
+<pre tabindex="0"><code>setwd(&#34;./images/&#34;)
+</code></pre><p>Now before stitching images together, we need to specify the order in which that will be done. File name plays a role in that. For the sake of easiness, we ignore a situation where filename alphabets specify the order. Let&rsquo;s assume that, ordering is specified by numerics; i.e. 1, 2, 3, &hellip; n.</p>
+<p>Talking about an actual case scenario, most modern digital cameras produce well named image files, like IMG_01.*, or IMG_002*. An <code>r</code> code to list all the files in the current directory is shown below.</p>
+<pre tabindex="0"><code>filenames &lt;- list.files(&#34;.&#34;, &#34;.JPG&#34;)
+</code></pre><p>The command saves the list of filenames in the ascending order of alphanumerics that appear in the filename prefix. This is important step in order to also ensure that original filename can be recovered after tampering with the names. Filenames might come in all sorts of peculiar name formats &ndash; some even devoid of any. Nevertheless, it is always desirable that the original filenames are renamed to correctly represent an ordered file presentation.</p>
+<p>This could be done by a creating a vector equal to the length of files (<code>len(filenames)</code>).</p>
+<pre tabindex="0"><code>chfilenames &lt;- paste(&#34;IMG_&#34;, sprintf(&#34;%03d&#34;, seq_along(filenames)), &#34;.JPG&#34;, sep = &#34;&#34;)
+stringr::str_pad(seq_along(filenames), width = 3, pad = &#34;0&#34;) # this also pads &#34;0&#34; in numbers
+</code></pre><p>Now just replace the original file-names with new, order specified file-names using low level <code>R</code> function.</p>
+<pre tabindex="0"><code>file.rename(from = chfilenames, to = chfilenames)
+</code></pre><p>Finally to weave a video use ffmpeg. Note that ffmpeg should be added to path for calling from shell (<code>cmd</code>) readily.</p>
+<pre tabindex="0"><code>ffmpeg.exe -y -framerate 1/2 -start_number 1 -i &#34;IMG_%03d.JPG&#34; -c:v libx264 -pix_fmt yuv420p -s:v 1280x720 output_filename.mp4
+</code></pre><ul>
+<li>
+<p>-framerate in fraction represents 2 seconds per frame</p>
+</li>
+<li>
+<p>-y: to overwrite existing file</p>
+</li>
+<li>
+<p>-f: to force any operation</p>
+</li>
+<li>
+<p>image2pipe: plugin that allows to pipe input; while passing input use &ldquo;-i -&rdquo; in the command syntax</p>
+</li>
+<li>
+<p>-s 1280x720: scale the images</p>
+</li>
+<li>
+<p>-qscale is a way to set quality, but -qscale alone is ambiguous. Use -qscale:v for video and -qscale:a for audio encoders that support it. Don&rsquo;t use this option unless you know what it means.</p>
+</li>
+<li>
+<p>x264 has a better option for setting quality: -crf. The Constant Rate Factor is a constant quality encoding mode. Lower values mean better quality, but anything below 18 might not be visually better. The default is 23, but something like 20 would be better since YouTube re-encodes your video again.</p>
+</li>
+<li>
+<p>-pix_fmt yuv420p should be used to enable 4:2:0 downsampling for the PNG input, which usually isn&rsquo;t downsampled at all (4:4:4, as observed in your output) and often contains an Alpha channel. YouTube won&rsquo;t handle this correctly.</p>
+</li>
+<li>
+<p>-r is for -rate; it is specification of output frame rate in Hz.</p>
+</li>
+<li>
+<p>-r is not needed for setting the output framerate, as YouTube will handle almost all frame rates anyway. When reading 10 images per second as input, changing the output frame rate to something higher (e.g. 30) will only duplicate frames, which is not necessary.</p>
+</li>
+<li>
+<p>Generally, unconventional resolutions like <code>-s:v 1380x720</code> are avoided. Think about using the native 16:9 (720p resolution; 1280 x 720) and regenerating your plots if necessary. This will save from troubles mainly relating to letterboxing on YouTube, and sticking to unusual dimensions might prevent your video from being shown in full resolution or offered at 720p quality settings.</p>
+</li>
+<li>
+<p>Use the MP4 container instead of MOV, which YouTube suggests you to use. MP4 is virtually identical in functionality to MOV, but has better support in playback devices. In general, prefer that over MOV when you can.</p>
+</li>
+</ul>
+
+
+
+
+<h1 id="video-format-conversion">Video format conversion
+  <a href="#video-format-conversion"></a>
+</h1>
+<p>Besides these, converting videos back and forth between formats is really easy either. For example, an easy way to convert high compression mkv format to mp4 so that most decoder could play the video can be accomplished by the following.</p>
+<pre tabindex="0"><code>ffmpeg -i inputfilename.mkv outputfilename.mp4
+</code></pre>
+
+
+
+<h1 id="muxing-streams">Muxing streams
+  <a href="#muxing-streams"></a>
+</h1>
+<p>Often times, we may have isolated streams of audio and videos; For example, only video stream may be extracted from a stream with noisy voice recordings in the background and we may desire to add in some music or alikes. So, the easiest way to do that would be:</p>
+<pre tabindex="0"><code># Following command uses both the streams to mux together into a media format
+
+ffmpeg -i &#34;input_audio.mp3&#34; -i input_video.mp4 -vcodec copy -acodec copy -shortest output_format.mp4
+</code></pre><p>Note that the length of output media is equal to the duration of the shortest stream specified by <code>-shortest</code> flag.</p>
+
+
+
+
+<h1 id="batch-conversion-of-videos-using-rstudio-and-its-shell-interface">Batch conversion of videos using Rstudio and its shell interface
+  <a href="#batch-conversion-of-videos-using-rstudio-and-its-shell-interface"></a>
+</h1>
+<p>Firstly, load the following libraries.</p>
+<pre tabindex="0"><code>require(tidyverse)
+require(glue)
+</code></pre><p>Then specify the input filenames, and output filenames alike through extension pattern substitution. <code>purrr</code> and <code>stringr</code> libraries come to the rescue.</p>
+<pre tabindex="0"><code># input filename
+iflist &lt;- map(c(&#34;.mkv&#34;, &#34;.webm&#34;), 
+              ~list.files(path = &#34;.&#34;, 
+                          recursive = T, pattern = .x, full.names = TRUE)) %&gt;% 
+  unlist()
+
+# output filename
+oflist &lt;- str_replace_all(iflist, &#34;\\.\\w*$&#34;, &#34;.mp4&#34;)
+</code></pre><p>Now, get the batch script run at once. All three lines, for example as in the code below may selected and ran, if there are three media files of interest.</p>
+<pre tabindex="0"><code># glue function demo
+glue(&#34;I love {iflist[1]} and hate {oflist[1]}&#34;)
+# call CMD shell for conversion from R
+# shell(cmd = &#34;ffmpeg --help&#34;)
+# run all in sequence and not in a single statement
+
+shell(cmd = glue(&#39;ffmpeg -i &#34;{iflist[1]}&#34; &#34;{oflist[1]}&#34;&#39;))
+shell(cmd = glue(&#39;ffmpeg -i &#34;{iflist[2]}&#34; &#34;{oflist[2]}&#34;&#39;))
+shell(cmd = glue(&#39;ffmpeg -i &#34;{iflist[3]}&#34; &#34;{oflist[3]}&#34;&#39;))
+</code></pre><p>This is all for now. Enjoy media editing with open source tools.</p>
+
+        
+        <details closed class="f6 fw7 input-reset">
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Posted on:</dt>
+    <dd class="fw5 ml0">November 3, 2018</dd>
+  </dl>
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Length:</dt>
+    <dd class="fw5 ml0">5 minute read, 990 words</dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Categories:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/categories/image-editing">image editing</a> </dd>
+  </dl>
+  
+  
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">See Also:</dt>
+    
+  </dl>
+</details>
+
+      </section>
+      <footer class="post-footer">
+        <div class="post-pagination dt w-100 mt4 mb2">
+  
+  
+    <a class="prev dtc pr2 tl v-top fw6"
+    href="http://localhost:4321/blog/expressing-timestamp-data-in-calendar/">&larr; Expressing timestamp data in calendar</a>
+  
+  
+  
+    <a class="next dtc pl2 tr v-top fw6"
+    href="http://localhost:4321/blog/2018-10-26-varietal-database-of-lentil-in-nepal/">Varietal database of lentil in Nepal &rarr;</a>
+  
+</div>
+
+      </footer>
+    </article>
+    
+      <div class="post-comments pa0 pa4-l mt4">
+  
+    
+      <script src="https://utteranc.es/client.js"
+              repo="deependrad/dblog"
+              issue-term="pathname"
+              theme="boxy-light"
+              label="comments :crystal_ball:"
+              crossorigin="anonymous"
+              async
+              type="text/javascript">
+      </script>
+    
+  
+</div>
+
+    
+  </section>
+</main>
+<footer class="site-footer pv4 bt b--transparent ph5" role="contentinfo">
+  <nav class="db dt-l w-100">
+    <p class="site-copyright f7 db dtc-l v-mid w-100 w-33-l tc tl-l pv2 pv0-l mv0 lh-copy">
+      &copy; 2024 Dblog
+      <span class="middot-divider"></span>
+      Made with <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/hugo-apero/" rel="dct:source">Hugo Apéro</a></span>.
+      <br />
+      
+Based on <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/formspree/blogophonic-hugo" rel="dct:source">Blogophonic</a></span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://formspree.io" property="cc:attributionName" rel="cc:attributionURL">Formspree</a>.
+    </p>
+    
+    <div class="site-social-links db dtc-l v-mid w-100 w-33-l tc pv2 pv0-l mv0">
+      <div class="social-icon-links" aria-hidden="true">
+  
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://github.com/deependrad/dblog" title="github" target="_blank" rel="me noopener">
+      <i class="fab fa-github fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://bsky.app/" title="bluesky" target="_blank" rel="me noopener">
+      <i class="fab fa-bluesky fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://twitter.com/dd_rookie" title="x-twitter" target="_blank" rel="me noopener">
+      <i class="fab fa-x-twitter fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://orcid.org/0000-0002-0347-7950" title="orcid" target="_blank" rel="me noopener">
+      <i class="ai ai-orcid fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="/blog/index.xml" title="rss" >
+      <i class="fas fa-rss fa-lg fa-fw"></i>
+    </a>
+  
+</div>
+
+    </div>
+    
+    <div class="site-links f6 db dtc-l v-mid w-100 w-67-l tc tr-l pv2 pv0-l mv0">
+      
+      <a class="dib pv1 ph2 link" href="/license/" title="License">License</a>
+      
+      <a class="dib pv1 ph2 link" href="/contact/" title="Contact form">Contact</a>
+      
+      <a class="dib pv1 ph2 link" href="/contributors/" title="Contributors">Contributors</a>
+      
+    </div>
+  </nav>
+  
+    <script>
+
+    var i, text, code, codes = document.getElementsByTagName('code');
+    for (let i = 0; i < codes.length;) {
+      code = codes[i];
+      if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+        text = code.textContent;
+        if (/^\$[^$]/.test(text) && /[^$]\$$/.test(text)) {
+          text = text.replace(/^\$/, '\\(').replace(/\$$/, '\\)');
+          code.textContent = text;
+        }
+        if (/^\\\((.|\s)+\\\)$/.test(text) ||
+            /^\\\[(.|\s)+\\\]$/.test(text) ||
+            /^\$(.|\s)+\$$/.test(text) ||
+            /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+          code.outerHTML = code.innerHTML;  
+          continue;
+        }
+      }
+      i++;
+    }
+</script>
+
+  
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+
+
+    
+  
+  
+</footer>
+
+      </div>
+    </body>
+</html>

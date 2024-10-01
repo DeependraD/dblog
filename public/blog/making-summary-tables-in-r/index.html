@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+  
+                           
+     
+
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.135.0">
+<title>Making Summary Tables in R | Rookie site</title>
+
+
+<meta property="twitter:site" content="@dd_rookie">
+<meta property="twitter:creator" content="@dd_rookie">
+
+
+
+
+
+
+
+  
+    
+  
+<meta name="description" content="">
+
+
+<meta property="og:site_name" content="Rookie site">
+<meta property="og:title" content="Making Summary Tables in R | Rookie site">
+<meta property="og:description" content="" />
+<meta property="og:type" content="page" />
+<meta property="og:url" content="http://localhost:4321/blog/making-summary-tables-in-r/" />
+<meta property="og:locale" content="en">
+
+
+
+
+    
+        <meta property="og:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+        <meta property="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+    
+    
+  
+  <meta itemprop="name" content="Making Summary Tables in R">
+  <meta itemprop="description" content="Background Table output of R is one of the richest and satisfying to use feature. Rmarkdown format provides loads of package support to create, format, and present tables beautifully. This is on one aspect extremely useful while on the other end it could very well be daunting as to choose between various package options to use while formating your table. I have a bunch of suggestions and enlistments here to help get off that dilemma.">
+  <meta itemprop="datePublished" content="2020-08-04T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2020-08-04T06:38:33+05:45">
+  <meta itemprop="wordCount" content="1067">
+  <meta itemprop="keywords" content="R">
+  
+  <!--[if IE]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  
+  
+  <link rel="stylesheet" href="/style.main.min.1cbac35dadc4fd962ceb58cdbe3e4bd32eb4a149ef54664a24d670fb5307d543.css" integrity="sha256-HLrDXa3E/ZYs61jNvj5L0y60oUnvVGZKJNZw&#43;1MH1UM=" media="screen">
+  
+  
+  <script src="/panelset.min.ed1ac24b6e16f4e2481e3d1d098ae66f5bc77438aef619e6e266d8ac5b00dc72.js" type="text/javascript"></script>
+  
+  
+  <script src="/main.min.36817c360165917b68a008c77f2439837c7c187a0acd3e9c92ce8f23fdc2d825.js" type="text/javascript"></script>
+</head>
+<body>
+      <div class="grid-container">
+<header class="site-header pt4 pb2 mb4 bb b--transparent ph5 headroom z-max" role="banner">
+  <nav class="site-nav db dt-l w-100" role="navigation">
+    <a class="site-brand db dtc-l v-mid link no-underline w-100 w-33-l tc tl-l" href="http://localhost:4321/" title="Home">
+      <img src="/img/blogophonic-mark-dark.png" class="dib db-l h2 w-auto" alt="Rookie site">
+    </a>
+    <div class="site-links db dtc-l v-mid w-100 w-47-l tc tr-l mt3 mt0-l ttu tracked">
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/about/" title="About Rookie">About</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 active" href="/blog/" title="Blog">Blog</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/project/" title="Project Portfolio">Projects</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/talks/" title="Talks">Talks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/academia/" title="Academia">Academia</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/tipsntricks/" title="Tips and tricks">Tips and tricks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="https://github.com/DeependraD/tex-for-beauty/releases/download/v1.06/Deependra_CV.pdf" title="CV copy">CV</a>
+      
+      
+    </div>
+  </nav>
+</header>
+
+<main class="page-main pa4" role="main">
+  <section class="page-content mw7 center">
+    <article class="post-content pa0 ph4-l">
+      <header class="post-header">
+        <h1 class="f1 lh-solid measure-narrow mb3 fw4">Making Summary Tables in R</h1>
+        
+        <p class="f6 measure lh-copy mv1">By Deependra Dhakal in <a href="http://localhost:4321/categories/tidyverse">tidyverse</a>  <a href="http://localhost:4321/categories/r">R</a> </p>
+        <p class="f7 db mv0 ttu">August 4, 2020</p>
+
+      
+
+      </header>
+      <section class="post-body pt5 pb4">
+        
+
+
+
+<h2 id="background">Background
+  <a href="#background"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<p>Table output of R is one of the richest and satisfying to use feature. Rmarkdown format provides loads of package support to create, format, and present tables beautifully. This is on one aspect extremely useful while on the other end it could very well be daunting as to choose between various package options to use while formating your table. I have a bunch of suggestions and enlistments here to help get off that dilemma.</p>
+<p>Once in a while someone writes a blog post and addressess these issues. This is true for this topic too. 
+<a href="https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/" target="_blank" rel="noopener">https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/</a> has wonderfully curated list of several such options. My intnet too is to supplement the information included in the post.</p>
+
+
+
+
+<h2 id="general-purpose-tables">General purpose tables
+  <a href="#general-purpose-tables"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+<p>Here goes the list of packages:</p>
+<ol>
+<li>Table output (or in general, dataframe printing) is a more general idea for Rmarkdown documents. It can be set with a print option set in the YAML header.</li>
+</ol>
+<pre tabindex="0"><code>title: Some good amount of table
+output:
+  html_document:
+    df_print: paged 
+</code></pre><p>The df_print option can take other values such as default, kable and tibble. More on this at 
+<a href="https://bookdown.org/yihui/rmarkdown/html-document.html#data-frame-printing" target="_blank" rel="noopener">https://bookdown.org/yihui/rmarkdown/html-document.html#data-frame-printing</a>.</p>
+<ol start="2">
+<li>gt package</li>
+<li>kable + kableExtra.</li>
+</ol>
+<p>Here are a bunch of appealing examples that surely entice you into using this combination of packages.</p>
+<pre tabindex="0"><code>vignette(package = &#34;kableExtra&#34;, topic = &#34;awesome_table_in_pdf&#34;)
+</code></pre><p>Sharla Gelfand also has whole repository maintained for sharing examples on use of kableExtra. Check that out at: 
+<a href="https://github.com/sharlagelfand/kableExtra-cookbook" target="_blank" rel="noopener">https://github.com/sharlagelfand/kableExtra-cookbook</a></p>
+<p>Additionally, I have forked the repo and tried to contribute some of my own hacks (not exactly my own, but learnt elsewhere on the internet) to the bookdown project.</p>
+<ol start="4">
+<li>
+<a href="https://renkun-ken.github.io/formattable/" target="_blank" rel="noopener">formattable</a></li>
+<li>DT. More at: 
+<a href="https://rstudio.github.io/DT/" target="_blank" rel="noopener">https://rstudio.github.io/DT/</a></li>
+<li>reactable. A demonstration of use at: 
+<a href="https://projects.fivethirtyeight.com/2019-womens-world-cup-predictions/" target="_blank" rel="noopener">https://projects.fivethirtyeight.com/2019-womens-world-cup-predictions/</a></li>
+<li>flextable: 
+<a href="https://davidgohel.github.io/flextable/index.html" target="_blank" rel="noopener">https://davidgohel.github.io/flextable/index.html</a></li>
+<li>huxtable. 
+<a href="https://hughjonesd.github.io/huxtable/" target="_blank" rel="noopener">https://hughjonesd.github.io/huxtable/</a></li>
+<li>rhandsontable. This extremely helpful package in case if you have dirty data and data representation. This lets you manually edit the data like working in a spreadsheet software. More on: 
+<a href="https://jrowen.github.io/rhandsontable/" target="_blank" rel="noopener">https://jrowen.github.io/rhandsontable/</a></li>
+<li>pixiedust. 
+<a href="https://github.com/nutterb/pixiedust" target="_blank" rel="noopener">https://github.com/nutterb/pixiedust</a></li>
+</ol>
+
+
+
+
+<h2 id="summary-tables">Summary tables
+  <a href="#summary-tables"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h2>
+
+
+
+
+<h3 id="rtables-package">rtables package
+  <a href="#rtables-package"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h3>
+<p>For the time of creating this post, the package rtable was available only as github project of G. Becker. In particular, specific branch was used to compile a package. However, as he mentions 
+<a href="https://www.youtube.com/watch?v=CBQzZ8ZhXLA" target="_blank" rel="noopener">here</a>, the project has a long history of being released as open-source well after being using as proprietary for some time.</p>
+<p>We start by installing and loading essential libraries.</p>
+<p>Throughout, <code>williams.trees</code> dataset from the agridat package will be used. Apart from already existing factors and numeric variables, an additional factor is generated from random process because pre-existing <code>gen</code> (genotype information) variable is nested in structure. Nested variable means that summary for that is available only for specific grouping and not for overall use.</p>
+<p>Using <code>rtable::split_cols_by</code>, we split the analysis variable into multiple columns formed by a grouping variable.</p>
+<pre tabindex="0"><code>##             Chanthaburi              HuaiBong               Ratchaburi               SaiThong                Sakaerat                 SiSaKet       
+##          D       B       C       D       B       C       D       B       C       D       B       C       D       B       C       D       B       C  
+## ————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+## mean   254.7   225.0   270.9   129.8   224.4   215.0   413.2   464.6   512.2   702.6   634.6   593.2   349.1   312.9   343.2   480.1   470.3   471.2
+</code></pre><p>Row splitting can also be done as shown.</p>
+<pre tabindex="0"><code>##           Chanthaburi    HuaiBong    Ratchaburi    SaiThong     Sakaerat     SiSaKet  
+## ——————————————————————————————————————————————————————————————————————————————————————
+## D         12 (40.0%)    6 (22.2%)    13 (38.2%)   8 (24.2%)    7 (21.2%)    12 (34.3%)
+##   mean      254.67        129.83       413.23       702.62       349.14       480.08  
+##   sd        164.54        37.45        131.67       224.19       114.81       228.98  
+##   range     493.00        114.00       392.00       545.00       303.00       742.00  
+##   max       569.00        189.00       608.00       894.00       538.00       839.00  
+##   min        76.00        75.00        216.00       349.00       235.00       97.00   
+## B         11 (36.7%)    9 (33.3%)    9 (26.5%)    17 (51.5%)   9 (27.3%)    11 (31.4%)
+##   mean      225.00        224.44       464.56       634.65       312.89       470.27  
+##   sd        119.19        105.25       161.15       302.51       131.65       194.21  
+##   range     311.00        301.00       464.00       967.00       357.00       651.00  
+##   max       391.00        397.00       673.00      1083.00       523.00       809.00  
+##   min        80.00        96.00        209.00       116.00       166.00       158.00  
+## C          7 (23.3%)    12 (44.4%)   12 (35.3%)   8 (24.2%)    17 (51.5%)   12 (34.3%)
+##   mean      270.86        215.00       512.25       593.25       343.18       471.17  
+##   sd        107.16        86.82        132.98       236.15       197.17       168.65  
+##   range     278.00        237.00       438.00       632.00       595.00       518.00  
+##   max       415.00        337.00       764.00       899.00       658.00       738.00  
+##   min       137.00        100.00       326.00       267.00       63.00        220.00
+</code></pre><p>In the previous table we used custom function for summarizing. However, we can use pre-existing helper functions of R like the <code>summary</code> function.</p>
+<pre tabindex="0"><code>##          Chanthaburi    HuaiBong    Ratchaburi    SaiThong     Sakaerat     SiSaKet  
+##            (N=30)        (N=27)       (N=34)       (N=33)       (N=33)       (N=35)  
+## —————————————————————————————————————————————————————————————————————————————————————
+## D        12 (40.0%)    6 (22.2%)    13 (38.2%)   8 (24.2%)    7 (21.2%)    12 (34.3%)
+##   Mean     254.67        129.83       413.23       702.62       349.14       480.08  
+## B        11 (36.7%)    9 (33.3%)    9 (26.5%)    17 (51.5%)   9 (27.3%)    11 (31.4%)
+##   Mean     225.00        224.44       464.56       634.65       312.89       470.27  
+## C         7 (23.3%)    12 (44.4%)   12 (35.3%)   8 (24.2%)    17 (51.5%)   12 (34.3%)
+##   Mean     270.86        215.00       512.25       593.25       343.18       471.17
+</code></pre><p>In earlier functions, we used variable as data parameter. But dataset entirely can also be provided as a data parameter if summary involves multiple variables.</p>
+<pre tabindex="0"><code>##                                 Chanthaburi      HuaiBong       Ratchaburi        SaiThong         Sakaerat         SiSaKet   
+##                                   (N=30)          (N=27)          (N=34)           (N=33)           (N=33)          (N=35)    
+## ——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+## D                               12 (40.0%)       6 (22.2%)      13 (38.2%)       8 (24.2%)        7 (21.2%)       12 (34.3%)  
+##   Total genotypes                   12               6              13               8                7               12      
+##   Unique genotypes                   4               4               5               4                4                4      
+##   Genotypes with &gt; 1 records   8.00 (26.67%)   2.00 (7.41%)    8.00 (23.53%)   4.00 (12.12%)     3.00 (9.09%)    8.00 (22.86%)
+## B                               11 (36.7%)       9 (33.3%)       9 (26.5%)       17 (51.5%)       9 (27.3%)       11 (31.4%)  
+##   Total genotypes                   11               9               9               17               9               11      
+##   Unique genotypes                   4               4               4               5                4                5      
+##   Genotypes with &gt; 1 records   7.00 (23.33%)   5.00 (18.52%)   5.00 (14.71%)   12.00 (36.36%)   5.00 (15.15%)    6.00 (17.14%)
+## C                                7 (23.3%)      12 (44.4%)      12 (35.3%)       8 (24.2%)        17 (51.5%)      12 (34.3%)  
+##   Total genotypes                    7              12              12               8                17              12      
+##   Unique genotypes                   3               3               5               3                5                5      
+##   Genotypes with &gt; 1 records   4.00 (13.33%)   9.00 (33.33%)   7.00 (20.59%)   5.00 (15.15%)    12.00 (36.36%)   7.00 (20.00%)
+</code></pre><!-- Also, insted of letting automatic counting from the given analysis variable, we could  manually supply the column aggregate summary by initially populating the columns counts. This is done using `tapply` or `map` functions. -->
+<!-- ```{r custom-summary-fun} -->
+<!-- tunique_env <- tapply(williams_tree$gen_generated, williams_tree$env, function(x)length(x)) -->
+<!-- stylizer_events <- basic_table() %>% -->
+<!--   split_cols_by("env") %>%  -->
+<!--   split_rows_by("replicate") %>% -->
+<!--   summarize_row_groups() %>%  -->
+<!--   add_colcounts() %>%  -->
+<!--   analyze(c("gen_generated"), afun = function(df, .N_col, lblstr = NULL){ -->
+<!--     x <- df[["gen_generated"]] -->
+<!--     in_rows( -->
+<!--       "Total genotypes" = rcell(length(x), format = "xx"), -->
+<!--       "Unique genotypes" = rcell(length(unique(x)), format = "xx"), -->
+<!--       "Genotypes with > 1 records" = rcell((length(x)-length(unique(x))) * c(1, 1/.N_col), format = "xx.xx (xx.xx%)")  -->
+<!--       # note that .N_col refers to total number of columns not individual category in a row split -->
+<!--     ) -->
+<!--   }) -->
+<!-- williams_stylizer_custom_table <- build_table(stylizer_events, williams_tree, tunique_env) -->
+<!-- williams_stylizer_custom_table -->
+<!-- ``` -->
+<!-- Here are some of the handy utility functions that can be used on the go. -->
+<!-- ```{r} -->
+<!-- # for boolean variable indicate Yes or No -->
+<!-- yn_as_bool <- function(f) { -->
+<!--   function(x, .N_col) { -->
+<!--     f(x == "Y", .N_col) -->
+<!--   } -->
+<!-- } -->
+<!-- # provide  a percentage format alongside count in a cell -->
+<!-- s_count_perc <- function(x, .N_col) { -->
+<!--   rcell(sum(!is.na(x)) * c(1, 1/.N_col), format = "xx (xx.xx%)") -->
+<!-- } -->
+<!-- # remove all na rows in summary output. -->
+<!-- trim_zero_rows <- function(tbl) { -->
+<!--  rows = collect_leaves(tbl, TRUE, TRUE) -->
+<!--  torn = vapply(rows, function(x){ -->
+<!--    identical(unname(unlist(row_values(x))), c(0L, 0L, 0L)) -->
+<!--  }, NA, USE.NAMES = FALSE) -->
+<!--  tbl[!tron, ] -->
+<!-- } -->
+<!-- ``` -->
+
+
+
+
+<h3 id="qwraps2-package">qwraps2 package
+  <a href="#qwraps2-package"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h3>
+<p>For constructing simple whole sample or subsample summary tables, qwarps package have simple interface. It provides a richly showcased 
+<a href="https://cran.r-project.org/web/packages/qwraps2/vignettes/summary-statistics.html" target="_blank" rel="noopener">vignette</a> using mtcars dataset.</p>
+<p>It requires markup language to be set early on in code chunk to render proper format.</p>
+<p>Alternatively, row group name can be used for informing p-value. This is exemplified in the vignette for package.</p>
+
+
+
+
+<h3 id="gtsummary-package">gtsummary package
+  <a href="#gtsummary-package"><svg class="anchor-symbol" aria-hidden="true" height="26" width="26" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="currentColor"></path>
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76.0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71.0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71.0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76.0 5-2.24 5-5s-2.24-5-5-5z"></path>
+    </svg></a>
+</h3>
+<p>This package is a recent development but has a lot more preview ready examples as vignette. It is richer and more easily extensible in feature because it draws upon the <code>gt</code> package. Check vignettes out at cran repo for the package: 
+<a href="https://cran.r-project.org/web/packages/gtsummary/index.html" target="_blank" rel="noopener">https://cran.r-project.org/web/packages/gtsummary/index.html</a>.</p>
+
+        
+        <details closed class="f6 fw7 input-reset">
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Posted on:</dt>
+    <dd class="fw5 ml0">August 4, 2020</dd>
+  </dl>
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Length:</dt>
+    <dd class="fw5 ml0">6 minute read, 1067 words</dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Categories:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/categories/tidyverse">tidyverse</a>  <a href="http://localhost:4321/categories/r">R</a> </dd>
+  </dl>
+  
+  
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Tags:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/tags/r">R</a> </dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">See Also:</dt>
+    
+    <dd class="fw5 ml0"><a href="/blog/paste-together-multiple-columns/">Paste together multiple columns</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/logistic-regression-part-ii-varietal-adoption-dataset/">Logistic Regression: Part II - Varietal adoption dataset</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/logistic-regression-part-i-fundamentals/">Logistic Regression: Part I - Fundamentals</a></dd>
+    
+  </dl>
+</details>
+
+      </section>
+      <footer class="post-footer">
+        <div class="post-pagination dt w-100 mt4 mb2">
+  
+  
+    <a class="prev dtc pr2 tl v-top fw6"
+    href="http://localhost:4321/blog/the-birthday-problem-non-analytical-solution/">&larr; The birthday problem: Non analytical solution</a>
+  
+  
+  
+    <a class="next dtc pl2 tr v-top fw6"
+    href="http://localhost:4321/blog/tidytuesday-tour-de-france/">Tidytuesday: Claremont Run, X-men Characters &rarr;</a>
+  
+</div>
+
+      </footer>
+    </article>
+    
+      <div class="post-comments pa0 pa4-l mt4">
+  
+    
+      <script src="https://utteranc.es/client.js"
+              repo="deependrad/dblog"
+              issue-term="pathname"
+              theme="boxy-light"
+              label="comments :crystal_ball:"
+              crossorigin="anonymous"
+              async
+              type="text/javascript">
+      </script>
+    
+  
+</div>
+
+    
+  </section>
+</main>
+<footer class="site-footer pv4 bt b--transparent ph5" role="contentinfo">
+  <nav class="db dt-l w-100">
+    <p class="site-copyright f7 db dtc-l v-mid w-100 w-33-l tc tl-l pv2 pv0-l mv0 lh-copy">
+      &copy; 2024 Dblog
+      <span class="middot-divider"></span>
+      Made with <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/hugo-apero/" rel="dct:source">Hugo Apéro</a></span>.
+      <br />
+      
+Based on <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/formspree/blogophonic-hugo" rel="dct:source">Blogophonic</a></span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://formspree.io" property="cc:attributionName" rel="cc:attributionURL">Formspree</a>.
+    </p>
+    
+    <div class="site-social-links db dtc-l v-mid w-100 w-33-l tc pv2 pv0-l mv0">
+      <div class="social-icon-links" aria-hidden="true">
+  
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://github.com/deependrad/dblog" title="github" target="_blank" rel="me noopener">
+      <i class="fab fa-github fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://bsky.app/" title="bluesky" target="_blank" rel="me noopener">
+      <i class="fab fa-bluesky fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://twitter.com/dd_rookie" title="x-twitter" target="_blank" rel="me noopener">
+      <i class="fab fa-x-twitter fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://orcid.org/0000-0002-0347-7950" title="orcid" target="_blank" rel="me noopener">
+      <i class="ai ai-orcid fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="/blog/index.xml" title="rss" >
+      <i class="fas fa-rss fa-lg fa-fw"></i>
+    </a>
+  
+</div>
+
+    </div>
+    
+    <div class="site-links f6 db dtc-l v-mid w-100 w-67-l tc tr-l pv2 pv0-l mv0">
+      
+      <a class="dib pv1 ph2 link" href="/license/" title="License">License</a>
+      
+      <a class="dib pv1 ph2 link" href="/contact/" title="Contact form">Contact</a>
+      
+      <a class="dib pv1 ph2 link" href="/contributors/" title="Contributors">Contributors</a>
+      
+    </div>
+  </nav>
+  
+    <script>
+
+    var i, text, code, codes = document.getElementsByTagName('code');
+    for (let i = 0; i < codes.length;) {
+      code = codes[i];
+      if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+        text = code.textContent;
+        if (/^\$[^$]/.test(text) && /[^$]\$$/.test(text)) {
+          text = text.replace(/^\$/, '\\(').replace(/\$$/, '\\)');
+          code.textContent = text;
+        }
+        if (/^\\\((.|\s)+\\\)$/.test(text) ||
+            /^\\\[(.|\s)+\\\]$/.test(text) ||
+            /^\$(.|\s)+\$$/.test(text) ||
+            /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+          code.outerHTML = code.innerHTML;  
+          continue;
+        }
+      }
+      i++;
+    }
+</script>
+
+  
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+
+
+    
+  
+  
+</footer>
+
+      </div>
+    </body>
+</html>

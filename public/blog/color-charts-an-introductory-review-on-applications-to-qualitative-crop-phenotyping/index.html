@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+  
+                           
+     
+
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.135.0">
+<title>Color charts: An introductory review on applications to qualitative crop phenotyping | Rookie site</title>
+
+
+<meta property="twitter:site" content="@dd_rookie">
+<meta property="twitter:creator" content="@dd_rookie">
+
+
+
+
+
+
+
+  
+    
+  
+<meta name="description" content="">
+
+
+<meta property="og:site_name" content="Rookie site">
+<meta property="og:title" content="Color charts: An introductory review on applications to qualitative crop phenotyping | Rookie site">
+<meta property="og:description" content="" />
+<meta property="og:type" content="page" />
+<meta property="og:url" content="http://localhost:4321/blog/color-charts-an-introductory-review-on-applications-to-qualitative-crop-phenotyping/" />
+<meta property="og:locale" content="en">
+
+
+
+
+    
+        <meta property="og:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+        <meta property="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="http://localhost:4321/blog/sidebar-listing.jpg" >
+    
+    
+  
+  <meta itemprop="name" content="Color charts: An introductory review on applications to qualitative crop phenotyping">
+  <meta itemprop="description" content="Background Colorimetry is a fascinating topic to discuss. In conjunction with the patterns of a natural world (See this awesome video about fibonacci numbers and plants), colors could have mesmerizing feels. In this post and the follow-up article, we will discuss in details about colorimetric features of a universe made of plants, in particular, which are cultivated/adopted and have edible human values – the agricultural crops. Then again, there are quite a large number of agricultural species to deal with. So, we will be making a touch down on some common crop species, i.e. Pea (Pisum sativum, wild counterpart of the famous Lathyrus pea studied by Mendel) and Wheat (Triticum aestivum).">
+  <meta itemprop="datePublished" content="2019-01-23T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2019-01-23T00:00:00+00:00">
+  <meta itemprop="wordCount" content="740">
+  <meta itemprop="keywords" content="Plant Breeding,R,Color Charts,Agriculture,Phenotyping">
+  
+  <!--[if IE]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  
+  
+  <link rel="stylesheet" href="/style.main.min.1cbac35dadc4fd962ceb58cdbe3e4bd32eb4a149ef54664a24d670fb5307d543.css" integrity="sha256-HLrDXa3E/ZYs61jNvj5L0y60oUnvVGZKJNZw&#43;1MH1UM=" media="screen">
+  
+  
+  <script src="/panelset.min.ed1ac24b6e16f4e2481e3d1d098ae66f5bc77438aef619e6e266d8ac5b00dc72.js" type="text/javascript"></script>
+  
+  
+  <script src="/main.min.36817c360165917b68a008c77f2439837c7c187a0acd3e9c92ce8f23fdc2d825.js" type="text/javascript"></script>
+</head>
+<body>
+      <div class="grid-container">
+<header class="site-header pt4 pb2 mb4 bb b--transparent ph5 headroom z-max" role="banner">
+  <nav class="site-nav db dt-l w-100" role="navigation">
+    <a class="site-brand db dtc-l v-mid link no-underline w-100 w-33-l tc tl-l" href="http://localhost:4321/" title="Home">
+      <img src="/img/blogophonic-mark-dark.png" class="dib db-l h2 w-auto" alt="Rookie site">
+    </a>
+    <div class="site-links db dtc-l v-mid w-100 w-47-l tc tr-l mt3 mt0-l ttu tracked">
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/about/" title="About Rookie">About</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 active" href="/blog/" title="Blog">Blog</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/project/" title="Project Portfolio">Projects</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/talks/" title="Talks">Talks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/academia/" title="Academia">Academia</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="/tipsntricks/" title="Tips and tricks">Tips and tricks</a>
+      
+        
+        
+        
+      <a class="link f6 f5-l dib pv1 ph2 " href="https://github.com/DeependraD/tex-for-beauty/releases/download/v1.06/Deependra_CV.pdf" title="CV copy">CV</a>
+      
+      
+    </div>
+  </nav>
+</header>
+
+<main class="page-main pa4" role="main">
+  <section class="page-content mw7 center">
+    <article class="post-content pa0 ph4-l">
+      <header class="post-header">
+        <h1 class="f1 lh-solid measure-narrow mb3 fw4">Color charts: An introductory review on applications to qualitative crop phenotyping</h1>
+        
+        <p class="f6 measure lh-copy mv1">By Deependra Dhakal</p>
+        <p class="f7 db mv0 ttu">January 23, 2019</p>
+
+      
+
+      </header>
+      <section class="post-body pt5 pb4">
+        
+
+
+
+<h1 id="background">Background
+  <a href="#background"></a>
+</h1>
+<p>Colorimetry is a fascinating topic to discuss. In conjunction with the patterns of a natural world (See this awesome video about 
+<a href="https://www.youtube.com/watch?v=ahXIMUkSXX0" target="_blank" rel="noopener">fibonacci numbers and plants</a>), colors could have mesmerizing feels. In this post and the follow-up article, we will discuss in details about colorimetric features of a universe made of plants, in particular, which are cultivated/adopted and have edible human values &ndash; the agricultural crops. Then again, there are quite a large number of agricultural species to deal with. So, we will be making a touch down on some common crop species, i.e. Pea (<em>Pisum sativum</em>, wild counterpart of the famous 
+<a href="https://en.wikipedia.org/wiki/Lathyrus" target="_blank" rel="noopener">Lathyrus</a> pea studied by Mendel) and Wheat (<em>Triticum aestivum</em>).</p>
+
+
+
+
+<h1 id="review">Review:
+  <a href="#review"></a>
+</h1>
+<ul>
+<li>
+<p>How relevent is color for characterizing objects?</p>
+<p>Colors are perceptible to almost everyone. The color perception of an object is a function of three main properties of light: absorption, relection and transmission. Light transmission is mainly concerned with the energy propagation through a medium and does not itself affect the medium or the object. Hence, the absorbance and reflectance pattern have major roles in imparting color to objects. The more an object absorbs light of certain wavelengths from visible spectrum the lesser it is perceptible to observer. On the other hand, certain wavelengths of light are more easily reflected and thus the observer percieves the spectrum due to the color sensation it gives to eyes. Some species of animal kingdom even have outlandish color perceptions; for example whales and dolphins are reported to have no sense of blue color perception, despite living in a primarily blue world (
+<a href="https://www.newscientist.com/article/dn664-colour-blind/" target="_blank" rel="noopener">New scientist magazine post</a>), and insects like butterfly are composed of richer composition of cone cells (cells responsible for photoreception, and thus to detect color) &ndash; one study reported as much as 15 &ndash; while humans only have three primary photoreceptor cells (red, green and blue). Some lucky people may be endowed with tetrachromatic vision, however, which allows for a much more distinct perception of color hues (
+<a href="https://cosmosmagazine.com/biology/incredible-bizarre-spectrum-animal-colour-vision" target="_blank" rel="noopener">Cosmosmagazine post</a>).</p>
+<p>Considering the enormity of plant kingdom, an immediate contrast that one can make about the organism is regarding the color variation. Other features might have to be more closely watched over to discern the differences. This is mostly because, morpho-, topological, textural and compositional features require comparative characterization while colorimetric features are more or less absolute in perception. It is rarely that mixes of colors, even if involved, can&rsquo;t be isolated and characterized properly. Furthermore, unlike morphometric features, colors indices can be quite easily tracked, usually for certain plane and for given resolution.</p>
+<p>Colors can now be quantified (easily more than ever). Advances in imaging technologies have enabled quantification of colors imparted by objects thereby adding a different dimension for comparative studies.</p>
+</li>
+<li>
+<p>What are the special roles assumed by color features in biology?</p>
+</li>
+<li>
+<p>How can colors be informative?</p>
+<ul>
+<li>Is standardization of flower petal/leaf colors possible?
+<ul>
+<li>Crop phenology as supportive feature for color description.
+Crop phenology augments the color information. Why is this important for crop characterization? One of the reasons could be that trait expression in some crops is phenology dependent. Only during cetain stages of their life cycles, do some crops exhibit particular features. For example, the color intensity of flower petals have a gradient of color intensities along the margin and middle??? {Citation and elaboration needed}</li>
+<li>Color variation along fine scale morpho-topological features.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>What insights do colors provide?</p>
+<ul>
+<li>Genetic insights (about parental genetics of the respective trait).
+- See this link: 
+<a href="https://www.ncbi.nlm.nih.gov/pubmed/20536019" target="_blank" rel="noopener">Genetic control of biosynthesis of anthocyans in sweet pea (Lathyrus odoratus l.) flowers</a></li>
+<li>Case study of 
+<a href="https://en.wikipedia.org/wiki/Sweet_pea" target="_blank" rel="noopener">Sweet pea</a>. Why not start with wiki article?</li>
+<li>Case study of Wheat crop for leaf color characterization? What are the immediate benifits of characterizing foliage by color?
+<ul>
+<li>Fertilizer/nutrition status</li>
+</ul>
+</li>
+<li>What evolutionary insights could be gleaned from color variation in crops. (Example case of entomophily)</li>
+<li>Are there any color associated traits?</li>
+</ul>
+</li>
+<li>
+<p>Ways to express biological variation of petal/leaf color (not variegation)?</p>
+<ul>
+<li>Color charts for discrete colorimetry</li>
+<li>Computer vision techniques to quantitative colorimetry. (Just the summary about available options)
+<ul>
+<li>See this document: 
+<a href="https://www.fs.fed.us/ne/newtown_square/publications/technical_reports/pdfs/2005/ne_gtr327.pdf" target="_blank" rel="noopener">An Instructional Guide for Leaf Color Analysis using Digital Imaging Software</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>How to deal with variegation?</p>
+</li>
+<li>
+<p>What are the downfalls of colorimetry based characterization?</p>
+</li>
+<li>
+<p>Color discretization: are there opportunities to extend existing system?</p>
+</li>
+<li>
+<p>Summary notes and conclusion</p>
+<ul>
+<li>Use of color charts in biological research (Which is best? why?)</li>
+<li>How to best summarize color associated trait information (Is phenological attribute enough to back the the trait information? What needs to be improved)?</li>
+</ul>
+</li>
+</ul>
+
+        
+        <details closed class="f6 fw7 input-reset">
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Posted on:</dt>
+    <dd class="fw5 ml0">January 23, 2019</dd>
+  </dl>
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Length:</dt>
+    <dd class="fw5 ml0">4 minute read, 740 words</dd>
+  </dl>
+  
+  
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">Tags:</dt>
+    <dd class="fw5 ml0"> <a href="http://localhost:4321/tags/plant-breeding">plant breeding</a>  <a href="http://localhost:4321/tags/r">r</a>  <a href="http://localhost:4321/tags/color-charts">color charts</a>  <a href="http://localhost:4321/tags/agriculture">agriculture</a>  <a href="http://localhost:4321/tags/phenotyping">phenotyping</a> </dd>
+  </dl>
+  
+  <dl class="f6 lh-copy">
+    <dt class="fw7">See Also:</dt>
+    
+    <dd class="fw5 ml0"><a href="/blog/correlation-and-pathway-analysis/">Correlation and pathway analysis with path diagrams</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/a-socio-economic-perspective-on-role-of-farmer-segment/">A socio economic perspective on role of farmer segment relationship for long term profitability of an agricultural enterprise</a></dd>
+    
+    <dd class="fw5 ml0"><a href="/blog/lentil-should-be-the-choice-or-should-it/">Lentil should be the choice. Or should it?</a></dd>
+    
+  </dl>
+</details>
+
+      </section>
+      <footer class="post-footer">
+        <div class="post-pagination dt w-100 mt4 mb2">
+  
+  
+    <a class="prev dtc pr2 tl v-top fw6"
+    href="http://localhost:4321/blog/world-production-and-grain-composition-of-major-cultivated-species/">&larr; World production and grain composition of major cultivated species</a>
+  
+  
+  
+    <a class="next dtc pl2 tr v-top fw6"
+    href="http://localhost:4321/blog/maize-seed-value-chain/">Maize seed value chain &rarr;</a>
+  
+</div>
+
+      </footer>
+    </article>
+    
+      <div class="post-comments pa0 pa4-l mt4">
+  
+    
+      <script src="https://utteranc.es/client.js"
+              repo="deependrad/dblog"
+              issue-term="pathname"
+              theme="boxy-light"
+              label="comments :crystal_ball:"
+              crossorigin="anonymous"
+              async
+              type="text/javascript">
+      </script>
+    
+  
+</div>
+
+    
+  </section>
+</main>
+<footer class="site-footer pv4 bt b--transparent ph5" role="contentinfo">
+  <nav class="db dt-l w-100">
+    <p class="site-copyright f7 db dtc-l v-mid w-100 w-33-l tc tl-l pv2 pv0-l mv0 lh-copy">
+      &copy; 2024 Dblog
+      <span class="middot-divider"></span>
+      Made with <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/hugo-apero/" rel="dct:source">Hugo Apéro</a></span>.
+      <br />
+      
+Based on <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/formspree/blogophonic-hugo" rel="dct:source">Blogophonic</a></span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://formspree.io" property="cc:attributionName" rel="cc:attributionURL">Formspree</a>.
+    </p>
+    
+    <div class="site-social-links db dtc-l v-mid w-100 w-33-l tc pv2 pv0-l mv0">
+      <div class="social-icon-links" aria-hidden="true">
+  
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://github.com/deependrad/dblog" title="github" target="_blank" rel="me noopener">
+      <i class="fab fa-github fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://bsky.app/" title="bluesky" target="_blank" rel="me noopener">
+      <i class="fab fa-bluesky fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://twitter.com/dd_rookie" title="x-twitter" target="_blank" rel="me noopener">
+      <i class="fab fa-x-twitter fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="https://orcid.org/0000-0002-0347-7950" title="orcid" target="_blank" rel="me noopener">
+      <i class="ai ai-orcid fa-lg fa-fw"></i>
+    </a>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <a class="link dib h1 w1 ml0 mr2 f6 o-90 glow" href="/blog/index.xml" title="rss" >
+      <i class="fas fa-rss fa-lg fa-fw"></i>
+    </a>
+  
+</div>
+
+    </div>
+    
+    <div class="site-links f6 db dtc-l v-mid w-100 w-67-l tc tr-l pv2 pv0-l mv0">
+      
+      <a class="dib pv1 ph2 link" href="/license/" title="License">License</a>
+      
+      <a class="dib pv1 ph2 link" href="/contact/" title="Contact form">Contact</a>
+      
+      <a class="dib pv1 ph2 link" href="/contributors/" title="Contributors">Contributors</a>
+      
+    </div>
+  </nav>
+  
+    <script>
+
+    var i, text, code, codes = document.getElementsByTagName('code');
+    for (let i = 0; i < codes.length;) {
+      code = codes[i];
+      if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+        text = code.textContent;
+        if (/^\$[^$]/.test(text) && /[^$]\$$/.test(text)) {
+          text = text.replace(/^\$/, '\\(').replace(/\$$/, '\\)');
+          code.textContent = text;
+        }
+        if (/^\\\((.|\s)+\\\)$/.test(text) ||
+            /^\\\[(.|\s)+\\\]$/.test(text) ||
+            /^\$(.|\s)+\$$/.test(text) ||
+            /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+          code.outerHTML = code.innerHTML;  
+          continue;
+        }
+      }
+      i++;
+    }
+</script>
+
+  
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+
+
+    
+  
+  
+</footer>
+
+      </div>
+    </body>
+</html>

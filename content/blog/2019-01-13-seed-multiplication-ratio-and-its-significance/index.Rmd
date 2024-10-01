@@ -1,0 +1,43 @@
+---
+title: Seed multiplication ratio and its significance in production planning
+author: Deependra Dhakal
+date: '2019-01-13'
+slug: seed-multiplication-ratio-and-its-significance
+categories:
+  - agriculture
+tags:
+  - agriculture
+header:
+  caption: ''
+  image: ''
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(tidy = TRUE, cache = FALSE, echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.6, 
+                      message = FALSE, warning = FALSE, cache = TRUE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+library(tidyverse)
+```
+
+# Context
+
+# SMR of Cereal crops
+
+# SMR of vegetable crops
+
+```{r smr-vegetables}
+smr_veg <- read_csv(here::here("content", "blog", "data", "smr_vegetables.csv"), comment = "#")
+smr_veg %>%
+  knitr::kable(caption = "Seed multiplication ratio of common vegetable crops", format = "html") %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12) %>%
+  kableExtra::column_spec(2, bold = TRUE) %>% 
+  kableExtra::scroll_box(width = "100%", 
+                         box_css = "border: 2px solid #22d0dd; padding: 10px; ")
+```
+
+
+# References
+
+Adapted from Nepali writing of document on Seed production technology of major vegetable crops cultivated in Nepal (Basanta Chalise and Dr. Tul Bahadur Pun). Authors cite: FAO, 1984 for their tabulation.

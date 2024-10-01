@@ -1,0 +1,272 @@
+---
+title: Design and analysis of balanced randomized complete block (RCBD) experiment
+author: Deependra Dhakal
+date: '2018-11-14'
+slug: design-and-analysis-of-balanced
+link-citations: yes
+math: yes
+tags:
+  - agriculture
+  - R
+header:
+  caption: ''
+  image: ''
+bibliography: ["../bib/2018-11-14-design-and-analysis-of-balanced.bib"]
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(cache = FALSE, echo = FALSE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.6, 
+                      message = FALSE, warning = FALSE, cache = TRUE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+library(tidyverse)
+library(gplots)
+library(agricolae)
+library(car)
+# library(plantbreeding)
+# install.packages("multcompView")
+library(multcompView)
+set.seed(453)
+
+```
+
+## Introduction
+
+Balanced block designs are a class of randomized experimental design that contain equal number of records for a particular level of categorical variable across all blocks.
+
+## Example 1
+
+Let us generate some data from random process mimicking a single factor process consisting of 3 levels.
+
+```{r generate}
+set.seed(42)
+# let's generate some random data, for example,
+treatments <- paste0("Treatment", 1:30)
+
+single_factor <- data.frame(Treatment = rep(treatments, times = 3),
+                            Block = rep(c("a", "b", "c"), each = 30),
+                            Value = c(rnorm(30,-2, 1), rnorm(30, -3, 1), rnorm(30, -4, 1)))
+
+# the method below also generates the same
+# single_factor <- data.frame(Treatment = treatments, 
+#                    a = rnorm(30, -2, 1), 
+#                    b = rnorm(30, -3, 1), 
+#                    c = rnorm(30, -4, 1)) %>% 
+#   gather(Block, value = Value, a, b, c)
+
+# Using treatment settings defined previous we can generate a randomized design 
+single_factor_design <- design.rcbd(trt = treatments, r = 3, serie = 2, 
+                                    seed = 42, first = TRUE, randomization = TRUE)
+
+```
+
+A glimpse of what data looks like is shown in Table \@ref(tab:single-factor-data).
+
+```{r single-factor-data}
+single_factor %>%
+  head(n = 8) %>% 
+  knitr::kable(caption = "Single factor data involving 30 treatments comprising 3 complete blocks") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10, full_width = TRUE) %>% 
+  kableExtra::row_spec(0, bold = TRUE)
+```
+
+The `agricolae::design.rcbd()` function generates design and the field book associated with the design. The field book looks like the one below in Table \@ref(tab:single-factor-des-fieldbook)
+
+```{r single-factor-des-fieldbook}
+single_factor_design$book %>%
+  head(n = 8) %>% 
+  knitr::kable(caption = "Single factor RCBD fieldbook comprising of 3 replicated blocks and 30 treatments") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10, full_width = TRUE) %>% 
+  kableExtra::row_spec(0, bold = TRUE)
+```
+
+### Box Plots
+
+To deal with real case scenario, let's import a dataset from hybrid maize trial of intermediate duration maturing types, which was conducted on summer of 2018. The plant height trait will be dealt.
+
+After import, type conversion and cleaning the data looks like as shown in Table \@ref(tab:ihyb-height)
+
+```{r ihyb-height}
+ihyb_multiple <- read_csv(here::here("content", "blog", "data", "ihyb_2018.csv")) %>% 
+  mutate_at(c("Rep", "Block", "Plot", "Entry", "col", "row"), as.factor) %>% 
+  mutate(`Plant height` = rowMeans(select(., contains("Plant height")), na.rm = TRUE)) %>% 
+  select(which(!str_detect(colnames(.), "height\\d")))
+
+ihyb_multiple %>% 
+  head(n = 8) %>% 
+  knitr::kable(caption = "Intermediate maturing hybrids with 50 entries each in 3 replicated blocks") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10, full_width = TRUE) %>% 
+  kableExtra::row_spec(0, bold = TRUE)
+```
+
+Although the block component exists for given dataset, for the sake of making case with analysing single factor RCBD experiment, we ignore the factor the effect. 
+
+A good thing to start with is plots of the data. Box plots are good for checking constant variances and to look for outliers.
+
+```{r boxplot1}
+boxplot(`Plant height` ~ Rep,data=ihyb_multiple)
+boxplot(`Plant height` ~ row,data=ihyb_multiple)
+```
+
+### Balanced?
+
+It is always a good idea to check to see if the data is balanced.
+
+```{r ex1balanced, echo=TRUE}
+table(ihyb_multiple$Entry)
+# with(ihyb_multiple, table(Entry, Rep)) # if two way table is to be generated
+```
+
+### Means
+
+The means for each factor level can be calculated, as well as for combination of different factor levels. The notation for the an interaction is "A:B".
+
+```{r ex1means}
+with(ihyb_multiple,tapply(`Plant height`,Entry,function(x){mean(x, na.rm = T)}))
+with(ihyb_multiple,tapply(`Plant height`,Rep,function(x){mean(x, na.rm = T)}))
+# with(ihyb_multiple,tapply(`Plant height`,Rep:Entry,function(x){mean(x, na.rm = T)})) # this essentially equals all observations for a single factor RCBD
+```
+
+### Treatment Mean Plots/Interaction Plots
+
+The other plot that is useful is the treatment means plot.  It is a good idea to look at it both ways and look for possible interactions.
+
+```{r ex1tmplot}
+par(cex=.5)
+# with(ihyb_multiple,interaction.plot(Entry,Rep,`Plant height`))
+with(ihyb_multiple,interaction.plot(Rep,Entry,`Plant height`, legend = FALSE))
+```
+
+### Running the ANOVA
+
+After the priliminary diagnostics is done, and transformations are made (if required), next we model the variable relationships.
+
+There are two ways to conduct the variance analysis in R -- one specifying a regression model, the other by speficying a variance component model. Since, we are dealing with single factor experiment with replicates, we can use model formula $A+B$ for specifying the regressors or a.k.a grouping variables (in case of factorial ANOVA), where $A$ is the factor of interest and $B$ is the recogizable source of source variation controlled through replication/blocking. The standard model for a randomized complete block design (with $s = 1$ observation on each treatment in each block) is 
+
+$$
+Y_{hi} = \mu + \theta_h + \tau_i + \epsilon_{hi}, \\
+\epsilon_{hi}\sim N(0, \sigma^2), \\
+{\epsilon_{hi}}'s\ are\ mutually\ independent, \\
+h = 1,..., b;\ i = 1,..., v ,
+$$
+
+Where $\mu$ is a constant, $\theta_h$ is the effect of the $h_{th}$ block, $\tau_i$ is the effect of $i_{th}$ treatment, $Y_{hi}$ is the random variable representing the measurement on treatment $i$ observed on block $j$, and $\epsilon_{hi}$ is the random error associated. This form of standard model is called *block-treatment model*.
+
+This model is limiting in that it does not include a term for interaction between blocks and treatments. However, including the interaction term in the model will lead to absence of degrees of freedom for estimation of error variance. It is also imperative to assume, in several blocking experiments, that interaction is non significant. There appears to be a case where interaction component could be estimated: when block size is increased during the design. For further explaination refer to @dean2017complete.
+
+The block-treatment model is similar to two-way main-effects model for two treatment factors in a completely randomized design with one observation per cell. The only difference between CRD and RCBD here is that in former experimental units are randomly assigned to treatment combinations (and, therefore to the levels of both factors) while in RCBD, the experimental units are randomly assigned to the levels of the treatment factor only. The levels of the block factor represent intentional groupings of the experimental units.
+
+The standard block-treatment model implementation of RCB design using Plant height as response variable is coded below. The model ANOVA is shown in Table \@ref(tab:rcb-block-treatment). We first plot the residuals and the Box-Cox plot to check assumptions. Once we are satisfied, we can examine the ANOVA.
+
+```{r ex1anova, error=TRUE, echo=TRUE}
+res <- aov(`Plant height` ~ Rep + Entry, data=ihyb_multiple)
+plot(res,1)
+
+# # test for homogeneity of variance
+# bartlett.test(`Plant height`~Rep,data=ihyb_multiple)
+# bartlett.test(`Plant height`~Entry,data=ihyb_multiple)
+
+# boxcox diagnostics
+boxCox(res) # if lambda parameter lies near to zero then, log transformation is useful to maintain assumption about distribution of the variable for further tests.
+```
+
+The residuals look good and the Box-Cox plot indicates no transformation is needed. 
+
+```{r rcb-block-treatment}
+res %>%
+  anova() %>% 
+  knitr::kable(caption = "Single factor RCBD ANOVA") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10, full_width = TRUE) %>% 
+  kableExtra::row_spec(0, bold = TRUE)
+```
+
+
+### Means and Tukey HSD
+
+R has some additional commands to find means as well as the effects of each factor level (think $\alpha_i$ and $\beta_i$).  Since both the replication and the entry effects are significant, we require Tukey pairwise comparisons test to distinguish which two among the levels of each factors are different.
+
+```{r ex1pairwise, echo=TRUE}
+model.tables(res,"means")
+model.tables(res,"effects")
+
+# tukey honestly significant difference
+TukeyHSD(res, "Entry")$Entry %>% head()
+```
+
+Since there are significant differences between the entries, a plot of the means may be appropriate. We can use the `model.tables()` to obtain the means (it behaves similar to `tapply()`).
+
+```{r ex1meanplots, message=FALSE}
+Y.bar.j <- model.tables(res,"means")$tables$Entry
+tuk.res.1 <- TukeyHSD(res,"Entry")
+groups <- multcompLetters(tuk.res.1$Entry[,4])
+letters <- groups$Letters[levels(ihyb_multiple$Entry)]
+se <- sqrt(sd(Y.bar.j)/sqrt(length(Y.bar.j)))
+lb <- Y.bar.j-qt(.975,length(Y.bar.j)-1)*se
+ub <- Y.bar.j+qt(.975,length(Y.bar.j)-1)*se
+bp <- barplot2(Y.bar.j,ylim=c(0,350),ci.l=lb,ci.u=ub,plot.ci=TRUE)
+# text(bp,ub,letters,cex=1,pos=3) # plotting letters might look aweful if factor levels are large in number
+```
+
+## Example 2
+
+In this example, we wish to see how the addition of sulphur and nitrogen affect the yield (bushels per acre) of soybeans(data source: "http://personal.psu.edu/~mar36/stat_461/sulpher.csv"). The final goal is to determine which combination, if any, of sulphur and nitrogen produces the highest yield.
+
+```{r ex2data}
+ex.2 <- read_csv(here::here("content", "blog", "data", "data_soybean_sulphur.csv"))
+head(ex.2)
+ex.2 <- within(ex.2,c(nitf <- factor(nitrogen),sulf <- factor(sulpher)))
+head(ex.2)
+```
+
+
+A quick look at the data and a check to see if it is balanced.  Do the treatment means plots indicate a significant interaction?
+
+```{r ex2dataplots}
+boxplot(yield~nitf,data=ex.2)
+boxplot(yield~sulf,data=ex.2)
+boxplot(yield~nitf:sulf,data=ex.2)
+with(ex.2,table(sulf,nitf))
+par(cex=.5)
+with(ex.2,interaction.plot(nitf,sulf,yield))
+with(ex.2,interaction.plot(sulf,nitf,yield))
+```
+
+### Residuals and Box-Cox plot
+
+```{r ex2assumptions, echo=TRUE}
+res.2 <- aov(yield~sulf*nitf,data=ex.2)
+plot(res.2,1)
+boxCox(res.2)
+```
+
+There seems to be no issues with the assumptions of ANOVA, so we will proceed to interpreting the results.
+
+```{r ex2anova}
+val <- anova(res.2)
+knitr::kable(anova(res.2) %>% broom::tidy(),digits=3, caption = "Single factor RCBD ANOVA") %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped", font_size = 10, full_width = TRUE) %>% 
+  kableExtra::row_spec(0, bold = TRUE)
+```
+
+
+Based on the two-factor ANOVA analysis of soybean yield, there appears to be an interaction between the use of sulpher and nitrogen (F=`r round(val$"F value"[3],2)`, num df=`r val$Df[3]`,  dem df=`r val$Df[4]`, p-value=`r round(val$"Pr(>F)"[3],3)`).  Since the interaction is significant, discussing the main effects individual is not possible, even though they themselves are significant (both p-values < 0.001).  Applying nitrogen does increase yield but the amount of increase depends on the amount of sulpher used.  
+
+Since the interaction is significant, a good way to comprehend results is via a bar graph with grouping letters.
+
+```{r ex2groups1, warning=FALSE, error=TRUE}
+tuk.res.2 <- TukeyHSD(res.2)
+names(tuk.res.2)
+multcompLetters(tuk.res.2$sulf[,4])
+# multcompLetters(tuk.res.2$nitf[,4]) # Why is this silly? => Because, only two levels exist no multiple comparisons possible.
+multcompLetters(tuk.res.2$"sulf:nitf"[,4])
+(Y.bar.ij <- with(ex.2,tapply(yield,sulf:nitf,mean)))
+groups <- multcompLetters(tuk.res.2$"sulf:nitf"[,4])
+bp <- barplot2(Y.bar.ij,ylim=c(0,8))
+letters <- groups$Letters[levels(ex.2$sulf:ex.2$nitf)]
+text(bp,Y.bar.ij,letters,cex=1,pos=3)
+```
+
+From the above plot, it appears that a combination of 3 units of sulpher and 20 units of nitrogen produce the highest yield of soybeans.
+
+## References

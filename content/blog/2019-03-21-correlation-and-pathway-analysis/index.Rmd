@@ -1,0 +1,196 @@
+---
+title: Correlation and pathway analysis with path diagrams
+author: Deependra Dhakal
+date: '2019-03-21'
+link-citations: yes
+math: yes
+slug: correlation-and-pathway-analysis
+categories:
+  - R
+  - agriculture
+tags:
+  - plant breeding
+header:
+  caption: ''
+  image: ''
+  preview: yes
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(tidy = TRUE, cache = FALSE, echo = TRUE, 
+                      tidy.opts = list(width.cutoff=50), 
+                      eval = TRUE, fig.align = "center", fig.asp = 0.6, 
+                      message = FALSE, warning = FALSE)
+options(knitr.kable.NA = "", digits = 3, knitr.table.format = "html")
+library(tidyverse)
+require(lavaan)
+library(gridExtra)
+require(ggdag)
+```
+
+# Background
+
+Correlation study is one of the most extensively yet not fully appreciated topic. It forms the backbone of several other inferential studies. Path analysis, on a similar note, is a derived technique that explains directed dependencies among a set of variables. It is almost exactly a century old now and still finds uses in several fields of causal inference. 
+
+In oder to understand the process of causal inference (thought to be successor of path analysis), it is important to understand the basics about categories of variables. Below I have pointed out some of the concepts.
+
+Exogenous variable: Fully independent variable. Has only single arrow exitting from them. No single-headed arrows point at exogenous variables.
+
+Endogenous variable: Variables that are solely dependent variables, or are both independent and dependent variables, are termed 'endogenous'. Graphically, endogenous variables have at least one single-headed arrow pointing at them.
+
+The Figure \@ref(fig:exogenous-endogenous), two exogenous variables (Exogenous1 and Exogenous2) are modeled as being correlated as depicted by the double-headed arrow. Both of these variables have direct and indirect (through Endogenous2) effects on Endogenous1 (the two dependent or 'endogenous' variables/factors). In most real-world models, the endogenous variables may also be affected by variables and factors stemming from outside the model (external effects including measurement error). These effects are depicted by the "Influencer a" and "Influencer b" (error) terms in the model.
+
+```{r exogenous-endogenous, fig.cap="Variable types and modeling of relationship among them", echo=FALSE}
+networka <- dagify(Endogenous1 ~ Endogenous2 + Exogenous1 + Exogenous2 + b,
+                   Endogenous2 ~ Exogenous1 + Exogenous2 + a,
+                   Exogenous1 ~ Exogenous2,
+                   Exogenous2 ~ Exogenous1,
+                   labels = c("Endogenous1" = "Endogenous variable\n A", 
+                              "Endogenous2" = "Endogenous variable\n B",
+                              "Exogenous1" = "Exogenous variable\n A",
+                              "Exogenous2" = "Exogenous variable\n B",
+                              "a" = "Influencer variable\n a",
+                              "b" = "Influencer variable\n b"
+                              ),
+                   latent = c("Exogenous1", "Exogenous2", "a", "b"),
+                   exposure = "Endogenous2",
+                   outcome = "Endogenous1")
+
+ggdag(networka, text = FALSE, use_labels = "label", layout = "circle") +
+  theme_dag()
+```
+
+This is one formulation of the several conceivable models, an alternative could assume that endogenous variable Endogenous2 has no role in relating Exogenous1 to Endogenous1 (No indirect effects). This could be represented as shown in Figure \@ref(fig:endogenous-exogenous2). Now the fit/likelihood of these these two models could be tested statistically.
+
+```{r endogenous-exogenous2, fig.cap="Variable types and modeling of relationship among them (alternative model)", echo=FALSE}
+networka <- dagify(Endogenous1 ~ Endogenous2 + Exogenous2 + Exogenous1 + b,
+                   Endogenous2 ~ Exogenous2 + a,
+                   Exogenous1 ~ Exogenous2,
+                   Exogenous2 ~ Exogenous1,
+                   labels = c("Endogenous1" = "Endogenous variable\n A", 
+                              "Endogenous2" = "Endogenous variable\n B",
+                              "Exogenous1" = "Exogenous variable\n A",
+                              "Exogenous2" = "Exogenous variable\n B",
+                              "a" = "Influencer variable\n a",
+                              "b" = "Influencer variable\n b"
+                              ),
+                   latent = c("Exogenous1", "Exogenous2", "a", "b"),
+                   exposure = "Endogenous2",
+                   outcome = "Endogenous1")
+
+ggdag(networka, text = FALSE, use_labels = "label", layout = "circle") +
+  theme_dag()
+```
+
+# Correlation analysis
+
+After correlation matrix has been obtained, it is ready to be imported as is for analysis. Here, for example sake, an arbitrary correlation matrix has been used. To simulate a more messy and realistic scenario, we will use encoded correlation sheet where values are augmented with significance stars. The dataset looks is shown in Table \@ref(tab:corr-mat).
+
+```{r corr-mat, echo=FALSE}
+corr_mat <- read_csv(here::here("content", "blog", "data", "correlation_matrix.csv")) %>% 
+  janitor::clean_names() %>% 
+  rename("Variable" = "x1")
+
+corr_mat %>%
+  knitr::kable(caption = "Correlation matrix of 10 variables with value encodings", format = "html") %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12) %>%
+  kableExtra::column_spec(1, bold = TRUE) %>% 
+  kableExtra::scroll_box(width = "100%", 
+                         box_css = "border: 2px solid #22d0dd; padding: 10px; ")
+
+corr_mat <- corr_mat %>% 
+  mutate_at(-1, ~(str_remove_all(., "\\*") %>% as.numeric()))
+```
+
+# Path analysis
+
+Detailed process of getting data ready for computing path coefficients is shown serially in code below. After completing the cleaning process, two matrix objects, one of dependent (`corr_maty`) and the other with explainatory variables (`corr_matx`) is required to pass to agricolae function `path.analysis()`.
+
+```{r cleaning-matrix, echo=FALSE}
+# in order to logically index, the data must be a matrix
+corr_mat_raw <- as.matrix(corr_mat[,-1])
+
+# # change a lower symmetric matrix to complete symmetric matrix
+# does not preserve column names
+corr_mat_raw <- lavaan::lav_matrix_upper2full(x = lavaan::lav_matrix_vech(corr_mat_raw, diagonal = TRUE), diagonal = TRUE)
+
+# # preserves column names
+corr_mat_raw <- corr_mat_raw %>%
+  magrittr::set_colnames(corr_mat$Variable) %>%
+  magrittr::set_rownames(corr_mat$Variable)
+
+# separate the columns to remove the dependent and independent variables 
+corr_matx <- corr_mat_raw[-which(colnames(corr_mat_raw) == "V3"), -which(colnames(corr_mat_raw) == "V3")]
+corr_maty <- corr_mat_raw[-which(colnames(corr_mat_raw) == "V3"), which(colnames(corr_mat_raw) == "V3"), drop = FALSE]
+```
+
+Now the prepared matrix objects look like what is shown in Tables \@ref(tab:corrx-matrix) and \@ref(tab:corry-matrix).
+
+```{r corrx-matrix, echo=FALSE}
+corr_matx %>% 
+  knitr::kable(caption = "Correlation matrix of explainatory variables", format = "html") %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12) %>%
+  kableExtra::scroll_box(width = "100%", 
+                         box_css = "border: 2px solid #22d0dd; padding: 10px; ")
+```
+
+```{r corry-matrix, echo=FALSE}
+corr_maty %>% 
+  knitr::kable(caption = "Correlation matrix of dependent variable", format = "html") %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12) %>%
+  kableExtra::scroll_box(width = "100%", 
+                         box_css = "border: 2px solid #22d0dd; padding: 10px; ")
+```
+
+We could check to see if dimensions of the matrix match, which is necessary for the calculation.
+
+```{r dimension-test, echo=TRUE}
+dim(corr_matx)
+dim(corr_maty)
+```
+
+
+```{r path-analysis, echo = TRUE}
+# Using agricolae function
+path_coeffs <- agricolae::path.analysis(corr_matx, corr_maty)$Coeff
+# path_coeffs
+```
+
+
+In fact, the path coefficients is just the result of matrix product between inverse matrix, of explainatory variables, and the dependent variable. For any [Well-posed problem](https://en.wikipedia.org/wiki/Well-posed_problem) being modeled as ordinary least squares problem let us consider known vector $A$ and $b$. Now, we seek to find vector $\mathbf{x}$. This could be solved as shown in the Equation \@ref(eq:solve-x). 
+
+\begin{equation}
+(\#eq:solve-x)
+{\displaystyle A\mathbf {x} =\mathbf {b}} \\
+{\displaystyle \mathbf{x} =A^{-1}\mathbf {b}}
+\end{equation}
+
+Hence the solution for vector $\mathbf x$ gives the direct effects path coefficients, between two variables. Then the indirect coefficients ($Z$) are scalar products of direct effects ($\mathbf {x}$) and correlation matrix of explainatory variables ($A$).
+
+$$
+Z = \mathbf {x} . A
+$$
+
+
+```{r direct-solving, echo=FALSE, eval=FALSE}
+# Direct calculation
+# make sure the dependent matrix has 1 column, else transpose it
+corr_maty %>% ncol()
+
+# direct effects
+Direct <- solve(corr_matx, corr_maty) # same as: solve(corr.x) %*% corr.y
+
+n <- ncol(corr_matx)
+
+# indirect effects
+Coeff <- corr_matx # initialization
+for (i in 1:n) {
+  for (j in 1:n) {
+    Coeff[i, j] <- Direct[j] * corr_matx[i, j]
+  }
+}
+
+# residuals
+Residual <- 1 - t(Direct) %*% corr_maty
+
+```

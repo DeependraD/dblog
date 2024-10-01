@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Genetics on Rookie site</title>
+    <link>http://localhost:4321/tags/genetics/</link>
+    <description>Recent content in Genetics on Rookie site</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 23 Sep 2020 06:22:01 +0545</lastBuildDate>
+    <atom:link href="http://localhost:4321/tags/genetics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The nature of code: Why is it</title>
+      <link>http://localhost:4321/blog/the-nature-of-code-why-is-it/</link>
+      <pubDate>Wed, 23 Sep 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/the-nature-of-code-why-is-it/</guid>
+      <description>&lt;p&gt;Many find genetics, as a field of science on its own, charming. Many more are excited to learn about the science that fits seamlessly into complexity driven life of organisms, providing explanation for natural phenomena at both micro-evolutionary and macro-evolutionary scales. But only few find fascination with its deep running concepts, going down to more fundamental physical theories. This article tries to at least expose, if not laid satisfying argument, to some of fundamental questions in genetics concerning nature of code (mostly chemical behaviour). In particular, following are some of the questions I plan to touch upon (Credit goes to a student of mine who posed these questions one evening and left me pondering on details):&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

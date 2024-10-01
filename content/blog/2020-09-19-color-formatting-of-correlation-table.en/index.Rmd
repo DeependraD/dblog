@@ -1,0 +1,78 @@
+---
+title: Color formatting of correlation table
+author: Deependra Dhakal
+date: '2020-09-19'
+slug: color-formatting-of-correlation-table
+categories:
+  - R
+tags:
+  - R
+  - correlation
+  - table
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-09-19T08:39:45+05:45'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+math: yes
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(fig.width=5, fig.height=4, 
+                      echo=TRUE, warning=FALSE, 
+                      message=FALSE, cache = TRUE)
+suppressPackageStartupMessages(require(tidyverse))
+options(knitr.kable.NA = '')
+```
+
+# Correlation
+
+Correlation is a bivariate summary statistic. It basically talks of direction and magnitidue of association of two variables. Besides formatting with significance stars, color coding correlation coefficient table might be helpful to pick patterns out in a quick glimpse.
+
+Table \@ref(tab:correlation-with-color) presents correlation matrix of yield and yield component traits (a blue $\rightarrow$ red color profile represents increasing magnitude of positive correlation between traits). Following code is helpful if somebody provides a correlation table with stars in it and tells you to prettify it. Note that lower or upper halves only cannot be used to determine the discrete color values so full column is required.
+
+```{r correlation-with-color}
+# don't use underscore with this kablestyling
+# list.files(here::here("content", "post", "data"))
+
+correlation_mat <- read_csv(here::here("content", "blog", "data", "correlation_matrix.csv")) %>% 
+  select(-1) %>% 
+  mutate_if(is.numeric, as.character) %>% 
+  as.matrix()
+
+# construct symmetric matrix
+correlation_mat[upper.tri(correlation_mat)] <- t(correlation_mat)[upper.tri(correlation_mat)]
+correlation_mat <- correlation_mat %>% as_tibble()
+
+rb_nextgen <- function(x){
+  # generates a function for palette generation
+  color_fun <- colorRampPalette(c(rgb(0.7, 0.7, 0.95, 0.5), rgb(0.95, 0.7, 0.7, 0.5)), alpha = TRUE)
+  # generate a palette of length equal to length of vector
+  length_vec <- length(x)
+  generated_colors <- color_fun(n = length_vec)[as.numeric(cut(parse_number(x), breaks = length_vec))]
+}
+
+correlation_mat <- correlation_mat %>%
+  mutate_all(function(x)kableExtra::cell_spec(x, "html", bold = TRUE, background = rb_nextgen(x)))
+correlation_mat[upper.tri(correlation_mat)] <- NA
+
+correlation_mat %>% 
+  knitr::kable(format = "html",
+               caption = "Correlation table with color",
+               escape = F,
+               booktabs = T,
+               linesep = "",
+               align = "c", digits = 2) %>%
+  kableExtra::kable_styling(position = "center",
+                            latex_options = c("scale_down", "HOLD_position"),
+                            full_width = FALSE) %>%
+  kableExtra::row_spec(row = 0, bold = TRUE)
+
+```
+
+

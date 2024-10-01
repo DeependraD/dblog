@@ -1,0 +1,173 @@
+---
+title: "Resource optimization"
+subtitle: "A practical solution"
+author: Deependra Dhakal
+date: '2018-08-12'
+slug: optimization
+math: true
+categories: 
+  - agriculture
+tags:
+  - agriculture
+  - optimization
+  - R
+header:
+  caption: ''
+  image: ''
+---
+
+
+```r
+library(lpSolve)
+library(tidyverse)
+```
+
+## Issue
+
+A farmer has 600 katthas of land under his authority. Each of his katthas of land will either be sown with Rice or with Maize during the current season. Each kattha planted with Maize will yield Rs 1000, requires 2 workers and 20 kg of fertilizer. Each kattha planted with Rice will yield Rs 2000, requires 4 workers and 25 kg of fertilizers. There are currently 1200 workers and 11000 kg of fertilizer available.
+
+## Solution
+
+So, the problem is how can he/she allocate his parcel of land for reaping maximum profit while also staying within the limits of input availability.
+
+The problem can be formulated as an optimization problem with following notation:
+
+`\(X_1\)` = katthas of Maize
+`\(X_2\)` = katthas of Rice
+
+The objective function is:
+
+$$
+max(1000X_1+2000X_2)
+$$
+
+Now let's construct a matrix defining the constraints.
+
+\[
+\begin{bmatrix}
+Worker\\
+Fertilizer 
+\end{bmatrix}=
+\begin{bmatrix}
+2X_1 + 4X_2 \leq 1200\\
+20X_1 + 25X_2 \leq 11000
+\end{bmatrix}
+\]
+
+Define objective function to be optimized.
+
+
+```r
+objective.in <- 
+  c(
+    1000, # maize
+    2000 # rice
+  )
+```
+
+Define constraint matrix with variables in the left hand side.
+
+
+```r
+const.mat <- 
+  matrix(
+    c(
+      2, 4, # maize
+      20, 25
+    ),
+    nrow = 2,
+    byrow = TRUE
+  )
+```
+
+Define direction of constraints.
+
+
+```r
+const.dir <- 
+  rep(
+    "<=",
+    2
+  )
+```
+
+Define constraint limits as values in the right hand side.
+
+
+```r
+const.rhs <- 
+  c(
+    1200,
+    11000
+  )
+```
+
+The structure of linear optimization problem.
+
+
+```r
+const.mat %>% 
+  cbind(const.dir) %>% 
+  cbind(const.rhs) %>% 
+  rbind(
+    c(
+      objective.in,
+      " <--- ",
+      "max fun to left"
+    ),
+    .
+  ) %>% 
+  noquote()
+```
+
+```
+##                const.dir const.rhs      
+## [1,] 1000 2000  <---     max fun to left
+## [2,] 2    4    <=        1200           
+## [3,] 20   25   <=        11000
+```
+
+Linear programming syntax and solution search.
+
+
+```r
+solution <- 
+  lp(
+    direction = "max",
+    objective.in = objective.in,
+    const.mat = const.mat,
+    const.dir = const.dir,
+    const.rhs = const.rhs
+  )
+
+scales::dollar(objective.in %*% solution$solution, prefix = "Rs. ")
+```
+
+```
+## [1] "Rs. 600,000"
+```
+
+Solution to variables value `\(X_1\)` and `\(X_2\)` can also be found.
+
+
+```r
+solution$solution
+```
+
+```
+## [1]   0 300
+```
+
+Whole problem and solution domain can be summarized in a graph. This is an added effort for some other day...
+
+<!-- ```{r question-answer} -->
+<!-- plot(0, 0,  -->
+<!--      xlim = c(0, 600), ylim = c(0, 600),  -->
+<!--      xlab = "Maize", ylab = "Rice",  -->
+<!--      main = "Maize versus Rice: Plant more of which?") -->
+<!-- polygon(c(0, 1000/3, 0), c(500, 0, 0), col = "skyblue", density = 30) -->
+<!-- polygon(c(0, 1200/2, 0), c(1200/4, 0), col = "red", density = 20) -->
+<!-- abline(h = 200, v = 200) -->
+<!-- ``` -->
+
+This post is thanks to [Freddy Drennan's youtube video](https://www.youtube.com/watch?v=61Kwaab8CoU)

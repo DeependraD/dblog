@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Phenotyping on Rookie site</title>
+    <link>http://localhost:4321/tags/phenotyping/</link>
+    <description>Recent content in Phenotyping on Rookie site</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 23 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:4321/tags/phenotyping/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Color charts: An introductory review on applications to qualitative crop phenotyping</title>
+      <link>http://localhost:4321/blog/color-charts-an-introductory-review-on-applications-to-qualitative-crop-phenotyping/</link>
+      <pubDate>Wed, 23 Jan 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/blog/color-charts-an-introductory-review-on-applications-to-qualitative-crop-phenotyping/</guid>
+      <description>&lt;h1 id=&#34;background&#34;&gt;Background&#xA;  &lt;a href=&#34;#background&#34;&gt;&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;Colorimetry is a fascinating topic to discuss. In conjunction with the patterns of a natural world (See this awesome video about &#xA;&lt;a href=&#34;https://www.youtube.com/watch?v=ahXIMUkSXX0&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;fibonacci numbers and plants&lt;/a&gt;), colors could have mesmerizing feels. In this post and the follow-up article, we will discuss in details about colorimetric features of a universe made of plants, in particular, which are cultivated/adopted and have edible human values &amp;ndash; the agricultural crops. Then again, there are quite a large number of agricultural species to deal with. So, we will be making a touch down on some common crop species, i.e. Pea (&lt;em&gt;Pisum sativum&lt;/em&gt;, wild counterpart of the famous &#xA;&lt;a href=&#34;https://en.wikipedia.org/wiki/Lathyrus&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Lathyrus&lt;/a&gt; pea studied by Mendel) and Wheat (&lt;em&gt;Triticum aestivum&lt;/em&gt;).&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
