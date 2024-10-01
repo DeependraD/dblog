@@ -33,10 +33,7 @@ blogdown::new_site(theme = "hugo-apero/hugo-apero",
   
 ## Diagnosis and update
 
-Time and again check for hugo updates, especially if the build fails. This could be because of inconsistencies between hugo and blogdown project structure. Also check for the Hugo academic repo once in a while so that in case any [breaking changes]() are made, be noted about in time. These changes are addressed in released notes with instructions for fixing website. Also equally worth noting is that, some `hugo-academic` theme updates require certain minimum version of hugo to build.
+Time and again check for hugo updates, especially if the build fails. This could be because of inconsistencies between hugo and blogdown project structure.
 
 
 ## Notes
-
-- Post: Time series analysis of cointegrated economic variables
-  - Trim `weather_nepal/` data to make the files smaller
